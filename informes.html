@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GesPyme - Informes</title>
+    <style>
+        :root { --primary-color: #1a73e8; --sidebar-bg: #2b3856; --text-color: #333; --bg-color: #f4f6f9; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-color); display: flex; height: 100vh; overflow: hidden; }
+        sidebar { width: 250px; background-color: var(--sidebar-bg); color: white; display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; }
+        .sidebar-brand { padding: 1.2rem; font-size: 1.1rem; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
+        .sidebar-menu { list-style: none; padding: 0.5rem 0; flex: 1; }
+        .sidebar-menu li a { display: block; padding: 0.6rem 1.2rem; color: #b0c4de; text-decoration: none; font-size: 0.9rem; transition: 0.2s; }
+        .sidebar-menu li.active a, .sidebar-menu li a:hover { background-color: rgba(255,255,255,0.1); color: white; }
+        .sidebar-footer { padding: 1rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.8rem; color: #a0a0a0; text-align: center; }
+        .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
+        header { background: white; padding: 0.8rem 2rem; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: flex-end; align-items: center; }
+        .user-profile { font-size: 0.9rem; color: #555; font-weight: 500; }
+        .container { padding: 2rem; max-width: 1200px; width: 100%; margin: 0 auto; }
+        .panel-section { background: white; border-radius: 8px; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .panel-section h2 { margin-bottom: 0.5rem; font-size: 1.2rem; color: #333; }
+        .reports-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
+        .report-category h3 { font-size: 1rem; color: var(--primary-color); border-bottom: 2px solid #e0e0e0; padding-bottom: 0.4rem; margin-bottom: 0.8rem; }
+        .report-item { margin-bottom: 1rem; }
+        .report-item a { font-size: 0.9rem; font-weight: bold; color: #333; text-decoration: none; display: block; }
+        .report-item a:hover { color: var(--primary-color); text-decoration: underline; }
+        .report-item p { font-size: 0.8rem; color: #666; margin-top: 2px; }
+    </style>
+</head>
+<body>
+    <sidebar>
+        <div class="sidebar-brand"><span>⚙️</span> GesPyme</div>
+        <ul class="sidebar-menu">
+            <li><a href="index.html">Panel</a></li>
+            <li><a href="clientes.html">Clientes</a></li>
+            <li><a href="facturas.html">Facturas</a></li>
+            <li><a href="cotizaciones.html">Cotizaciones</a></li>
+            <li><a href="notas-credito.html">Notas de crédito</a></li>
+            <li><a href="orden-servicio.html">Orden de Servicio</a></li>
+            <li><a href="pagos.html">Pagos</a></li>
+            <li><a href="reembolsos.html">Reembolsos</a></li>
+            <li><a href="articulos.html">Artículos</a></li>
+            <li class="active"><a href="informes.html">Informes</a></li>
+            <li><a href="herramientas.html">Herramientas</a></li>
+            <li><a href="configuracion.html">Configuración</a></li>
+            <li><a href="subscription.html">Subscription</a></li>
+        </ul>
+        <div class="sidebar-footer">GesPyme © 2026</div>
+    </sidebar>
+    <div class="main-content">
+        <header><div class="user-profile"><span>👤 Mi Cuenta</span></div></header>
+        <div class="container">
+            <div class="panel-section">
+                <h2>Informes Financieros y de Gestión</h2>
+                <p style="font-size: 0.85rem; color: #666;">Seleccione de nuestra lista de informes prefabricados para exportar o visualizar.</p>
+                
+                <div class="reports-grid">
+                    <div class="report-category">
+                        <h3>Cuentas por cobrar</h3>
+                        <div class="report-item"><a href="#">Facturas</a><p>Ver lista de facturas por cliente y/o período de tiempo.</p></div>
+                        <div class="report-item"><a href="#">Cotizaciones</a><p>Ver lista de cotizaciones emitidas.</p></div>
+                        <div class="report-item"><a href="#">Cuentas pendientes de pago</a><p>Generar lista de cuentas vencidas.</p></div>
+                    </div>
+                    <div class="report-category">
+                        <h3>Clientes y Ventas</h3>
+                        <div class="report-item"><a href="#">Clientes</a><p>Lista de información de contacto y saldo.</p></div>
+                        <div class="report-item"><a href="#">Ventas al cliente</a><p>Totales de facturas y pagos por cliente.</p></div>
+                        <div class="report-item"><a href="#">Ingresos mensuales</a><p>Ver lista de ingresos por mes.</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
