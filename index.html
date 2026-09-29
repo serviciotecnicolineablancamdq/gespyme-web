@@ -8,7 +8,7 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="text/javascript">
         (function() {
-            emailjs.init("QmQpltvvFAOghrfot"); // Clave pública corregida
+            emailjs.init("QmQpltvvFAOghrfot"); // Clave pública configurada
         })();
     </script>
     <style>
@@ -132,7 +132,7 @@
     <div id="auth-modal">
         <div class="auth-card">
             <button class="close-modal" onclick="cerrarModalRegistro()">×</button>
-            <h2>⚙️️ Únete a GesPyme</h2>
+            <h2>⚙️ Únete a GesPyme</h2>
             <p>Crea tu cuenta gratuita para empezar a gestionar.</p>
             <input type="email" id="regEmail" placeholder="Tu correo electrónico">
             <input type="password" id="regPassword" placeholder="Crea una contraseña">
@@ -170,7 +170,7 @@
             <li><a href="articulos.html">📦 Artículos</a></li>
             <li><a href="informes.html">📈 Informes</a></li>
             <li><a href="herramientas.html">🔧 Herramientas</a></li>
-            <li><a href="configuracion.html">⚙️️ Configuración</a></li>
+            <li><a href="configuracion.html">⚙️ Configuración</a></li>
             <li><a href="subscription.html" style="color: #ffd700;">⭐ Subscription Pro</a></li>
             <li id="menuCerrarSesion" style="display:none;"><a href="#" onclick="cerrarSesion();" style="color: #ff9999;">🚪 Cerrar Sesión</a></li>
         </ul>
@@ -360,7 +360,7 @@
                 title: "Nuevo Registro de Usuario en GesPyme"
             };
 
-            emailjs.send('service_dz1b36', 'template_khlwu4x', templateParams)
+            emailjs.send('service_dz3lb36', 'template_khlwu4x', templateParams)
                 .then(function(response) {
                     console.log('Notificación enviada con éxito.', response.status, response.text);
                     alert("¡Notificación enviada por correo con éxito!");
