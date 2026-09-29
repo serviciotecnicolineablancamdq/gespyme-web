@@ -55,20 +55,20 @@
         }
         .close-modal { position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #888; }
 
-        /* Modal de Restricción de Planes y Límites */
-        #pro-modal {
+        /* Modal de Panel Admin de Planes */
+        #admin-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.6); display: none; justify-content: center; align-items: center; z-index: 10000;
         }
-        .pro-card {
-            background: white; padding: 2.5rem; border-radius: 12px; width: 90%; max-width: 420px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.3); text-align: center; position: relative; border-top: 5px solid #ff9800;
+        .admin-card {
+            background: white; padding: 2.5rem; border-radius: 12px; width: 90%; max-width: 450px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3); text-align: center; position: relative; border-top: 5px solid #28a745;
         }
-        .pro-card h2 { color: #d97706; margin-bottom: 0.5rem; font-size: 1.4rem; border: none; padding: 0; }
-        .pro-card p { color: #555; font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.4; }
-        .pro-btn {
-            background-color: #28a745; color: white; border: none; padding: 0.8rem 1.5rem;
-            border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; width: 100%;
+        .admin-card h2 { color: #28a745; margin-bottom: 0.5rem; font-size: 1.4rem; }
+        .admin-card p { color: #555; font-size: 0.9rem; margin-bottom: 1.2rem; }
+        .admin-card select, .admin-card input {
+            width: 100%; padding: 0.8rem; margin-bottom: 1rem; border: 1px solid #ccc;
+            border-radius: 6px; font-size: 0.95rem; outline: none;
         }
 
         /* Menú Lateral */
@@ -88,18 +88,15 @@
         
         .container { padding: 2rem; max-width: 1200px; width: 100%; margin: 0 auto; }
         
-        /* Secciones del Panel */
         .panel-section { background: white; border-radius: 8px; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 2rem; }
         .panel-section h2 { margin-bottom: 1rem; font-size: 1.1rem; color: #333; }
         
-        /* Grid de accesos rápidos */
         .quick-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 1rem; }
         .action-card { background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 6px; padding: 1rem; text-align: center; text-decoration: none; color: #333; transition: 0.2s; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; }
         .action-card:hover { background: #e9ecef; border-color: #cbd3da; }
         .action-icon { font-size: 1.5rem; }
         .action-text { font-size: 0.85rem; font-weight: 500; }
 
-        /* Resto de estilos */
         .filters-bar { display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; align-items: center; }
         .filters-bar select, .filters-bar input { padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.9rem; }
         .btn-primary { background-color: #28a745; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-weight: 500; text-decoration: none; display: inline-block; }
@@ -140,38 +137,62 @@
         </div>
     </div>
 
+    <!-- PANEL ADMIN MANUAL DE PLANES (CON CORREO DE AVISO) -->
+    <div id="admin-modal">
+        <div class="admin-card">
+            <button class="close-modal" onclick="cerrarModalAdmin()">×</button>
+            <h2>👑 Panel Admin de Planes</h2>
+            <p>Actualización manual tras verificar pago. Se enviará un correo de aviso.</p>
+            
+            <label style="font-size: 0.85rem; font-weight: bold; display: block; text-align: left; margin-bottom: 5px;">Correo del Cliente / Usuario:</label>
+            <input type="email" id="adminClientEmail" placeholder="ejemplo@correo.com">
+
+            <label style="font-size: 0.85rem; font-weight: bold; display: block; text-align: left; margin-bottom: 5px;">Seleccionar Nuevo Plan:</label>
+            <select id="selectNuevoPlan">
+                <option value="free">Plan Gratuito (5 documentos)</option>
+                <option value="basico">Plan Básico (20 documentos)</option>
+                <option value="estandar">Plan Estándar (100 documentos)</option>
+                <option value="plus">Plan Plus (500 documentos)</option>
+                <option value="pro">Plan Pro (Ilimitado 🚀)</option>
+            </select>
+            <button class="auth-btn" style="background-color: #28a745; margin-top: 5px;" onclick="aplicarPlanManual()">Aplicar Plan y Enviar Aviso</button>
+        </div>
+    </div>
+
     <!-- MODAL DE RESTRICCIÓN DE PLANES Y LÍMITES -->
     <div id="pro-modal">
-        <div class="pro-card">
+        <div class="pro-card" style="background: white; padding: 2.5rem; border-radius: 12px; width: 90%; max-width: 420px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); text-align: center; position: relative; border-top: 5px solid #ff9800;">
             <button class="close-modal" onclick="cerrarModalPro()">×</button>
-            <h2>⭐ Función Exclusiva</h2>
-            <p id="pro-message">Este módulo está reservado para planes superiores.</p>
-            <a href="subscription.html" class="pro-btn">Ver Planes y Actualizar</a>
+            <h2 style="color: #d97706; margin-bottom: 0.5rem; font-size: 1.4rem;">⭐ Función Exclusiva</h2>
+            <p id="pro-message" style="color: #555; font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.4;">Este módulo está reservado para planes superiores.</p>
+            <a href="subscription.html" style="background-color: #28a745; color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; width: 100%;">Ver Planes y Actualizar</a>
         </div>
     </div>
 
     <!-- Menú Lateral -->
     <sidebar>
         <div class="sidebar-brand" onclick="intentarActivarModoDev()" title="Haz 3 clics aquí para Modo Desarrollador">
-            <span>⚙️</span> <span id="lblBrandText">GesPyme</span>
+            <span>⚙</span> <span id="lblBrandText">GesPyme</span>
         </div>
         <ul class="sidebar-menu">
             <li class="active"><a href="index.html">🏠 Panel</a></li>
             <li><a href="clientes.html">👥 Clientes</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('facturas')">📄 Facturas</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('facturas')" class="sub-item">➕ Nueva factura</a></li>
+            <li><a href="facturas.html" onclick="return verificarRestriccionModuloLink('facturas', event)">📄 Facturas</a></li>
+            <li><a href="facturas.html" onclick="return verificarRestriccionModuloLink('facturas', event)" class="sub-item">➕ Nueva factura</a></li>
             <li><a href="cotizaciones.html">📊 Cotizaciones</a></li>
             <li><a href="nueva-cotizacion.html" class="sub-item">➕ Nueva cotización</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('notas')">🔄 Notas de crédito</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('ordenes')">🛠️ Orden de Servicio</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('ordenes')" class="sub-item">➕ Nueva orden</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('pagos')">💳 Pagos</a></li>
+            <li><a href="notas-credito.html" onclick="return verificarRestriccionModuloLink('notas', event)">🔄 Notas de crédito</a></li>
+            <li><a href="ordenes.html" onclick="return verificarRestriccionModuloLink('ordenes', event)">🛠️ Orden de Servicio</a></li>
+            <li><a href="ordenes.html" onclick="return verificarRestriccionModuloLink('ordenes', event)" class="sub-item">➕ Nueva orden</a></li>
+            <li><a href="pagos.html" onclick="return verificarRestriccionModuloLink('pagos', event)">💳 Pagos</a></li>
             <li><a href="reembolsos.html">💸 Reembolsos</a></li>
             <li><a href="articulos.html">📦 Artículos</a></li>
             <li><a href="informes.html">📈 Informes</a></li>
             <li><a href="herramientas.html">🔧 Herramientas</a></li>
-            <li><a href="configuracion.html">⚙️️ Configuración</a></li>
+            <li><a href="configuracion.html">⚙ Configuración</a></li>
             <li><a href="subscription.html" style="color: #ffd700;">⭐ Subscription Pro</a></li>
+            <!-- BOTÓN SECRETO EN EL MENÚ PARA ABRIR EL PANEL ADMIN DE PAGOS -->
+            <li><a href="#" onclick="abrirAdminModal(event)" style="color: #4ade80;">👑 Activar Plan (Admin)</a></li>
             <li id="menuCerrarSesion" style="display:none;"><a href="#" onclick="cerrarSesion();" style="color: #ff9999;">🚪 Cerrar Sesión</a></li>
         </ul>
         <div class="sidebar-footer">
@@ -198,26 +219,26 @@
                         <span class="action-icon">📊</span>
                         <span class="action-text">Cotización</span>
                     </a>
-                    <div class="action-card" onclick="verificarRestriccionModulo('facturas')">
+                    <a href="facturas.html" class="action-card" onclick="return verificarRestriccionModuloLink('facturas', event)">
                         <span class="action-icon">📄</span>
                         <span class="action-text">Factura</span>
-                    </div>
-                    <div class="action-card" onclick="verificarRestriccionModulo('ordenes')">
+                    </a>
+                    <a href="ordenes.html" class="action-card" onclick="return verificarRestriccionModuloLink('ordenes', event)">
                         <span class="action-icon">🛠️</span>
                         <span class="action-text">Orden Serv.</span>
-                    </div>
+                    </a>
                     <div class="action-card" onclick="verificarAccion('Cliente')">
                         <span class="action-icon">👤</span>
                         <span class="action-text">Cliente</span>
                     </div>
-                    <div class="action-card" onclick="verificarRestriccionModulo('notas')">
+                    <a href="notas-credito.html" class="action-card" onclick="return verificarRestriccionModuloLink('notas', event)">
                         <span class="action-icon">🔄</span>
                         <span class="action-text">Nota crédito</span>
-                    </div>
-                    <div class="action-card" onclick="verificarRestriccionModulo('pagos')">
+                    </a>
+                    <a href="pagos.html" class="action-card" onclick="return verificarRestriccionModuloLink('pagos', event)">
                         <span class="action-icon">💳</span>
                         <span class="action-text">Pago</span>
-                    </div>
+                    </a>
                 </div>
             </div>
 
@@ -297,10 +318,10 @@
                 let modoActual = localStorage.getItem("gespyme_modo_dev") === "true";
                 if (modoActual) {
                     localStorage.setItem("gespyme_modo_dev", "false");
-                    alert("🛠️ MODO DESARROLLADOR DESACTIVADO. La app vuelve a tener restricciones normales.");
+                    alert("🛠 MODO DESARROLLADOR DESACTIVADO.");
                 } else {
                     localStorage.setItem("gespyme_modo_dev", "true");
-                    alert("🚀 MODO DESARROLLADOR ACTIVADO. Tienes acceso libre a todas las solapas y funciones para probar.");
+                    alert("🚀 MODO DESARROLLADOR ACTIVADO.");
                 }
                 clicsDev = 0;
                 actualizarIndicadorModoDev();
@@ -326,12 +347,12 @@
             return uso ? parseInt(uso) : 0;
         }
 
-        function verificarRestriccionModulo(modulo) {
-            // SI ESTÁ ACTIVO EL MODO DESARROLLADOR, SALTA LAS RESTRICCIONES AUTOMÁTICAMENTE
+        function verificarRestriccionModuloLink(modulo, event) {
             if (localStorage.getItem("gespyme_modo_dev") === "true") {
-                alert(`🛠️ [MODO DEV] Acceso libre concedido al módulo de: ${modulo}`);
-                return;
+                return true; 
             }
+
+            if (event) event.preventDefault();
 
             let planKey = obtenerPlanActual();
             let usoActual = obtenerUsoActual();
@@ -345,17 +366,73 @@
                 };
                 document.getElementById("pro-message").innerHTML = `El módulo de <strong>${nombresModulos[modulo]}</strong> está reservado para planes superiores.<br><br>Actualiza tu suscripción para desbloquearlo.`;
                 document.getElementById("pro-modal").style.display = "flex";
-                return;
+                return false;
             }
 
             let planInfo = PLANES_LIMITES[planKey] || PLANES_LIMITES['free'];
             if (usoActual >= planInfo.limite) {
                 document.getElementById("pro-message").innerHTML = `Has alcanzado el límite de <strong>${planInfo.limite} documentos</strong> de tu <strong>${planInfo.nombre}</strong>.<br><br>Actualiza tu plan para continuar operando.`;
                 document.getElementById("pro-modal").style.display = "flex";
+                return false;
+            }
+
+            return true;
+        }
+
+        // Funciones del Panel Admin de Planes Manual con notificación de correo
+        function abrirAdminModal(event) {
+            if (event) event.preventDefault();
+            let passwordAdmin = prompt("Introduce tu clave de Administrador para desbloquear planes:");
+            if (passwordAdmin === "admin123") { // Clave de seguridad de admin
+                // Autocompletar con el usuario actual si existe en sesión
+                let usuarioActual = localStorage.getItem("gespyme_usuario");
+                if(usuarioActual) {
+                    document.getElementById("adminClientEmail").value = usuarioActual;
+                }
+                document.getElementById("admin-modal").style.display = "flex";
+            } else if (passwordAdmin !== null) {
+                alert("Contraseña incorrecta.");
+            }
+        }
+
+        function cerrarModalAdmin() {
+            document.getElementById("admin-modal").style.display = "none";
+        }
+
+        function aplicarPlanManual() {
+            let clienteEmail = document.getElementById("adminClientEmail").value.trim();
+            let nuevoPlan = document.getElementById("selectNuevoPlan").value;
+
+            if(clienteEmail === "") {
+                alert("Por favor ingresa el correo del cliente.");
                 return;
             }
 
-            alert(`¡Acceso concedido al módulo de ${modulo}!`);
+            // Aplicamos localmente si es el mismo usuario logueado en este navegador
+            let usuarioActual = localStorage.getItem("gespyme_usuario");
+            if(usuarioActual === clienteEmail || !usuarioActual) {
+                localStorage.setItem("gespyme_plan", nuevoPlan);
+            }
+
+            // Parámetros para enviar la notificación por correo vía EmailJS
+            let templateParams = {
+                nombre: clienteEmail,
+                email: clienteEmail,
+                mensaje: `¡Pago confirmado!\nSe ha activado el plan: ${PLANES_LIMITES[nuevoPlan].nombre} para el cliente/usuario: ${clienteEmail}\nFecha y hora: ${new Date().toLocaleString()}`,
+                title: "Confirmación de Pago y Activación de Plan - GesPyme"
+            };
+
+            // Enviando correo de alerta de pago
+            emailjs.send('service_dz3lb36', 'template_khlwu4x', templateParams)
+                .then(function(response) {
+                    alert(`¡Plan actualizado a "${PLANES_LIMITES[nuevoPlan].nombre}" y correo de aviso enviado con éxito!`);
+                    cerrarModalAdmin();
+                    location.reload();
+                }, function(error) {
+                    alert(`El plan se actualizó localmente, pero hubo un error al enviar el correo: ${JSON.stringify(error)}`);
+                    cerrarModalAdmin();
+                    location.reload();
+                });
         }
 
         function abrirModalRegistro() {
@@ -372,7 +449,6 @@
 
         function verificarAccion(accion) {
             if (localStorage.getItem("gespyme_modo_dev") === "true") {
-                alert(`🛠️ [MODO DEV] Acción permitida para: ${accion}`);
                 return;
             }
             alert(`¡Acción permitida! Estás gestionando: ${accion}`);
@@ -410,10 +486,8 @@
             emailjs.send('service_dz3lb36', 'template_khlwu4x', templateParams)
                 .then(function(response) {
                     console.log('Notificación enviada con éxito.', response.status, response.text);
-                    alert("¡Notificación enviada por correo con éxito!");
                 }, function(error) {
                     console.log('Error al enviar notificación:', error);
-                    alert("Error al enviar el correo de EmailJS: " + JSON.stringify(error));
                 });
         }
 
