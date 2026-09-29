@@ -73,7 +73,7 @@
 
         /* Menú Lateral */
         sidebar { width: 250px; background-color: var(--sidebar-bg); color: white; display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; margin-top: 45px; }
-        .sidebar-brand { padding: 1.2rem; font-size: 1.1rem; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
+        .sidebar-brand { padding: 1.2rem; font-size: 1.1rem; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
         .sidebar-menu { list-style: none; padding: 0.5rem 0; flex: 1; }
         .sidebar-menu li a { display: block; padding: 0.6rem 1.2rem; color: #b0c4de; text-decoration: none; font-size: 0.9rem; transition: 0.2s; }
         .sidebar-menu li.active a, .sidebar-menu li a:hover { background-color: rgba(255,255,255,0.1); color: white; }
@@ -152,8 +152,8 @@
 
     <!-- Menú Lateral -->
     <sidebar>
-        <div class="sidebar-brand">
-            <span>⚙️</span> GesPyme
+        <div class="sidebar-brand" onclick="intentarActivarModoDev()" title="Haz 3 clics aquí para Modo Desarrollador">
+            <span>⚙️</span> <span id="lblBrandText">GesPyme</span>
         </div>
         <ul class="sidebar-menu">
             <li class="active"><a href="index.html">🏠 Panel</a></li>
@@ -170,7 +170,7 @@
             <li><a href="articulos.html">📦 Artículos</a></li>
             <li><a href="informes.html">📈 Informes</a></li>
             <li><a href="herramientas.html">🔧 Herramientas</a></li>
-            <li><a href="configuracion.html">⚙️ Configuración</a></li>
+            <li><a href="configuracion.html">⚙️️ Configuración</a></li>
             <li><a href="subscription.html" style="color: #ffd700;">⭐ Subscription Pro</a></li>
             <li id="menuCerrarSesion" style="display:none;"><a href="#" onclick="cerrarSesion();" style="color: #ff9999;">🚪 Cerrar Sesión</a></li>
         </ul>
@@ -270,7 +270,7 @@
         </div>
     </div>
 
-    <!-- Script de Lógica de Seguridad y Planes -->
+    <!-- Script de Lógica de Seguridad, Planes y Modo Desarrollador -->
     <script>
         const PLANES_LIMITES = {
             'free': { limite: 5, nombre: 'Plan Gratuito' },
@@ -279,6 +279,43 @@
             'plus': { limite: 500, nombre: 'Plan Plus' },
             'pro': { limite: 99999, nombre: 'Plan Pro Ilimitado' }
         };
+
+        // Lógica de clics para activar el Modo Desarrollador de forma secreta
+        let clicsDev = 0;
+        let tiempoUltimoClic = 0;
+
+        function intentarActivarModoDev() {
+            let ahora = new Date().getTime();
+            if (ahora - tiempoUltimoClic > 1000) {
+                clicsDev = 1;
+            } else {
+                clicsDev++;
+            }
+            tiempoUltimoClic = ahora;
+
+            if (clicsDev >= 3) {
+                let modoActual = localStorage.getItem("gespyme_modo_dev") === "true";
+                if (modoActual) {
+                    localStorage.setItem("gespyme_modo_dev", "false");
+                    alert("🛠️ MODO DESARROLLADOR DESACTIVADO. La app vuelve a tener restricciones normales.");
+                } else {
+                    localStorage.setItem("gespyme_modo_dev", "true");
+                    alert("🚀 MODO DESARROLLADOR ACTIVADO. Tienes acceso libre a todas las solapas y funciones para probar.");
+                }
+                clicsDev = 0;
+                actualizarIndicadorModoDev();
+            }
+        }
+
+        function actualizarIndicadorModoDev() {
+            let esDev = localStorage.getItem("gespyme_modo_dev") === "true";
+            let marca = document.getElementById("lblBrandText");
+            if (esDev) {
+                marca.innerHTML = "GesPyme <span style='color: #4ade80; font-size: 0.75rem;'>[DEV]</span>";
+            } else {
+                marca.innerText = "GesPyme";
+            }
+        }
 
         function obtenerPlanActual() {
             return localStorage.getItem("gespyme_plan") || "free";
@@ -290,6 +327,12 @@
         }
 
         function verificarRestriccionModulo(modulo) {
+            // SI ESTÁ ACTIVO EL MODO DESARROLLADOR, SALTA LAS RESTRICCIONES AUTOMÁTICAMENTE
+            if (localStorage.getItem("gespyme_modo_dev") === "true") {
+                alert(`🛠️ [MODO DEV] Acceso libre concedido al módulo de: ${modulo}`);
+                return;
+            }
+
             let planKey = obtenerPlanActual();
             let usoActual = obtenerUsoActual();
             
@@ -328,6 +371,10 @@
         }
 
         function verificarAccion(accion) {
+            if (localStorage.getItem("gespyme_modo_dev") === "true") {
+                alert(`🛠️ [MODO DEV] Acción permitida para: ${accion}`);
+                return;
+            }
             alert(`¡Acción permitida! Estás gestionando: ${accion}`);
         }
 
@@ -390,6 +437,7 @@
         }
 
         window.onload = function() {
+            actualizarIndicadorModoDev();
             let usuarioGuardado = localStorage.getItem("gespyme_usuario");
             if (usuarioGuardado) {
                 document.getElementById("welcome-banner").style.display = "none";
