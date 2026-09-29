@@ -14,7 +14,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-color); display: flex; height: 100vh; overflow: hidden; }
         
-        /* Banner de Bienvenida / Invitación Superior (Se oculta al registrarse) */
+        /* Banner superior de bienvenida */
         #welcome-banner {
             position: fixed; top: 0; left: 0; width: 100%; background: linear-gradient(135deg, #1a73e8, #2b3856);
             color: white; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center;
@@ -27,7 +27,7 @@
         }
         #welcome-banner button:hover { background: #f0f0f0; }
 
-        /* Modal de Registro rápido (Se abre al hacer clic en registrarse) */
+        /* Modal de Registro rápido */
         #auth-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.6); display: none; justify-content: center; align-items: center; z-index: 10000;
@@ -48,6 +48,22 @@
         }
         .close-modal { position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #888; }
 
+        /* Modal de Restricción Plan Pro */
+        #pro-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6); display: none; justify-content: center; align-items: center; z-index: 10000;
+        }
+        .pro-card {
+            background: white; padding: 2.5rem; border-radius: 12px; width: 90%; max-width: 420px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3); text-align: center; position: relative; border-top: 5px solid #ff9800;
+        }
+        .pro-card h2 { color: #d97706; margin-bottom: 0.5rem; font-size: 1.4rem; }
+        .pro-card p { color: #555; font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.4; }
+        .pro-btn {
+            background-color: #28a745; color: white; border: none; padding: 0.8rem 1.5rem;
+            border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; width: 100%;
+        }
+
         /* Menú lateral */
         sidebar { width: 250px; background-color: var(--sidebar-bg); color: white; display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; margin-top: 45px; }
         .sidebar-brand { padding: 1.2rem; font-size: 1.1rem; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
@@ -60,7 +76,7 @@
         /* Contenido principal */
         .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; margin-top: 45px; }
         header { background: white; padding: 0.8rem 2rem; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; }
-        .demo-badge { background: #e8f0fe; color: #1a73e8; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
+        .plan-badge { background: #e2e8f0; color: #475569; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
         .user-profile { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: #555; font-weight: 500; background: #f8f9fa; padding: 0.4rem 0.8rem; border-radius: 4px; border: 1px solid #ddd; }
         
         .container { padding: 2rem; max-width: 1200px; width: 100%; margin: 0 auto; }
@@ -76,11 +92,14 @@
         .action-icon { font-size: 1.5rem; }
         .action-text { font-size: 0.85rem; font-weight: 500; }
 
-        /* Facturas pendientes */
+        /* Tarjeta bloqueada para plan gratuito */
+        .locked-card { opacity: 0.6; position: relative; }
+        .lock-tag { font-size: 0.7rem; background: #ff9800; color: white; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
+
+        /* Resto de estilos */
         .filters-bar { display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; align-items: center; }
         .filters-bar select, .filters-bar input { padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.9rem; }
         .btn-primary { background-color: #28a745; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-weight: 500; text-decoration: none; display: inline-block; }
-        .btn-primary:hover { background-color: #218838; }
         
         table { width: 100%; border-collapse: collapse; text-align: left; margin-top: 1rem; }
         th, td { padding: 0.75rem; border-bottom: 1px solid #eee; font-size: 0.9rem; }
@@ -95,26 +114,36 @@
 </head>
 <body>
 
-    <!-- BANNER SUPERIOR DE BIENVENIDA (Invitación visible sin bloquear) -->
+    <!-- BANNER SUPERIOR DE BIENVENIDA -->
     <div id="welcome-banner">
         <div class="banner-info">
             <span>🚀</span>
             <div>
-                <strong>¡Bienvenido a GesPyme!</strong> Estás viendo una demostración. Gestiona facturas, clientes y órdenes fácilmente.
+                <strong>¡Bienvenido a GesPyme!</strong> Estás en el Plan Gratuito (Cotizaciones ilimitadas).
             </div>
         </div>
-        <button onclick="abrirModalRegistro()">Crear mi cuenta gratis</button>
+        <button onclick="abrirModalRegistro()">Crear mi cuenta</button>
     </div>
 
-    <!-- MODAL DE REGISTRO (Salta cuando quieren registrarse) -->
+    <!-- MODAL DE REGISTRO RÁPIDO -->
     <div id="auth-modal">
         <div class="auth-card">
             <button class="close-modal" onclick="cerrarModalRegistro()">×</button>
             <h2>⚙️ Únete a GesPyme</h2>
-            <p>Crea tu cuenta para guardar tus datos y acceder a todas las funciones.</p>
+            <p>Crea tu cuenta gratuita para empezar a emitir cotizaciones.</p>
             <input type="email" id="regEmail" placeholder="Tu correo electrónico">
             <input type="password" id="regPassword" placeholder="Crea una contraseña">
-            <button class="auth-btn" onclick="registrarYAcceder()">Registrarme e Ingresar</button>
+            <button class="auth-btn" onclick="registrarYAcceder()">Registrarme gratis</button>
+        </div>
+    </div>
+
+    <!-- MODAL DE RESTRICCIÓN PLAN PRO -->
+    <div id="pro-modal">
+        <div class="pro-card">
+            <button class="close-modal" onclick="cerrarModalPro()">×</button>
+            <h2>⭐ Función Exclusiva Plan Pro</h2>
+            <p id="pro-message">Esta herramienta (Facturas, Pagos y Órdenes) está disponible únicamente en la versión Pro de GesPyme.</p>
+            <a href="subscription.html" class="pro-btn">Ver Planes y Actualizar a Pro</a>
         </div>
     </div>
 
@@ -126,20 +155,17 @@
         <ul class="sidebar-menu">
             <li class="active"><a href="index.html">🏠 Panel</a></li>
             <li><a href="clientes.html">👥 Clientes</a></li>
-            <li><a href="facturas.html">📄 Facturas</a></li>
-            <li><a href="nueva-factura.html" class="sub-item">➕ Nueva factura</a></li>
-            <li><a href="cotizaciones.html">📊 Cotizaciones</a></li>
+            <!-- Funciones restringidas en plan gratuito -->
+            <li><a href="#" onclick="verificarPlanPro('Facturas')">📄 Facturas <span class="lock-tag">PRO</span></a></li>
+            <li><a href="cotizaciones.html">📊 Cotizaciones (Gratis)</a></li>
             <li><a href="nueva-cotizacion.html" class="sub-item">➕ Nueva cotización</a></li>
-            <li><a href="notas-credito.html">🔄 Notas de crédito</a></li>
-            <li><a href="orden-servicio.html">🛠 Orden de Servicio</a></li>
-            <li><a href="nueva-orden-servicio.html" class="sub-item">➕ Nueva orden</a></li>
-            <li><a href="pagos.html">💳 Pagos</a></li>
-            <li><a href="reembolsos.html">💸 Reembolsos</a></li>
+            <li><a href="#" onclick="verificarPlanPro('Notas de crédito')">🔄 Notas de crédito <span class="lock-tag">PRO</span></a></li>
+            <li><a href="#" onclick="verificarPlanPro('Órdenes de Servicio')">🛠 Orden de Servicio <span class="lock-tag">PRO</span></a></li>
+            <li><a href="#" onclick="verificarPlanPro('Pagos')">💳 Pagos <span class="lock-tag">PRO</span></a></li>
             <li><a href="articulos.html">📦 Artículos</a></li>
             <li><a href="informes.html">📈 Informes</a></li>
-            <li><a href="herramientas.html">⚙️ Herramientas</a></li>
             <li><a href="configuracion.html">🔧 Configuración</a></li>
-            <li><a href="subscription.html">⭐ Subscription</a></li>
+            <li><a href="subscription.html" style="color: #ffd700;">⭐ Subscription Pro</a></li>
             <li id="menuCerrarSesion" style="display:none;"><a href="#" onclick="cerrarSesion();" style="color: #ff9999;">🚪 Cerrar Sesión</a></li>
         </ul>
         <div class="sidebar-footer">
@@ -150,7 +176,7 @@
     <!-- Área Principal -->
     <div class="main-content">
         <header>
-            <span class="demo-badge">Modo Demostración</span>
+            <span class="plan-badge" id="lblPlanBadge">Plan Gratuito</span>
             <div class="user-profile">
                 <span>👤</span> <span id="lblUsuario">Visitante</span>
             </div>
@@ -158,64 +184,61 @@
 
         <div class="container">
             
-            <!-- Crear -->
+            <!-- Crear (Accesos Directos con Restricción) -->
             <div class="panel-section">
                 <h2>Crear</h2>
                 <div class="quick-actions">
-                    <div class="action-card" onclick="verificarAccion('Factura')">
-                        <span class="action-icon">📄</span>
-                        <span class="action-text">Factura</span>
-                    </div>
-                    <div class="action-card" onclick="verificarAccion('Cotización')">
+                    <!-- ACCESO PERMITIDO: COTIZACIÓN -->
+                    <a href="nueva-cotizacion.html" class="action-card">
                         <span class="action-icon">📊</span>
-                        <span class="action-text">Cotización</span>
+                        <span class="action-text">Cotización (Gratis)</span>
+                    </a>
+                    <!-- ACCESOS BLOQUEADOS PLAN GRATIS -->
+                    <div class="action-card locked-card" onclick="verificarPlanPro('Factura')">
+                        <span class="action-icon">📄</span>
+                        <span class="action-text">Factura <span class="lock-tag">PRO</span></span>
                     </div>
-                    <div class="action-card" onclick="verificarAccion('Orden de Servicio')">
+                    <div class="action-card locked-card" onclick="verificarPlanPro('Orden de Servicio')">
                         <span class="action-icon">🛠️</span>
-                        <span class="action-text">Orden Serv.</span>
+                        <span class="action-text">Orden Serv. <span class="lock-tag">PRO</span></span>
                     </div>
                     <div class="action-card" onclick="verificarAccion('Cliente')">
                         <span class="action-icon">👤</span>
                         <span class="action-text">Cliente</span>
                     </div>
-                    <div class="action-card" onclick="verificarAccion('Nota de crédito')">
+                    <div class="action-card locked-card" onclick="verificarPlanPro('Nota de crédito')">
                         <span class="action-icon">🔄</span>
-                        <span class="action-text">Nota crédito</span>
+                        <span class="action-text">Nota crédito <span class="lock-tag">PRO</span></span>
                     </div>
-                    <div class="action-card" onclick="verificarAccion('Pago')">
+                    <div class="action-card locked-card" onclick="verificarPlanPro('Pago')">
                         <span class="action-icon">💳</span>
-                        <span class="action-text">Pago</span>
+                        <span class="action-text">Pago <span class="lock-tag">PRO</span></span>
                     </div>
                 </div>
             </div>
 
-            <!-- Facturas pendientes -->
+            <!-- Cotizaciones recientes (Plan Gratis) -->
             <div class="panel-section">
-                <h2>Facturas pendientes</h2>
+                <h2>Cotizaciones Recientes</h2>
                 <div class="filters-bar">
-                    <select>
-                        <option>Período: Todos</option>
-                    </select>
-                    <input type="text" placeholder="Palabra clave: Cliente, Número">
-                    <button class="btn-primary" onclick="verificarAccion('Crear una factura')">Crear una factura</button>
+                    <input type="text" placeholder="Buscar cotización por cliente...">
+                    <a href="nueva-cotizacion.html" class="btn-primary">Crear una cotización</a>
                 </div>
                 <table>
                     <thead>
                         <tr>
                             <th>Fecha</th>
-                            <th>Número</th>
+                            <th>Nº Cotización</th>
                             <th>Cliente</th>
-                            <th>Importe a pagar</th>
+                            <th>Validez</th>
                             <th>Total</th>
-                            <th>Estado</th>
-                            <th>Enviado</th>
                             <th>Acción</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td colspan="8" style="text-align: center; color: #70757a; padding: 2rem;">
-                                No se han encontrado facturas en modo demo. <a href="#" onclick="abrirModalRegistro()" style="color: var(--primary-color);">Crea una cuenta para guardar tus registros.</a>
+                            <td colspan="6" style="text-align: center; color: #70757a; padding: 2rem;">
+                                No tienes cotizaciones creadas todavía. <a href="nueva-cotizacion.html" style="color: var(--primary-color);">¡Crea la primera ahora!</a>
                             </td>
                         </tr>
                     </tbody>
@@ -225,28 +248,26 @@
             <!-- Sección Inferior -->
             <div class="bottom-grid">
                 <div class="panel-section" style="margin-bottom: 0;">
-                    <h2>Primeros pasos en GesPyme</h2>
+                    <h2>Límite de la Versión Gratuita</h2>
                     <ul class="checklist">
-                        <li>Explora el diseño y la velocidad del panel</li>
-                        <li>Prueba a crear cotizaciones y órdenes de servicio</li>
-                        <li>Registra tu empresa de manera gratuita</li>
-                        <li>Genera reportes automáticos de ingresos</li>
+                        <li>Creación ilimitada de <strong>Cotizaciones</strong> y gestión de clientes.</li>
+                        <li>Las funciones de Facturas, Órdenes y Pagos requieren actualizar a <strong>Plan Pro</strong>.</li>
+                        <li>Soporte técnico y almacenamiento en la nube activo.</li>
                     </ul>
                 </div>
-                <div class="panel-section" style="margin-bottom: 0;">
-                    <h2>Ventajas del Sistema</h2>
-                    <p style="font-size: 0.85rem; color: #555; line-height: 1.4;">
-                        ✓ Todo centralizado en la nube.<br>
-                        ✓ Rápido, ligero y sin instalaciones complejas.<br>
-                        ✓ Ideal para técnicos y PyMEs.
+                <div class="panel-section" style="margin-bottom: 0; background: #fff8e1; border: 1px solid #ffe0b2;">
+                    <h2 style="color: #d97706;">⚡ Pásate a Pro</h2>
+                    <p style="font-size: 0.85rem; color: #555; line-height: 1.4; margin-bottom: 10px;">
+                        Desbloquea facturación electrónica, órdenes de servicio completas y reportes avanzados.
                     </p>
+                    <a href="subscription.html" style="font-size: 0.85rem; font-weight: bold; color: #d97706; text-decoration: none;">Ver detalles y precios →</a>
                 </div>
             </div>
 
         </div>
     </div>
 
-    <!-- Script de Lógica de Demostración e Interacción -->
+    <!-- Script de Lógica de Planes y Registro -->
     <script>
         function abrirModalRegistro() {
             document.getElementById("auth-modal").style.display = "flex";
@@ -256,16 +277,18 @@
             document.getElementById("auth-modal").style.display = "none";
         }
 
-        // Si intentan realizar una acción clave, los invitamos amablemente a registrarse
+        function cerrarModalPro() {
+            document.getElementById("pro-modal").style.display = "none";
+        }
+
+        // Función que bloquea las características PRO en el plan gratuito
+        function verificarPlanPro(nombreFuncion) {
+            document.getElementById("pro-message").innerHTML = `La función de <strong>${nombreFuncion}</strong> está reservada para el Plan Pro de GesPyme. ¡Actualiza tu cuenta para desbloquearla!`;
+            document.getElementById("pro-modal").style.display = "flex";
+        }
+
         function verificarAccion(accion) {
-            let usuarioGuardado = localStorage.getItem("gespyme_usuario");
-            if (!usuarioGuardado) {
-                if (confirm(`Para crear un/a "${accion}" necesitas tener tu propia cuenta guardada en GesPyme. ¿Deseas registrarte ahora de forma gratuita?`)) {
-                    abrirModalRegistro();
-                }
-            } else {
-                alert(`¡Acción permitida! Estás creando: ${accion}`);
-            }
+            alert(`¡Acción permitida! Estás gestionando: ${accion}`);
         }
 
         function registrarYAcceder() {
@@ -277,41 +300,43 @@
                 return;
             }
 
-            // Guardar sesión
+            // Guardar sesión y definir plan gratuito
             localStorage.setItem("gespyme_usuario", email);
+            localStorage.setItem("gespyme_plan", "free");
             
-            // Ocultar banner superior y modal
+            // Ocultar banner y modal de registro
             document.getElementById("welcome-banner").style.display = "none";
             document.getElementById("auth-modal").style.display = "none";
             
-            // Actualizar interfaz con el usuario real
+            // Actualizar interfaz
             document.getElementById("lblUsuario").innerText = email;
+            document.getElementById("lblPlanBadge").innerText = "Plan Gratuito (Activo)";
             document.getElementById("menuCerrarSesion").style.display = "block";
-            document.querySelector(".demo-badge").style.display = "none";
 
-            alert("¡Cuenta creada con éxito! Ya puedes utilizar todas las funciones.");
+            alert("¡Cuenta de prueba creada! Ya puedes generar tus cotizaciones gratis.");
 
             // Notificación automática a tu correo Refri234gonza@gmail.com
-            let asunto = encodeURIComponent("Nuevo usuario registrado en GesPyme");
-            let cuerpo = encodeURIComponent("Hola Maximiliano,\n\nUn nuevo usuario se ha registrado en la plataforma:\nCorreo: " + email + "\nFecha y Hora: " + new Date().toLocaleString());
+            let asunto = encodeURIComponent("Nuevo usuario en Plan Gratuito - GesPyme");
+            let cuerpo = encodeURIComponent("Hola Maximiliano,\n\nUn nuevo usuario se registró en el plan gratuito:\nCorreo: " + email + "\nFecha y Hora: " + new Date().toLocaleString());
             window.location.href = `mailto:Refri234gonza@gmail.com?subject=${asunto}&body=${cuerpo}`;
         }
 
         function cerrarSesion() {
             if (confirm("¿Estás seguro de que deseas cerrar sesión?")) {
                 localStorage.removeItem("gespyme_usuario");
+                localStorage.removeItem("gespyme_plan");
                 location.reload();
             }
         }
 
-        // Al cargar la página, verificar si ya estaba registrado de antes
+        // Al cargar la página, comprobar si ya está registrado
         window.onload = function() {
             let usuarioGuardado = localStorage.getItem("gespyme_usuario");
             if (usuarioGuardado) {
                 document.getElementById("welcome-banner").style.display = "none";
                 document.getElementById("lblUsuario").innerText = usuarioGuardado;
+                document.getElementById("lblPlanBadge").innerText = "Plan Gratuito (Activo)";
                 document.getElementById("menuCerrarSesion").style.display = "block";
-                document.querySelector(".demo-badge").style.display = "none";
             }
         };
     </script>
