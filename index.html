@@ -55,7 +55,7 @@
         }
         .close-modal { position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #888; }
 
-        /* Modal de Restricción Plan Pro / Límites */
+        /* Modal de Restricción de Planes y Límites */
         #pro-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.6); display: none; justify-content: center; align-items: center; z-index: 10000;
@@ -98,10 +98,6 @@
         .action-card:hover { background: #e9ecef; border-color: #cbd3da; }
         .action-icon { font-size: 1.5rem; }
         .action-text { font-size: 0.85rem; font-weight: 500; }
-
-        /* Tarjeta bloqueada para plan gratuito */
-        .locked-card { opacity: 0.6; position: relative; }
-        .lock-tag { font-size: 0.7rem; background: #ff9800; color: white; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
 
         /* Resto de estilos */
         .filters-bar { display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; align-items: center; }
@@ -148,13 +144,13 @@
     <div id="pro-modal">
         <div class="pro-card">
             <button class="close-modal" onclick="cerrarModalPro()">×</button>
-            <h2>⭐ Límite de Plan Alcanzado</h2>
-            <p id="pro-message">Has alcanzado el límite de documentos permitidos para tu plan actual. Actualiza tu suscripción para continuar.</p>
+            <h2>⭐ Función Exclusiva / Límite de Plan</h2>
+            <p id="pro-message">Has alcanzado el límite de tu plan actual o estás intentando acceder a una función Pro.</p>
             <a href="subscription.html" class="pro-btn">Ver Planes y Actualizar</a>
         </div>
     </div>
 
-    <!-- Menú Lateral -->
+    <!-- Menú Lateral BLINDADO -->
     <sidebar>
         <div class="sidebar-brand">
             <span>⚙️</span> GesPyme
@@ -162,12 +158,18 @@
         <ul class="sidebar-menu">
             <li class="active"><a href="index.html">🏠 Panel</a></li>
             <li><a href="clientes.html">👥 Clientes</a></li>
-            <li><a href="#" onclick="verificarLimiteYAcceder('Facturas', 'factura')">📄 Facturas</a></li>
+            
+            <!-- Bloqueadas / Limitadas estrictamente -->
+            <li><a href="#" onclick="verificarRestriccionModulo('facturas')">📄 Facturas</a></li>
+            <li><a href="#" onclick="verificarRestriccionModulo('facturas')">➕ Nueva factura</a></li>
+            
             <li><a href="cotizaciones.html">📊 Cotizaciones</a></li>
-            <li><a href="#" onclick="verificarLimiteYAcceder('Nueva Cotización', 'cotizacion')" class="sub-item">➕ Nueva cotización</a></li>
-            <li><a href="#" onclick="verificarLimiteYAcceder('Notas de crédito', 'nota')">🔄 Notas de crédito</a></li>
-            <li><a href="#" onclick="verificarLimiteYAcceder('Órdenes de Servicio', 'orden')">🛠 Orden de Servicio</a></li>
-            <li><a href="#" onclick="verificarLimiteYAcceder('Pagos', 'pago')">💳 Pagos</a></li>
+            <li><a href="nueva-cotizacion.html" class="sub-item">➕ Nueva cotización</a></li>
+            
+            <li><a href="#" onclick="verificarRestriccionModulo('notas')">🔄 Notas de crédito</a></li>
+            <li><a href="#" onclick="verificarRestriccionModulo('ordenes')">🛠 Orden de Servicio</a></li>
+            <li><a href="#" onclick="verificarRestriccionModulo('pagos')">💳 Pagos</a></li>
+            
             <li><a href="articulos.html">📦 Artículos</a></li>
             <li><a href="informes.html">📈 Informes</a></li>
             <li><a href="configuracion.html">🔧 Configuración</a></li>
@@ -190,19 +192,19 @@
 
         <div class="container">
             
-            <!-- Crear (Accesos Directos con Restricción de Límites) -->
+            <!-- Crear (Accesos Directos con Control Estricto) -->
             <div class="panel-section">
                 <h2>Crear</h2>
                 <div class="quick-actions">
-                    <div class="action-card" onclick="verificarLimiteYAcceder('Cotización', 'cotizacion')">
+                    <a href="nueva-cotizacion.html" class="action-card">
                         <span class="action-icon">📊</span>
                         <span class="action-text">Cotización</span>
-                    </div>
-                    <div class="action-card" onclick="verificarLimiteYAcceder('Factura', 'factura')">
+                    </a>
+                    <div class="action-card" onclick="verificarRestriccionModulo('facturas')">
                         <span class="action-icon">📄</span>
                         <span class="action-text">Factura</span>
                     </div>
-                    <div class="action-card" onclick="verificarLimiteYAcceder('Orden de Servicio', 'orden')">
+                    <div class="action-card" onclick="verificarRestriccionModulo('ordenes')">
                         <span class="action-icon">🛠️</span>
                         <span class="action-text">Orden Serv.</span>
                     </div>
@@ -210,11 +212,11 @@
                         <span class="action-icon">👤</span>
                         <span class="action-text">Cliente</span>
                     </div>
-                    <div class="action-card" onclick="verificarLimiteYAcceder('Nota de crédito', 'nota')">
+                    <div class="action-card" onclick="verificarRestriccionModulo('notas')">
                         <span class="action-icon">🔄</span>
                         <span class="action-text">Nota crédito</span>
                     </div>
-                    <div class="action-card" onclick="verificarLimiteYAcceder('Pago', 'pago')">
+                    <div class="action-card" onclick="verificarRestriccionModulo('pagos')">
                         <span class="action-icon">💳</span>
                         <span class="action-text">Pago</span>
                     </div>
@@ -226,7 +228,7 @@
                 <h2>Cotizaciones Recientes</h2>
                 <div class="filters-bar">
                     <input type="text" placeholder="Buscar cotización por cliente...">
-                    <button class="btn-primary" onclick="verificarLimiteYAcceder('Crear una cotización', 'cotizacion')">Crear una cotización</button>
+                    <a href="nueva-cotizacion.html" class="btn-primary">Crear una cotización</a>
                 </div>
                 <table>
                     <thead>
@@ -242,7 +244,7 @@
                     <tbody>
                         <tr>
                             <td colspan="6" style="text-align: center; color: #70757a; padding: 2rem;">
-                                No tienes cotizaciones creadas todavía. <a href="#" onclick="verificarLimiteYAcceder('Crear una cotización', 'cotizacion')" style="color: var(--primary-color);">¡Crea la primera ahora!</a>
+                                No tienes cotizaciones creadas todavía. <a href="nueva-cotizacion.html" style="color: var(--primary-color);">¡Crea la primera ahora!</a>
                             </td>
                         </tr>
                     </tbody>
@@ -254,8 +256,8 @@
                 <div class="panel-section" style="margin-bottom: 0;">
                     <h2>Límites de tu Plan Actual</h2>
                     <ul class="checklist" id="listaLimitesInfo">
-                        <li>Plan Gratuito: Limitado a 5 documentos mensuales.</li>
-                        <li>Actualiza a un plan superior para desbloquear capacidad extendida.</li>
+                        <li>Plan Gratuito: Cotizaciones ilimitadas.</li>
+                        <li>Facturas, Órdenes y Notas de Crédito requieren actualización a un plan superior.</li>
                     </ul>
                 </div>
                 <div class="panel-section" style="margin-bottom: 0; background: #fff8e1; border: 1px solid #ffe0b2;">
@@ -270,9 +272,8 @@
         </div>
     </div>
 
-    <!-- Script de Lógica de Planes, Límites y Registro con EmailJS -->
+    <!-- Script de Lógica de Seguridad y Planes -->
     <script>
-        // Configuración de límites por plan (ejemplo de estructura)
         const PLANES_LIMITES = {
             'free': { limite: 5, nombre: 'Plan Gratuito' },
             'basico': { limite: 20, nombre: 'Plan Básico' },
@@ -290,24 +291,34 @@
             return uso ? parseInt(uso) : 0;
         }
 
-        function verificarLimiteYAcceder(nombreAccion, tipoDocumento) {
+        // FUNCIÓN CENTRAL DE SEGURIDAD PARA BLOQUEAR MÓDULOS PRO / LÍMITES
+        function verificarRestriccionModulo(modulo) {
             let planKey = obtenerPlanActual();
-            let planInfo = PLANES_LIMITES[planKey] || PLANES_LIMITES['free'];
             let usoActual = obtenerUsoActual();
-
-            // Verificar si excede el límite del plan
-            if (usoActual >= planInfo.limite) {
-                document.getElementById("pro-message").innerHTML = `Has alcanzado el límite de <strong>${planInfo.limite} documentos</strong> de tu <strong>${planInfo.nombre}</strong>.<br><br>Actualiza tu plan para seguir creando ${nombreAccion.toLowerCase()}.`;
+            
+            // Si está en plan gratuito y trata de entrar a módulos restringidos (facturas, notas, órdenes, pagos)
+            if (planKey === 'free' && (modulo === 'facturas' || modulo === 'notas' || modulo === 'ordenes' || modulo === 'pagos')) {
+                let nombresModulos = {
+                    'facturas': 'Facturación',
+                    'notas': 'Notas de Crédito',
+                    'ordenes': 'Órdenes de Servicio',
+                    'pagos': 'Gestión de Pagos'
+                };
+                document.getElementById("pro-message").innerHTML = `El módulo de <strong>${nombresModulos[modulo]}</strong> está reservado para planes superiores.<br><br>Actualiza tu suscripción para desbloquearlo y potenciar tu negocio.`;
                 document.getElementById("pro-modal").style.display = "flex";
                 return;
             }
 
-            // Si pasa la validación, incrementar uso (simulación) y permitir avanzar
-            localStorage.setItem("gespyme_uso_documentos", usoActual + 1);
-            alert(`¡Acción permitida! Has abierto: ${nombreAccion}. (Documentos usados: ${usoActual + 1}/${planInfo.limite})`);
-            
-            // Aquí puedes redirigir a la pantalla correspondiente según el tipo si lo deseas:
-            // if(tipoDocumento === 'cotizacion') { window.location.href = 'nueva-cotizacion.html'; }
+            // Validación por límite general de documentos alcanzado
+            let planInfo = PLANES_LIMITES[planKey] || PLANES_LIMITES['free'];
+            if (usoActual >= planInfo.limite) {
+                document.getElementById("pro-message").innerHTML = `Has alcanzado el límite de <strong>${planInfo.limite} documentos</strong> de tu <strong>${planInfo.nombre}</strong>.<br><br>Actualiza tu plan para continuar operando.`;
+                document.getElementById("pro-modal").style.display = "flex";
+                return;
+            }
+
+            // Si pasa todas las validaciones
+            alert(`¡Acceso concedido al módulo de ${modulo}!`);
         }
 
         function abrirModalRegistro() {
@@ -335,23 +346,19 @@
                 return;
             }
 
-            // Guardar sesión y definir plan gratuito inicial con contador en 0
             localStorage.setItem("gespyme_usuario", email);
             localStorage.setItem("gespyme_plan", "free");
             if(!localStorage.getItem("gespyme_uso_documentos")) {
                 localStorage.setItem("gespyme_uso_documentos", "0");
             }
             
-            // Ocultar banner y modal de registro
             document.getElementById("welcome-banner").style.display = "none";
             document.getElementById("auth-modal").style.display = "none";
             
-            // Actualizar interfaz
             actualizarInterfazUsuario(email);
 
-            alert("¡Cuenta creada con éxito! Tienes 5 documentos disponibles en tu Plan Gratuito.");
+            alert("¡Cuenta creada con éxito! Ya puedes operar con tu Plan Gratuito.");
 
-            // Parámetros para EmailJS
             let templateParams = {
                 nombre: email,
                 email: email,
@@ -359,10 +366,9 @@
                 title: "Nuevo Registro de Usuario en GesPyme"
             };
 
-            // Envío automático al correo configurado
             emailjs.send('service_dz1b36', 'template_khlwu4x', templateParams)
                 .then(function(response) {
-                    console.log('Correo de notificación enviado con éxito.', response.status, response.text);
+                    console.log('Notificación enviada con éxito.');
                 }, function(error) {
                     console.log('Error al enviar notificación:', error);
                 });
@@ -387,7 +393,6 @@
             }
         }
 
-        // Al cargar la página, comprobar sesión y límites
         window.onload = function() {
             let usuarioGuardado = localStorage.getItem("gespyme_usuario");
             if (usuarioGuardado) {
