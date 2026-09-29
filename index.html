@@ -58,6 +58,14 @@
         .checklist { list-style: none; padding-left: 0; }
         .checklist li { padding: 0.4rem 0; font-size: 0.9rem; color: #555; display: flex; align-items: center; gap: 8px; }
         .checklist li::before { content: "•"; color: var(--primary-color); font-weight: bold; }
+
+        /* Ventana Modal Personalizada */
+        #modalRegistro { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: white; padding: 2rem; border-radius: 8px; width: 90%; max-width: 400px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .modal-content h3 { margin-bottom: 1rem; color: var(--sidebar-bg); }
+        .modal-content input { width: 100%; padding: 0.7rem; margin-bottom: 1rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.9rem; }
+        .modal-buttons { display: flex; justify-content: flex-end; gap: 10px; }
+        .btn-cancel { background: #ccc; color: #333; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -84,7 +92,7 @@
             <li><a href="herramientas.html">⚙️ Herramientas</a></li>
             <li><a href="configuracion.html">🔧 Configuración</a></li>
             <li><a href="subscription.html">⭐ Subscription</a></li>
-            <li><a href="#" onclick="abrirRegistro();">🔑 Crear Usuario</a></li>
+            <li><a href="#" onclick="abrirModal();">🔑 Crear Usuario</a></li>
             <li><a href="#" onclick="cerrarSesion();" style="color: #ff9999;">🚪 Cerrar Sesión</a></li>
         </ul>
         <div class="sidebar-footer">
@@ -95,7 +103,7 @@
     <!-- Área Principal -->
     <div class="main-content">
         <header>
-            <a href="#" class="user-profile" onclick="abrirRegistro();">
+            <a href="#" class="user-profile" onclick="abrirModal();">
                 <span>👤</span> <span id="lblUsuario">Mi Cuenta / Registrarse</span>
             </a>
         </header>
@@ -190,22 +198,49 @@
         </div>
     </div>
 
-    <!-- Script de registro y cierre de sesión -->
-    <script>
-        function abrirRegistro() {
-            let email = prompt("Ingrese su Correo electrónico para registrarse en GesPyme:");
-            if (email) {
-                let password = prompt("Cree una Contraseña de acceso:");
-                if (password) {
-                    localStorage.setItem("gespyme_usuario", email);
-                    document.getElementById("lblUsuario").innerText = email;
-                    alert("¡Cuenta creada con éxito! Bienvenido a GesPyme.");
+    <!-- Ventana Modal de Registro -->
+    <div id="modalRegistro">
+        <div class="modal-content">
+            <h3>Registro de Usuario</h3>
+            <input type="email" id="txtEmail" placeholder="Correo electrónico">
+            <input type="password" id="txtPassword" placeholder="Contraseña">
+            <div class="modal-buttons">
+                <button class="btn-cancel" onclick="cerrarModal()">Cancelar</button>
+                <button class="btn-primary" onclick="guardarRegistro()">Registrarse</button>
+            </div>
+        </div>
+    </div>
 
-                    let asunto = encodeURIComponent("Nuevo usuario registrado en GesPyme");
-                    let cuerpo = encodeURIComponent("Hola Maximiliano,\n\nUn nuevo usuario se ha registrado en la plataforma:\nCorreo: " + email + "\nFecha y Hora: " + new Date().toLocaleString());
-                    window.location.href = `mailto:maxidasilva90@gmail.com?subject=${asunto}&body=${cuerpo}`;
-                }
+    <!-- Scripts de Control -->
+    <script>
+        function abrirModal() {
+            document.getElementById("modalRegistro").style.display = "flex";
+        }
+
+        function cerrarModal() {
+            document.getElementById("modalRegistro").style.display = "none";
+        }
+
+        function guardarRegistro() {
+            let email = document.getElementById("txtEmail").value.trim();
+            let password = document.getElementById("txtPassword").value.trim();
+
+            if (email === "" || password === "") {
+                alert("Por favor completa ambos campos.");
+                return;
             }
+
+            // Guardar sesión localmente
+            localStorage.setItem("gespyme_usuario", email);
+            document.getElementById("lblUsuario").innerText = email;
+            cerrarModal();
+
+            alert("¡Cuenta creada con éxito! Bienvenido a GesPyme.");
+
+            // Notificación automática a tu correo Refri234gonza@gmail.com
+            let asunto = encodeURIComponent("Nuevo usuario registrado en GesPyme");
+            let cuerpo = encodeURIComponent("Hola Maximiliano,\n\nUn nuevo usuario se ha registrado en la plataforma:\nCorreo: " + email + "\nFecha y Hora: " + new Date().toLocaleString());
+            window.location.href = `mailto:Refri234gonza@gmail.com?subject=${asunto}&body=${cuerpo}`;
         }
 
         function cerrarSesion() {
