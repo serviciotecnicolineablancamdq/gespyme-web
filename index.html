@@ -28,7 +28,7 @@
         
         /* Tarjetas de Acceso Rápido */
         .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
-        .card { background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.2s; }
+        .card { background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.2s; text-decoration: none; color: inherit; display: block; }
         .card:hover { transform: translateY(-3px); }
         .card h3 { font-size: 1.1rem; color: var(--primary-color); margin-bottom: 0.5rem; }
         .card p { font-size: 0.9rem; color: #666; }
@@ -43,18 +43,18 @@
 </head>
 <body>
 
-    <!-- Menú Lateral -->
+    <!-- Menú Lateral con Enlaces -->
     <sidebar>
         <div class="sidebar-brand">
             <span>⚙️</span> GesPyme
         </div>
         <ul class="sidebar-menu">
-            <li class="active"><a href="#">Panel Principal</a></li>
-            <li><a href="#">Clientes</a></li>
-            <li><a href="#">Facturas</a></li>
-            <li><a href="#">Cotizaciones</a></li>
-            <li><a href="#">Artículos / Servicios</a></li>
-            <li><a href="#">Configuración</a></li>
+            <li class="active"><a href="index.html">Panel Principal</a></li>
+            <li><a href="clientes.html">Clientes</a></li>
+            <li><a href="facturas.html">Facturas</a></li>
+            <li><a href="cotizaciones.html">Cotizaciones</a></li>
+            <li><a href="articulos.html">Artículos / Servicios</a></li>
+            <li><a href="configuracion.html">Configuración</a></li>
         </ul>
     </sidebar>
 
@@ -66,27 +66,27 @@
         </header>
 
         <div class="container">
-            <!-- Accesos Rápidos (Crear) -->
+            <!-- Accesos Rápidos -->
             <div class="cards-grid">
-                <div class="card">
+                <a href="facturas.html" class="card">
                     <h3>➕ Nueva Factura</h3>
                     <p>Emite comprobantes para tus clientes rápidamente.</p>
-                </div>
-                <div class="card">
+                </a>
+                <a href="clientes.html" class="card">
                     <h3>👤 Nuevo Cliente</h3>
                     <p>Registra empresas, comercios o monotributistas.</p>
-                </div>
-                <div class="card">
+                </a>
+                <a href="articulos.html" class="card">
                     <h3>📦 Nuevo Artículo</h3>
                     <p>Carga repuestos, servicios técnicos o productos.</p>
-                </div>
-                <div class="card">
+                </a>
+                <a href="cotizaciones.html" class="card">
                     <h3>📊 Cotización</h3>
                     <p>Prepara presupuestos detallados.</p>
-                </div>
+                </a>
             </div>
 
-            <!-- Tabla de Facturas Pendientes / Actividad -->
+            <!-- Tabla de Actividad -->
             <div class="panel-section">
                 <h2>Facturas Pendientes</h2>
                 <table>
@@ -102,7 +102,7 @@
                     <tbody>
                         <tr>
                             <td colspan="5" style="text-align: center; color: #70757a; padding: 2rem;">
-                                No hay facturas pendientes registradas por el momentoi. ¡Crea la primera!
+                                No hay facturas pendientes registradas por el momento. ¡Crea la primera!
                             </td>
                         </tr>
                     </tbody>
