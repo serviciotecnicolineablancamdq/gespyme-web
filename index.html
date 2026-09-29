@@ -362,9 +362,11 @@
 
             emailjs.send('service_dz1b36', 'template_khlwu4x', templateParams)
                 .then(function(response) {
-                    console.log('Notificación enviada con éxito.');
+                    console.log('Notificación enviada con éxito.', response.status, response.text);
+                    alert("¡Notificación enviada por correo con éxito!");
                 }, function(error) {
                     console.log('Error al enviar notificación:', error);
+                    alert("Error al enviar el correo de EmailJS: " + JSON.stringify(error));
                 });
         }
 
