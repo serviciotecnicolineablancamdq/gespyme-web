@@ -55,6 +55,18 @@
         .btn-primary:hover { background-color: #218838; }
         .btn-secondary { background-color: #6c757d; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-weight: 500; text-decoration: none; display: inline-block; font-size: 0.95rem; }
         .btn-secondary:hover { background-color: #5a6268; }
+
+        /* Estilo exclusivo para la impresión en PDF */
+        @media print {
+            sidebar, header, .form-actions, .panel-section h2, .form-row, .invoice-items-table input { display: none !important; }
+            body { background: white; height: auto; overflow: visible; }
+            .main-content { overflow: visible; }
+            .container { padding: 0; max-width: 100%; }
+            .panel-section { box-shadow: none; padding: 0; margin: 0; }
+            #pdf-preview { display: block !important; border: none; padding: 20px; }
+        }
+
+        #pdf-preview { display: none; }
     </style>
 </head>
 <body>
@@ -96,30 +108,31 @@
         <div class="container">
             <div class="panel-section">
                 <h2>Nueva Factura</h2>
-                <form onsubmit="event.preventDefault(); alert('Factura creada con éxito'); window.location.href='facturas.html';">
+                <form id="facturaForm" onsubmit="generarPDF(event)">
                     
                     <div class="form-row">
                         <div class="form-group">
                             <label>Cliente</label>
-                            <select required>
+                            <select id="clienteSelect" required>
                                 <option value="">Seleccione un cliente...</option>
-                                <option value="1">Ejemplo: Juan Pérez</option>
+                                <option value="Juan Pérez">Juan Pérez</option>
+                                <option value="Empresa S.A.">Empresa S.A.</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label>Número de Factura</label>
-                            <input type="text" value="FAC-0001" required>
+                            <input type="text" id="numFactura" value="FAC-0001" required>
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
                             <label>Fecha de Emisión</label>
-                            <input type="date" required>
+                            <input type="date" id="fechaEmision" required>
                         </div>
                         <div class="form-group">
                             <label>Fecha de Vencimiento</label>
-                            <input type="date" required>
+                            <input type="date" id="fechaVencimiento" required>
                         </div>
                     </div>
 
@@ -135,9 +148,9 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td><input type="text" placeholder="Concepto o descripción..."></td>
-                                <td><input type="number" id="cantidad" value="1" min="1" oninput="calcularTotal()"></td>
-                                <td><input type="number" id="precio" placeholder="0.00" step="any" oninput="calcularTotal()"></td>
+                                <td><input type="text" id="descripcionItem" placeholder="Concepto o descripción..." required></td>
+                                <td><input type="number" id="cantidad" value="1" min="1" oninput="calcularTotal()" required></td>
+                                <td><input type="number" id="precio" placeholder="0.00" step="any" oninput="calcularTotal()" required></td>
                                 <td><input type="text" id="totalItem" value="0.00" readonly style="background-color: #f8f9fa;"></td>
                             </tr>
                         </tbody>
@@ -161,8 +174,41 @@
                         </div>
                     </div>
 
+                    <!-- Plantilla oculta que se convierte en PDF al imprimir -->
+                    <div id="pdf-preview" style="background: white; padding: 20px; font-family: sans-serif;">
+                        <h1 style="color: #1a73e8; margin-bottom: 5px;">FACTURA</h1>
+                        <p><strong>Nº Factura:</strong> <span id="lblNum">FAC-0001</span></p>
+                        <p><strong>Fecha de Emisión:</strong> <span id="lblEmision"></span></p>
+                        <p><strong>Fecha de Vencimiento:</strong> <span id="lblVencimiento"></span></p>
+                        <hr style="margin: 15px 0; border: 0; border-top: 1px solid #ccc;">
+                        <p><strong>Cliente:</strong> <span id="lblCliente"></span></p>
+                        <br>
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background: #f8f9fa; border-bottom: 2px solid #ddd;">
+                                    <th style="text-align: left; padding: 8px;">Descripción</th>
+                                    <th style="text-align: center; padding: 8px;">Cant.</th>
+                                    <th style="text-align: right; padding: 8px;">Precio Unit.</th>
+                                    <th style="text-align: right; padding: 8px;">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid #eee;">
+                                    <td id="lblDesc" style="padding: 8px;"></td>
+                                    <td id="lblCant" style="text-align: center; padding: 8px;"></td>
+                                    <td id="lblPrecioUnit" style="text-align: right; padding: 8px;"></td>
+                                    <td id="lblTotalItem" style="text-align: right; padding: 8px;"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br>
+                        <div style="text-align: right; font-size: 1.1rem;">
+                            <p><strong>Total a Pagar: <span id="lblTotalFinal" style="color: #1a73e8;">$0.00</span></strong></p>
+                        </div>
+                    </div>
+
                     <div class="form-actions">
-                        <button type="submit" class="btn-primary">Generar Factura</button>
+                        <button type="submit" class="btn-primary">Generar y Descargar PDF</button>
                         <a href="facturas.html" class="btn-secondary">Cancelar</a>
                     </div>
                 </form>
@@ -171,6 +217,9 @@
     </div>
 
     <script>
+        // Poner fecha de hoy por defecto
+        document.getElementById('fechaEmision').valueAsDate = new Date();
+
         function calcularTotal() {
             let cantidad = parseFloat(document.getElementById('cantidad').value) || 0;
             let precio = parseFloat(document.getElementById('precio').value) || 0;
@@ -179,6 +228,24 @@
             document.getElementById('totalItem').value = total.toFixed(2);
             document.getElementById('subtotalText').innerText = '$' + total.toFixed(2);
             document.getElementById('totalFinalText').innerText = '$' + total.toFixed(2);
+        }
+
+        function generarPDF(event) {
+            event.preventDefault();
+
+            // Rellenar la plantilla oculta con los datos del formulario
+            document.getElementById('lblNum').innerText = document.getElementById('numFactura').value;
+            document.getElementById('lblEmision').innerText = document.getElementById('fechaEmision').value;
+            document.getElementById('lblVencimiento').innerText = document.getElementById('fechaVencimiento').value;
+            document.getElementById('lblCliente').innerText = document.getElementById('clienteSelect').value;
+            document.getElementById('lblDesc').innerText = document.getElementById('descripcionItem').value;
+            document.getElementById('lblCant').innerText = document.getElementById('cantidad').value;
+            document.getElementById('lblPrecioUnit').innerText = '$' + parseFloat(document.getElementById('precio').value || 0).toFixed(2);
+            document.getElementById('lblTotalItem').innerText = '$' + document.getElementById('totalItem').value;
+            document.getElementById('lblTotalFinal').innerText = '$' + document.getElementById('totalItem').value;
+
+            // Abrir el diálogo de impresión del navegador configurado como "Guardar como PDF"
+            window.print();
         }
     </script>
 
