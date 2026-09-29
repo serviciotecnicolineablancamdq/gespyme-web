@@ -21,7 +21,7 @@
         .container { padding: 2rem; max-width: 1200px; width: 100%; margin: 0 auto; }
         .panel-section { background: white; border-radius: 8px; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 2rem; }
         .panel-section h2 { margin-bottom: 1rem; font-size: 1.1rem; color: #333; display: flex; justify-content: space-between; align-items: center; }
-        .btn-primary { background-color: #28a745; color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 4px; cursor: pointer; font-weight: 500; text-decoration: none; font-size: 0.9rem; }
+        .btn-primary { background-color: #28a745; color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 4px; cursor: pointer; font-weight: 500; text-decoration: none; font-size: 0.9rem; display: inline-block; }
         .btn-primary:hover { background-color: #218838; }
         table { width: 100%; border-collapse: collapse; text-align: left; margin-top: 1rem; }
         th, td { padding: 0.75rem; border-bottom: 1px solid #eee; font-size: 0.9rem; }
@@ -35,9 +35,12 @@
             <li><a href="index.html">Panel</a></li>
             <li><a href="clientes.html">Clientes</a></li>
             <li><a href="facturas.html">Facturas</a></li>
+            <li><a href="nueva-factura.html" class="sub-item">Nueva factura</a></li>
             <li><a href="cotizaciones.html">Cotizaciones</a></li>
+            <li><a href="nueva-cotizacion.html" class="sub-item">Nueva cotización</a></li>
             <li><a href="notas-credito.html">Notas de crédito</a></li>
             <li><a href="orden-servicio.html">Orden de Servicio</a></li>
+            <li><a href="nueva-orden-servicio.html" class="sub-item">Nueva orden</a></li>
             <li><a href="pagos.html">Pagos</a></li>
             <li><a href="reembolsos.html">Reembolsos</a></li>
             <li><a href="articulos.html">Artículos</a></li>
@@ -54,7 +57,7 @@
             <div class="panel-section">
                 <h2>
                     <span>Herramientas - Importación de Registros</span>
-                    <button class="btn-primary" onclick="alert('Funcionalidad de importación masiva habilitada.');">Importar artículos</button>
+                    <a href="importar-articulos.html" class="btn-primary">Importar artículos</a>
                 </h2>
                 <p style="font-size: 0.85rem; color: #666; margin-bottom: 1rem;">Historia de los registros importados desde archivos externos (CSV / Excel).</p>
                 <table>
