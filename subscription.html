@@ -24,7 +24,7 @@
 
         .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
         header { background: white; padding: 0.8rem 2rem; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: flex-end; align-items: center; }
-        .user-profile { font-size: 0.9rem; color: #555; font-weight: 500; }
+        .user-profile { font-size: 0.9rem; color: #555; font-weight: 500; display: flex; align-items: center; gap: 8px; }
         
         .container { padding: 2rem; max-width: 1000px; width: 100%; margin: 0 auto; }
         
@@ -57,27 +57,56 @@
         .modal-box p { font-size: 0.9rem; color: #555; margin-bottom: 1rem; line-height: 1.4; }
         .modal-box input { width: 100%; padding: 0.6rem; border: 1px solid #ccc; border-radius: 4px; background: #f8f9fa; font-size: 0.9rem; margin-bottom: 1rem; }
         .btn-close { background-color: #6c757d; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; width: 100%; font-weight: 500; }
+
+        /* Modal de Restricción de Planes */
+        #pro-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6); display: none; justify-content: center; align-items: center; z-index: 10000;
+        }
+        .pro-card {
+            background: white; padding: 2.5rem; border-radius: 12px; width: 90%; max-width: 420px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3); text-align: center; position: relative; border-top: 5px solid #ff9800;
+        }
+        .pro-card h2 { color: #d97706; margin-bottom: 0.5rem; font-size: 1.4rem; border: none; padding: 0; }
+        .pro-card p { color: #555; font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.4; }
+        .pro-btn {
+            background-color: #28a745; color: white; border: none; padding: 0.8rem 1.5rem;
+            border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; width: 100%;
+        }
+        .close-modal { position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #888; }
     </style>
 </head>
 <body>
+
+    <!-- MODAL DE RESTRICCIÓN DE PLANES -->
+    <div id="pro-modal">
+        <div class="pro-card">
+            <button class="close-modal" onclick="cerrarModalPro()">×</button>
+            <h2>⭐ Función Exclusiva</h2>
+            <p id="pro-message">Este módulo está reservado para planes superiores.</p>
+            <a href="subscription.html" class="pro-btn">Ver Planes y Actualizar</a>
+        </div>
+    </div>
 
     <sidebar>
         <div class="sidebar-brand"><span>⚙️</span> GesPyme</div>
         <ul class="sidebar-menu">
             <li><a href="index.html">Panel</a></li>
             <li><a href="clientes.html">Clientes</a></li>
-            <li><a href="facturas.html">Facturas</a></li>
-            <li><a href="nueva-factura.html" class="sub-item">Nueva factura</a></li>
+            <li><a href="#" onclick="verificarRestriccionModulo('facturas')">Facturas</a></li>
+            <li><a href="#" onclick="verificarRestriccionModulo('facturas')" class="sub-item">Nueva factura</a></li>
             <li><a href="cotizaciones.html">Cotizaciones</a></li>
             <li><a href="nueva-cotizacion.html" class="sub-item">Nueva cotización</a></li>
-            <li><a href="notas-credito.html">Notas de crédito</a></li>
-            <li><a href="pagos.html">Pagos</a></li>
+            <li><a href="#" onclick="verificarRestriccionModulo('notas')">Notas de crédito</a></li>
+            <li><a href="#" onclick="verificarRestriccionModulo('ordenes')">Orden de Servicio</a></li>
+            <li><a href="#" onclick="verificarRestriccionModulo('ordenes')" class="sub-item">Nueva orden</a></li>
+            <li><a href="#" onclick="verificarRestriccionModulo('pagos')">Pagos</a></li>
             <li><a href="reembolsos.html">Reembolsos</a></li>
             <li><a href="articulos.html">Artículos</a></li>
             <li><a href="informes.html">Informes</a></li>
             <li><a href="herramientas.html">Herramientas</a></li>
             <li><a href="configuracion.html">Configuración</a></li>
-            <li class="active"><a href="subscription.html">Subscription</a></li>
+            <li class="active"><a href="subscription.html" style="color: #ffd700;">Subscription Pro</a></li>
         </ul>
         <div class="sidebar-footer">
             Ayuda<br>
@@ -89,7 +118,11 @@
     </sidebar>
 
     <div class="main-content">
-        <header><div class="user-profile"><span>👤 Mi Cuenta</span></div></header>
+        <header>
+            <div class="user-profile" id="userProfileDisplay">
+                <span>👤 Mi Cuenta</span>
+            </div>
+        </header>
         
         <div class="container">
             <div class="sub-header">
@@ -115,9 +148,8 @@
                         </ul>
                     </div>
                     <div>
-                        <!-- Reemplaza el enlace href con tu link de Mercado Pago real -->
-                        <a href="https://mpago.la/TU_LINK_MERCADOPAGO" target="_blank" class="btn-plan">Pagar con Mercado Pago</a>
-                        <button class="btn-plan btn-crypto" onclick="abrirModalUSDT()">Pagar con USDT (Binance)</button>
+                        <a href="https://mpago.la/TU_LINK_MERCADOPAGO" target="_blank" class="btn-plan" onclick="seleccionarPlan('basico')">Pagar con Mercado Pago</a>
+                        <button class="btn-plan btn-crypto" onclick="abrirModalUSDT('basico')">Pagar con USDT (Binance)</button>
                     </div>
                 </div>
 
@@ -135,8 +167,8 @@
                         </ul>
                     </div>
                     <div>
-                        <a href="https://mpago.la/TU_LINK_MERCADOPAGO" target="_blank" class="btn-plan">Pagar con Mercado Pago</a>
-                        <button class="btn-plan btn-crypto" onclick="abrirModalUSDT()">Pagar con USDT (Binance)</button>
+                        <a href="https://mpago.la/TU_LINK_MERCADOPAGO" target="_blank" class="btn-plan" onclick="seleccionarPlan('estandar')">Pagar con Mercado Pago</a>
+                        <button class="btn-plan btn-crypto" onclick="abrirModalUSDT('estandar')">Pagar con USDT (Binance)</button>
                     </div>
                 </div>
 
@@ -154,8 +186,8 @@
                         </ul>
                     </div>
                     <div>
-                        <a href="https://mpago.la/TU_LINK_MERCADOPAGO" target="_blank" class="btn-plan">Pagar con Mercado Pago</a>
-                        <button class="btn-plan btn-crypto" onclick="abrirModalUSDT()">Pagar con USDT (Binance)</button>
+                        <a href="https://mpago.la/TU_LINK_MERCADOPAGO" target="_blank" class="btn-plan" onclick="seleccionarPlan('plus')">Pagar con Mercado Pago</a>
+                        <button class="btn-plan btn-crypto" onclick="abrirModalUSDT('plus')">Pagar con USDT (Binance)</button>
                     </div>
                 </div>
             </div>
@@ -175,12 +207,49 @@
     </div>
 
     <script>
-        function abrirModalUSDT() {
+        function obtenerPlanActual() {
+            return localStorage.getItem("gespyme_plan") || "free";
+        }
+
+        function verificarRestriccionModulo(modulo) {
+            let planKey = obtenerPlanActual();
+            if (planKey === 'free') {
+                let nombresModulos = {
+                    'facturas': 'Facturación',
+                    'notas': 'Notas de Crédito',
+                    'ordenes': 'Órdenes de Servicio',
+                    'pagos': 'Gestión de Pagos'
+                };
+                document.getElementById("pro-message").innerHTML = `El módulo de <strong>${nombresModulos[modulo]}</strong> está reservado para planes superiores.<br><br>Actualiza tu suscripción para desbloquearlo.`;
+                document.getElementById("pro-modal").style.display = "flex";
+                return;
+            }
+            window.location.href = modulo + '.html';
+        }
+
+        function cerrarModalPro() {
+            document.getElementById("pro-modal").style.display = "none";
+        }
+
+        function seleccionarPlan(tipoPlan) {
+            localStorage.setItem("gespyme_plan", tipoPlan);
+        }
+
+        function abrirModalUSDT(tipoPlan) {
+            seleccionarPlan(tipoPlan);
             document.getElementById('modalUSDT').style.display = 'flex';
         }
+
         function cerrarModalUSDT() {
             document.getElementById('modalUSDT').style.display = 'none';
         }
+
+        window.onload = function() {
+            let usuario = localStorage.getItem("gespyme_usuario");
+            if (usuario) {
+                document.getElementById("userProfileDisplay").innerHTML = `<span>👤</span> ${usuario}`;
+            }
+        };
     </script>
 </body>
 </html>
