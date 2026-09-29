@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GesPyme - Nueva Cotización</title>
+    <style>
+        :root {
+            --primary-color: #1a73e8;
+            --sidebar-bg: #2b3856;
+            --text-color: #333;
+            --bg-color: #f4f6f9;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-color); display: flex; height: 100vh; overflow: hidden; }
+        
+        sidebar { width: 250px; background-color: var(--sidebar-bg); color: white; display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; }
+        .sidebar-brand { padding: 1.2rem; font-size: 1.1rem; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
+        .sidebar-menu { list-style: none; padding: 0.5rem 0; flex: 1; }
+        .sidebar-menu li a { display: block; padding: 0.6rem 1.2rem; color: #b0c4de; text-decoration: none; font-size: 0.9rem; transition: 0.2s; }
+        .sidebar-menu li.active a, .sidebar-menu li a:hover { background-color: rgba(255,255,255,0.1); color: white; }
+        .sidebar-menu .sub-item { padding-left: 2.2rem; font-size: 0.85rem; }
+        .sidebar-footer { padding: 1rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.8rem; color: #a0a0a0; text-align: center; }
+
+        .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
+        header { background: white; padding: 0.8rem 2rem; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: flex-end; align-items: center; }
+        .user-profile { font-size: 0.9rem; color: #555; font-weight: 500; }
+        
+        .container { padding: 2rem; max-width: 1000px; width: 100%; margin: 0 auto; background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        h2 { font-size: 1.4rem; color: #333; margin-bottom: 1.5rem; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.4rem; font-weight: 500; font-size: 0.85rem; color: #555; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.6rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.9rem; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; margin-bottom: 1rem; }
+        th, td { padding: 0.75rem; border-bottom: 1px solid #eee; font-size: 0.9rem; text-align: left; }
+        th { background-color: #f8f9fa; color: #5f6368; }
+        
+        .totals-section { display: flex; flex-direction: column; align-items: flex-end; margin-top: 1rem; font-size: 0.95rem; }
+        .totals-row { display: flex; justify-content: space-between; width: 250px; margin-bottom: 0.5rem; }
+        .totals-row.total { font-weight: bold; font-size: 1.1rem; border-top: 2px solid #333; padding-top: 0.5rem; }
+
+        .btn-primary { background-color: #28a745; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-weight: 500; font-size: 0.95rem; }
+        .btn-primary:hover { background-color: #218838; }
+        .btn-secondary { background-color: #1a73e8; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem; margin-top: 0.5rem; }
+    </style>
+</head>
+<body>
+
+    <sidebar>
+        <div class="sidebar-brand"><span>⚙️</span> GesPyme</div>
+        <ul class="sidebar-menu">
+            <li><a href="index.html">Panel</a></li>
+            <li><a href="clientes.html">Clientes</a></li>
+            <li><a href="facturas.html">Facturas</a></li>
+            <li><a href="nueva-factura.html" class="sub-item">Nueva factura</a></li>
+            <li><a href="cotizaciones.html">Cotizaciones</a></li>
+            <li class="active"><a href="nueva-cotizacion.html" class="sub-item">Nueva cotización</a></li>
+            <li><a href="notas-credito.html">Notas de crédito</a></li>
+            <li><a href="pagos.html">Pagos</a></li>
+            <li><a href="reembolsos.html">Reembolsos</a></li>
+            <li><a href="articulos.html">Artículos</a></li>
+            <li><a href="informes.html">Informes</a></li>
+            <li><a href="herramientas.html">Herramientas</a></li>
+            <li><a href="configuracion.html">Configuración</a></li>
+            <li><a href="subscription.html">Subscription</a></li>
+        </ul>
+        <div class="sidebar-footer">GesPyme © 2026</div>
+    </sidebar>
+
+    <div class="main-content">
+        <header><div class="user-profile"><span>👤 Mi Cuenta</span></div></header>
+        <div class="container">
+            <h2>Nueva Cotización</h2>
+            <form onsubmit="event.preventDefault(); alert('¡Cotización generada y guardada con éxito!'); window.location.href='cotizaciones.html';">
+                <div class="form-grid">
+                    <div>
+                        <div class="form-group">
+                            <label>Cliente</label>
+                            <select required>
+                                <option value="">Seleccione un cliente...</option>
+                                <option value="1">Empresa S.A.</option>
+                                <option value="2">Cliente Particular</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Dirección de facturación</label>
+                            <textarea placeholder="Dirección del cliente..."></textarea>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="form-group">
+                            <label>Fecha de emisión</label>
+                            <input type="date" id="fechaHoy" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Nº de Cotización</label>
+                            <input type="text" value="COT-10001" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Validez (Días)</label>
+                            <input type="number" value="15">
+                        </div>
+                    </div>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Cant.</th>
+                            <th>Descripción del Artículo / Servicio</th>
+                            <th>Precio Unitario</th>
+                            <th>Impuesto</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="number" value="1" style="width: 60px; padding: 4px;" oninput="calcularTotal()"></td>
+                            <td><input type="text" placeholder="Descripción del producto o servicio" style="width: 100%; padding: 4px;" required></td>
+                            <td><input type="number" value="0.00" step="any" id="precio" style="width: 100px; padding: 4px;" oninput="calcularTotal()" required></td>
+                            <td>
+                                <select style="padding: 4px;">
+                                    <option>IVA (21%)</option>
+                                    <option>Exento (0%)</option>
+                                </select>
+                            </td>
+                            <td id="filaTotal">$0.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button type="button" class="btn-secondary">+ Añadir artículo</button>
+
+                <div class="totals-section">
+                    <div class="totals-row"><span>Subtotal:</span><span id="lblSubtotal">$0.00</span></div>
+                    <div class="totals-row total"><span>Total:</span><span id="lblTotal">$0.00</span></div>
+                </div>
+
+                <div style="margin-top: 2rem; display: flex; justify-content: flex-end; gap: 1rem;">
+                    <button type="submit" class="btn-primary">Crear Cotización</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('fechaHoy').valueAsDate = new Date();
+
+        function calcularTotal() {
+            let precio = parseFloat(document.getElementById('precio').value) || 0;
+            document.getElementById('filaTotal').innerText = '$' + precio.toFixed(2);
+            document.getElementById('lblSubtotal').innerText = '$' + precio.toFixed(2);
+            document.getElementById('lblTotal').innerText = '$' + precio.toFixed(2);
+        }
+    </script>
+</body>
+</html>
