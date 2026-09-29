@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GesPyme - Gestión Inteligente</title>
+    <!-- SDK de EmailJS -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+            emailjs.init("QmQpitvvFAOghrfot"); // Clave pública configurada
+        })();
+    </script>
     <style>
         :root {
             --primary-color: #1a73e8;
@@ -48,7 +55,7 @@
         }
         .close-modal { position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #888; }
 
-        /* Modal de Restricción Plan Pro */
+        /* Modal de Restricción Plan Pro / Límites */
         #pro-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.6); display: none; justify-content: center; align-items: center; z-index: 10000;
@@ -64,7 +71,7 @@
             border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; width: 100%;
         }
 
-        /* Menú lateral */
+        /* Menú Lateral */
         sidebar { width: 250px; background-color: var(--sidebar-bg); color: white; display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; margin-top: 45px; }
         .sidebar-brand { padding: 1.2rem; font-size: 1.1rem; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
         .sidebar-menu { list-style: none; padding: 0.5rem 0; flex: 1; }
@@ -119,7 +126,7 @@
         <div class="banner-info">
             <span>🚀</span>
             <div>
-                <strong>¡Bienvenido a GesPyme!</strong> Estás en el Plan Gratuito (Cotizaciones ilimitadas).
+                <strong>¡Bienvenido a GesPyme!</strong> Estás en el Plan Gratuito.
             </div>
         </div>
         <button onclick="abrirModalRegistro()">Crear mi cuenta</button>
@@ -130,20 +137,20 @@
         <div class="auth-card">
             <button class="close-modal" onclick="cerrarModalRegistro()">×</button>
             <h2>⚙️ Únete a GesPyme</h2>
-            <p>Crea tu cuenta gratuita para empezar a emitir cotizaciones.</p>
+            <p>Crea tu cuenta gratuita para empezar a gestionar.</p>
             <input type="email" id="regEmail" placeholder="Tu correo electrónico">
             <input type="password" id="regPassword" placeholder="Crea una contraseña">
             <button class="auth-btn" onclick="registrarYAcceder()">Registrarme gratis</button>
         </div>
     </div>
 
-    <!-- MODAL DE RESTRICCIÓN PLAN PRO -->
+    <!-- MODAL DE RESTRICCIÓN DE PLANES Y LÍMITES -->
     <div id="pro-modal">
         <div class="pro-card">
             <button class="close-modal" onclick="cerrarModalPro()">×</button>
-            <h2>⭐ Función Exclusiva Plan Pro</h2>
-            <p id="pro-message">Esta herramienta (Facturas, Pagos y Órdenes) está disponible únicamente en la versión Pro de GesPyme.</p>
-            <a href="subscription.html" class="pro-btn">Ver Planes y Actualizar a Pro</a>
+            <h2>⭐ Límite de Plan Alcanzado</h2>
+            <p id="pro-message">Has alcanzado el límite de documentos permitidos para tu plan actual. Actualiza tu suscripción para continuar.</p>
+            <a href="subscription.html" class="pro-btn">Ver Planes y Actualizar</a>
         </div>
     </div>
 
@@ -155,13 +162,12 @@
         <ul class="sidebar-menu">
             <li class="active"><a href="index.html">🏠 Panel</a></li>
             <li><a href="clientes.html">👥 Clientes</a></li>
-            <!-- Funciones restringidas en plan gratuito -->
-            <li><a href="#" onclick="verificarPlanPro('Facturas')">📄 Facturas <span class="lock-tag">PRO</span></a></li>
-            <li><a href="cotizaciones.html">📊 Cotizaciones (Gratis)</a></li>
-            <li><a href="nueva-cotizacion.html" class="sub-item">➕ Nueva cotización</a></li>
-            <li><a href="#" onclick="verificarPlanPro('Notas de crédito')">🔄 Notas de crédito <span class="lock-tag">PRO</span></a></li>
-            <li><a href="#" onclick="verificarPlanPro('Órdenes de Servicio')">🛠 Orden de Servicio <span class="lock-tag">PRO</span></a></li>
-            <li><a href="#" onclick="verificarPlanPro('Pagos')">💳 Pagos <span class="lock-tag">PRO</span></a></li>
+            <li><a href="#" onclick="verificarLimiteYAcceder('Facturas', 'factura')">📄 Facturas</a></li>
+            <li><a href="cotizaciones.html">📊 Cotizaciones</a></li>
+            <li><a href="#" onclick="verificarLimiteYAcceder('Nueva Cotización', 'cotizacion')" class="sub-item">➕ Nueva cotización</a></li>
+            <li><a href="#" onclick="verificarLimiteYAcceder('Notas de crédito', 'nota')">🔄 Notas de crédito</a></li>
+            <li><a href="#" onclick="verificarLimiteYAcceder('Órdenes de Servicio', 'orden')">🛠 Orden de Servicio</a></li>
+            <li><a href="#" onclick="verificarLimiteYAcceder('Pagos', 'pago')">💳 Pagos</a></li>
             <li><a href="articulos.html">📦 Artículos</a></li>
             <li><a href="informes.html">📈 Informes</a></li>
             <li><a href="configuracion.html">🔧 Configuración</a></li>
@@ -184,45 +190,43 @@
 
         <div class="container">
             
-            <!-- Crear (Accesos Directos con Restricción) -->
+            <!-- Crear (Accesos Directos con Restricción de Límites) -->
             <div class="panel-section">
                 <h2>Crear</h2>
                 <div class="quick-actions">
-                    <!-- ACCESO PERMITIDO: COTIZACIÓN -->
-                    <a href="nueva-cotizacion.html" class="action-card">
+                    <div class="action-card" onclick="verificarLimiteYAcceder('Cotización', 'cotizacion')">
                         <span class="action-icon">📊</span>
-                        <span class="action-text">Cotización (Gratis)</span>
-                    </a>
-                    <!-- ACCESOS BLOQUEADOS PLAN GRATIS -->
-                    <div class="action-card locked-card" onclick="verificarPlanPro('Factura')">
-                        <span class="action-icon">📄</span>
-                        <span class="action-text">Factura <span class="lock-tag">PRO</span></span>
+                        <span class="action-text">Cotización</span>
                     </div>
-                    <div class="action-card locked-card" onclick="verificarPlanPro('Orden de Servicio')">
+                    <div class="action-card" onclick="verificarLimiteYAcceder('Factura', 'factura')">
+                        <span class="action-icon">📄</span>
+                        <span class="action-text">Factura</span>
+                    </div>
+                    <div class="action-card" onclick="verificarLimiteYAcceder('Orden de Servicio', 'orden')">
                         <span class="action-icon">🛠️</span>
-                        <span class="action-text">Orden Serv. <span class="lock-tag">PRO</span></span>
+                        <span class="action-text">Orden Serv.</span>
                     </div>
                     <div class="action-card" onclick="verificarAccion('Cliente')">
                         <span class="action-icon">👤</span>
                         <span class="action-text">Cliente</span>
                     </div>
-                    <div class="action-card locked-card" onclick="verificarPlanPro('Nota de crédito')">
+                    <div class="action-card" onclick="verificarLimiteYAcceder('Nota de crédito', 'nota')">
                         <span class="action-icon">🔄</span>
-                        <span class="action-text">Nota crédito <span class="lock-tag">PRO</span></span>
+                        <span class="action-text">Nota crédito</span>
                     </div>
-                    <div class="action-card locked-card" onclick="verificarPlanPro('Pago')">
+                    <div class="action-card" onclick="verificarLimiteYAcceder('Pago', 'pago')">
                         <span class="action-icon">💳</span>
-                        <span class="action-text">Pago <span class="lock-tag">PRO</span></span>
+                        <span class="action-text">Pago</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Cotizaciones recientes (Plan Gratis) -->
+            <!-- Cotizaciones recientes -->
             <div class="panel-section">
                 <h2>Cotizaciones Recientes</h2>
                 <div class="filters-bar">
                     <input type="text" placeholder="Buscar cotización por cliente...">
-                    <a href="nueva-cotizacion.html" class="btn-primary">Crear una cotización</a>
+                    <button class="btn-primary" onclick="verificarLimiteYAcceder('Crear una cotización', 'cotizacion')">Crear una cotización</button>
                 </div>
                 <table>
                     <thead>
@@ -238,7 +242,7 @@
                     <tbody>
                         <tr>
                             <td colspan="6" style="text-align: center; color: #70757a; padding: 2rem;">
-                                No tienes cotizaciones creadas todavía. <a href="nueva-cotizacion.html" style="color: var(--primary-color);">¡Crea la primera ahora!</a>
+                                No tienes cotizaciones creadas todavía. <a href="#" onclick="verificarLimiteYAcceder('Crear una cotización', 'cotizacion')" style="color: var(--primary-color);">¡Crea la primera ahora!</a>
                             </td>
                         </tr>
                     </tbody>
@@ -248,17 +252,16 @@
             <!-- Sección Inferior -->
             <div class="bottom-grid">
                 <div class="panel-section" style="margin-bottom: 0;">
-                    <h2>Límite de la Versión Gratuita</h2>
-                    <ul class="checklist">
-                        <li>Creación ilimitada de <strong>Cotizaciones</strong> y gestión de clientes.</li>
-                        <li>Las funciones de Facturas, Órdenes y Pagos requieren actualizar a <strong>Plan Pro</strong>.</li>
-                        <li>Soporte técnico y almacenamiento en la nube activo.</li>
+                    <h2>Límites de tu Plan Actual</h2>
+                    <ul class="checklist" id="listaLimitesInfo">
+                        <li>Plan Gratuito: Limitado a 5 documentos mensuales.</li>
+                        <li>Actualiza a un plan superior para desbloquear capacidad extendida.</li>
                     </ul>
                 </div>
                 <div class="panel-section" style="margin-bottom: 0; background: #fff8e1; border: 1px solid #ffe0b2;">
-                    <h2 style="color: #d97706;">⚡ Pásate a Pro</h2>
+                    <h2 style="color: #d97706;">⚡ Actualiza tu Plan</h2>
                     <p style="font-size: 0.85rem; color: #555; line-height: 1.4; margin-bottom: 10px;">
-                        Desbloquea facturación electrónica, órdenes de servicio completas y reportes avanzados.
+                        Escala tus operaciones con los planes Básico, Estándar o Plus.
                     </p>
                     <a href="subscription.html" style="font-size: 0.85rem; font-weight: bold; color: #d97706; text-decoration: none;">Ver detalles y precios →</a>
                 </div>
@@ -267,8 +270,46 @@
         </div>
     </div>
 
-    <!-- Script de Lógica de Planes y Registro -->
+    <!-- Script de Lógica de Planes, Límites y Registro con EmailJS -->
     <script>
+        // Configuración de límites por plan (ejemplo de estructura)
+        const PLANES_LIMITES = {
+            'free': { limite: 5, nombre: 'Plan Gratuito' },
+            'basico': { limite: 20, nombre: 'Plan Básico' },
+            'estandar': { limite: 100, nombre: 'Plan Estándar' },
+            'plus': { limite: 500, nombre: 'Plan Plus' },
+            'pro': { limite: 99999, nombre: 'Plan Pro Ilimitado' }
+        };
+
+        function obtenerPlanActual() {
+            return localStorage.getItem("gespyme_plan") || "free";
+        }
+
+        function obtenerUsoActual() {
+            let uso = localStorage.getItem("gespyme_uso_documentos");
+            return uso ? parseInt(uso) : 0;
+        }
+
+        function verificarLimiteYAcceder(nombreAccion, tipoDocumento) {
+            let planKey = obtenerPlanActual();
+            let planInfo = PLANES_LIMITES[planKey] || PLANES_LIMITES['free'];
+            let usoActual = obtenerUsoActual();
+
+            // Verificar si excede el límite del plan
+            if (usoActual >= planInfo.limite) {
+                document.getElementById("pro-message").innerHTML = `Has alcanzado el límite de <strong>${planInfo.limite} documentos</strong> de tu <strong>${planInfo.nombre}</strong>.<br><br>Actualiza tu plan para seguir creando ${nombreAccion.toLowerCase()}.`;
+                document.getElementById("pro-modal").style.display = "flex";
+                return;
+            }
+
+            // Si pasa la validación, incrementar uso (simulación) y permitir avanzar
+            localStorage.setItem("gespyme_uso_documentos", usoActual + 1);
+            alert(`¡Acción permitida! Has abierto: ${nombreAccion}. (Documentos usados: ${usoActual + 1}/${planInfo.limite})`);
+            
+            // Aquí puedes redirigir a la pantalla correspondiente según el tipo si lo deseas:
+            // if(tipoDocumento === 'cotizacion') { window.location.href = 'nueva-cotizacion.html'; }
+        }
+
         function abrirModalRegistro() {
             document.getElementById("auth-modal").style.display = "flex";
         }
@@ -279,12 +320,6 @@
 
         function cerrarModalPro() {
             document.getElementById("pro-modal").style.display = "none";
-        }
-
-        // Función que bloquea las características PRO en el plan gratuito
-        function verificarPlanPro(nombreFuncion) {
-            document.getElementById("pro-message").innerHTML = `La función de <strong>${nombreFuncion}</strong> está reservada para el Plan Pro de GesPyme. ¡Actualiza tu cuenta para desbloquearla!`;
-            document.getElementById("pro-modal").style.display = "flex";
         }
 
         function verificarAccion(accion) {
@@ -300,43 +335,64 @@
                 return;
             }
 
-            // Guardar sesión y definir plan gratuito
+            // Guardar sesión y definir plan gratuito inicial con contador en 0
             localStorage.setItem("gespyme_usuario", email);
             localStorage.setItem("gespyme_plan", "free");
+            if(!localStorage.getItem("gespyme_uso_documentos")) {
+                localStorage.setItem("gespyme_uso_documentos", "0");
+            }
             
             // Ocultar banner y modal de registro
             document.getElementById("welcome-banner").style.display = "none";
             document.getElementById("auth-modal").style.display = "none";
             
             // Actualizar interfaz
+            actualizarInterfazUsuario(email);
+
+            alert("¡Cuenta creada con éxito! Tienes 5 documentos disponibles en tu Plan Gratuito.");
+
+            // Parámetros para EmailJS
+            let templateParams = {
+                nombre: email,
+                email: email,
+                mensaje: "Se ha registrado un nuevo usuario en la plataforma con el correo: " + email + "\nFecha y hora: " + new Date().toLocaleString(),
+                title: "Nuevo Registro de Usuario en GesPyme"
+            };
+
+            // Envío automático al correo configurado
+            emailjs.send('service_dz1b36', 'template_khlwu4x', templateParams)
+                .then(function(response) {
+                    console.log('Correo de notificación enviado con éxito.', response.status, response.text);
+                }, function(error) {
+                    console.log('Error al enviar notificación:', error);
+                });
+        }
+
+        function actualizarInterfazUsuario(email) {
+            let planKey = obtenerPlanActual();
+            let planInfo = PLANES_LIMITES[planKey];
+            let usoActual = obtenerUsoActual();
+
             document.getElementById("lblUsuario").innerText = email;
-            document.getElementById("lblPlanBadge").innerText = "Plan Gratuito (Activo)";
+            document.getElementById("lblPlanBadge").innerText = `${planInfo.nombre} (${usoActual}/${planInfo.limite} usados)`;
             document.getElementById("menuCerrarSesion").style.display = "block";
-
-            alert("¡Cuenta de prueba creada! Ya puedes generar tus cotizaciones gratis.");
-
-            // Notificación automática a tu correo Refri234gonza@gmail.com
-            let asunto = encodeURIComponent("Nuevo usuario en Plan Gratuito - GesPyme");
-            let cuerpo = encodeURIComponent("Hola Maximiliano,\n\nUn nuevo usuario se registró en el plan gratuito:\nCorreo: " + email + "\nFecha y Hora: " + new Date().toLocaleString());
-            window.location.href = `mailto:Refri234gonza@gmail.com?subject=${asunto}&body=${cuerpo}`;
         }
 
         function cerrarSesion() {
             if (confirm("¿Estás seguro de que deseas cerrar sesión?")) {
                 localStorage.removeItem("gespyme_usuario");
                 localStorage.removeItem("gespyme_plan");
+                localStorage.removeItem("gespyme_uso_documentos");
                 location.reload();
             }
         }
 
-        // Al cargar la página, comprobar si ya está registrado
+        // Al cargar la página, comprobar sesión y límites
         window.onload = function() {
             let usuarioGuardado = localStorage.getItem("gespyme_usuario");
             if (usuarioGuardado) {
                 document.getElementById("welcome-banner").style.display = "none";
-                document.getElementById("lblUsuario").innerText = usuarioGuardado;
-                document.getElementById("lblPlanBadge").innerText = "Plan Gratuito (Activo)";
-                document.getElementById("menuCerrarSesion").style.display = "block";
+                actualizarInterfazUsuario(usuarioGuardado);
             }
         };
     </script>
