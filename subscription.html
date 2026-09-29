@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GesPyme - Subscription</title>
+    <style>
+        :root {
+            --primary-color: #1a73e8;
+            --sidebar-bg: #2b3856;
+            --text-color: #333;
+            --bg-color: #f4f6f9;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-color); display: flex; height: 100vh; overflow: hidden; }
+        
+        sidebar { width: 250px; background-color: var(--sidebar-bg); color: white; display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; }
+        .sidebar-brand { padding: 1.2rem; font-size: 1.1rem; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
+        .sidebar-menu { list-style: none; padding: 0.5rem 0; flex: 1; }
+        .sidebar-menu li a { display: block; padding: 0.6rem 1.2rem; color: #b0c4de; text-decoration: none; font-size: 0.9rem; transition: 0.2s; }
+        .sidebar-menu li.active a, .sidebar-menu li a:hover { background-color: rgba(255,255,255,0.1); color: white; }
+        .sidebar-menu .sub-item { padding-left: 2.2rem; font-size: 0.85rem; }
+        .sidebar-footer { padding: 1rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.75rem; color: #a0a0a0; text-align: left; line-height: 1.4; }
+
+        .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
+        header { background: white; padding: 0.8rem 2rem; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: flex-end; align-items: center; }
+        .user-profile { font-size: 0.9rem; color: #555; font-weight: 500; }
+        
+        .container { padding: 2rem; max-width: 1000px; width: 100%; margin: 0 auto; }
+        
+        .sub-header { text-align: center; margin-bottom: 2rem; }
+        .sub-header h2 { font-size: 1.5rem; color: #1a73e8; margin-bottom: 1rem; }
+        
+        .billing-toggle { display: inline-flex; background: #e0e0e0; border-radius: 20px; padding: 3px; margin-bottom: 2rem; }
+        .toggle-btn { background: none; border: none; padding: 0.5rem 1.5rem; border-radius: 17px; font-weight: 500; font-size: 0.9rem; cursor: pointer; color: #555; }
+        .toggle-btn.active { background: #28a745; color: white; }
+
+        .plans-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+        .plan-card { background: white; border-radius: 8px; border: 1px solid #dcdcdc; padding: 2rem; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between; }
+        .plan-title { font-size: 1.2rem; font-weight: bold; color: #333; margin-bottom: 1rem; }
+        .plan-price { font-size: 1.8rem; font-weight: bold; color: #1a73e8; margin-bottom: 1.5rem; }
+        .plan-price span { font-size: 0.9rem; color: #666; font-weight: normal; }
+        
+        .plan-features { list-style: none; text-align: left; margin-bottom: 2rem; font-size: 0.9rem; color: #555; }
+        .plan-features li { margin-bottom: 0.75rem; position: relative; padding-left: 1.2rem; }
+        .plan-features li::before { content: "•"; position: absolute; left: 0; color: #1a73e8; font-weight: bold; }
+
+        .btn-plan { background-color: #28a745; color: white; border: none; padding: 0.75rem 1rem; border-radius: 4px; cursor: pointer; font-weight: 500; width: 100%; font-size: 0.95rem; text-decoration: none; display: inline-block; margin-top: 0.5rem; }
+        .btn-plan:hover { background-color: #218838; }
+        .btn-crypto { background-color: #f3ba2f; color: #333; }
+        .btn-crypto:hover { background-color: #e0a81e; }
+
+        /* Estilo para el modal de pago USDT */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000; }
+        .modal-box { background: white; padding: 2rem; border-radius: 8px; width: 100%; max-width: 450px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); text-align: left; }
+        .modal-box h3 { margin-bottom: 1rem; font-size: 1.2rem; color: #1a73e8; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; }
+        .modal-box p { font-size: 0.9rem; color: #555; margin-bottom: 1rem; line-height: 1.4; }
+        .modal-box input { width: 100%; padding: 0.6rem; border: 1px solid #ccc; border-radius: 4px; background: #f8f9fa; font-size: 0.9rem; margin-bottom: 1rem; }
+        .btn-close { background-color: #6c757d; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; width: 100%; font-weight: 500; }
+    </style>
+</head>
+<body>
+
+    <sidebar>
+        <div class="sidebar-brand"><span>⚙️</span> GesPyme</div>
+        <ul class="sidebar-menu">
+            <li><a href="index.html">Panel</a></li>
+            <li><a href="clientes.html">Clientes</a></li>
+            <li><a href="facturas.html">Facturas</a></li>
+            <li><a href="nueva-factura.html" class="sub-item">Nueva factura</a></li>
+            <li><a href="cotizaciones.html">Cotizaciones</a></li>
+            <li><a href="nueva-cotizacion.html" class="sub-item">Nueva cotización</a></li>
+            <li><a href="notas-credito.html">Notas de crédito</a></li>
+            <li><a href="pagos.html">Pagos</a></li>
+            <li><a href="reembolsos.html">Reembolsos</a></li>
+            <li><a href="articulos.html">Artículos</a></li>
+            <li><a href="informes.html">Informes</a></li>
+            <li><a href="herramientas.html">Herramientas</a></li>
+            <li><a href="configuracion.html">Configuración</a></li>
+            <li class="active"><a href="subscription.html">Subscription</a></li>
+        </ul>
+        <div class="sidebar-footer">
+            Ayuda<br>
+            Asistencia<br>
+            Sugerencias<br>
+            ✨ Agente GPT<br>
+            GesPyme © 2026
+        </div>
+    </sidebar>
+
+    <div class="main-content">
+        <header><div class="user-profile"><span>👤 Mi Cuenta</span></div></header>
+        
+        <div class="container">
+            <div class="sub-header">
+                <h2>Elija el plan adecuado para su empresa</h2>
+                <div class="billing-toggle">
+                    <button class="toggle-btn active">Mensual</button>
+                    <button class="toggle-btn">Anualmente (ahorre 16%)</button>
+                </div>
+            </div>
+
+            <div class="plans-grid">
+                <!-- Plan Básico -->
+                <div class="plan-card">
+                    <div>
+                        <div class="plan-title">Plan Básico</div>
+                        <div class="plan-price">$4.85 <span>/ Mes</span></div>
+                        <ul class="plan-features">
+                            <li>1 usuario</li>
+                            <li>Hasta 25 clientes</li>
+                            <li>Hasta 100 facturas al mes</li>
+                            <li>Hasta 100 SMS al mes</li>
+                            <li>Acepte pagos con tarjeta y Mercado Pago</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <!-- Reemplaza el enlace href con tu link de Mercado Pago real -->
+                        <a href="https://mpago.la/TU_LINK_MERCADOPAGO" target="_blank" class="btn-plan">Pagar con Mercado Pago</a>
+                        <button class="btn-plan btn-crypto" onclick="abrirModalUSDT()">Pagar con USDT (Binance)</button>
+                    </div>
+                </div>
+
+                <!-- Plan Estándar -->
+                <div class="plan-card">
+                    <div>
+                        <div class="plan-title">Plan Estándar</div>
+                        <div class="plan-price">$9.85 <span>/ Mes</span></div>
+                        <ul class="plan-features">
+                            <li>2 usuarios</li>
+                            <li>Hasta 100 clientes</li>
+                            <li>Hasta 200 facturas al mes</li>
+                            <li>Hasta 200 SMS al mes</li>
+                            <li>Acepte pagos con tarjeta y Mercado Pago</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <a href="https://mpago.la/TU_LINK_MERCADOPAGO" target="_blank" class="btn-plan">Pagar con Mercado Pago</a>
+                        <button class="btn-plan btn-crypto" onclick="abrirModalUSDT()">Pagar con USDT (Binance)</button>
+                    </div>
+                </div>
+
+                <!-- Plus Plan -->
+                <div class="plan-card">
+                    <div>
+                        <div class="plan-title">Plus Plan</div>
+                        <div class="plan-price">$18.85 <span>/ Mes</span></div>
+                        <ul class="plan-features">
+                            <li>2 usuarios (+$4.85 adicional)</li>
+                            <li>Clientes ilimitados</li>
+                            <li>Facturas ilimitadas al mes</li>
+                            <li>Hasta 500 SMS al mes</li>
+                            <li>Soporte prioritario</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <a href="https://mpago.la/TU_LINK_MERCADOPAGO" target="_blank" class="btn-plan">Pagar con Mercado Pago</a>
+                        <button class="btn-plan btn-crypto" onclick="abrirModalUSDT()">Pagar con USDT (Binance)</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Informativo para Pago USDT / Binance -->
+    <div id="modalUSDT" class="modal-overlay">
+        <div class="modal-box">
+            <h3>Pago con Criptomonedas (USDT)</h3>
+            <p>Para activar tu plan mediante Binance Pay o transferencia USDT, realiza el envío correspondiente a la siguiente dirección o red (TRC20):</p>
+            <label style="font-size: 0.8rem; font-weight: bold; color: #555;">Tu dirección o Binance Pay ID:</label>
+            <input type="text" value="TU_DIRECCION_USDT_O_BINANCE_ID" readonly onclick="this.select();">
+            <p style="font-size: 0.8rem; color: #777;">Una vez realizado el pago, envíanos el comprobante por WhatsApp o soporte para habilitar tu cuenta al instante.</p>
+            <button class="btn-close" onclick="cerrarModalUSDT()">Cerrar Ventana</button>
+        </div>
+    </div>
+
+    <script>
+        function abrirModalUSDT() {
+            document.getElementById('modalUSDT').style.display = 'flex';
+        }
+        function cerrarModalUSDT() {
+            document.getElementById('modalUSDT').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
