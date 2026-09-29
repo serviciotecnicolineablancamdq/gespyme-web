@@ -15,7 +15,7 @@
         body { background-color: var(--bg-color); color: var(--text-color); display: flex; height: 100vh; overflow: hidden; }
         
         /* Menú lateral */
-        sidebar { width: 250px; background-color: var(--sidebar-bg); color: white; display: flex; flex-direction: column; overflow-y: auto; }
+        sidebar { width: 250px; background-color: var(--sidebar-bg); color: white; display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; }
         .sidebar-brand { padding: 1.2rem; font-size: 1.1rem; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
         .sidebar-menu { list-style: none; padding: 0.5rem 0; flex: 1; }
         .sidebar-menu li a { display: block; padding: 0.6rem 1.2rem; color: #b0c4de; text-decoration: none; font-size: 0.9rem; transition: 0.2s; }
@@ -42,9 +42,36 @@
         table { width: 100%; border-collapse: collapse; text-align: left; margin-top: 1rem; }
         th, td { padding: 0.75rem; border-bottom: 1px solid #eee; font-size: 0.9rem; }
         th { background-color: #f8f9fa; color: #5f6368; }
+
+        /* Modal de Restricción de Planes */
+        #pro-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6); display: none; justify-content: center; align-items: center; z-index: 10000;
+        }
+        .pro-card {
+            background: white; padding: 2.5rem; border-radius: 12px; width: 90%; max-width: 420px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3); text-align: center; position: relative; border-top: 5px solid #ff9800;
+        }
+        .pro-card h2 { color: #d97706; margin-bottom: 0.5rem; font-size: 1.4rem; }
+        .pro-card p { color: #555; font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.4; }
+        .pro-btn {
+            background-color: #28a745; color: white; border: none; padding: 0.8rem 1.5rem;
+            border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; width: 100%;
+        }
+        .close-modal { position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #888; }
     </style>
 </head>
 <body>
+
+    <!-- MODAL DE RESTRICCIÓN DE PLANES -->
+    <div id="pro-modal">
+        <div class="pro-card">
+            <button class="close-modal" onclick="cerrarModalPro()">×</button>
+            <h2>⭐ Función Exclusiva</h2>
+            <p id="pro-message">Este módulo está reservado para planes superiores.</p>
+            <a href="subscription.html" class="pro-btn">Ver Planes y Actualizar</a>
+        </div>
+    </div>
 
     <!-- Menú Lateral -->
     <sidebar>
@@ -54,20 +81,20 @@
         <ul class="sidebar-menu">
             <li><a href="index.html">Panel</a></li>
             <li class="active"><a href="clientes.html">Clientes</a></li>
-            <li><a href="facturas.html">Facturas</a></li>
-            <li><a href="nueva-factura.html" class="sub-item">Nueva factura</a></li>
+            <li><a href="#" onclick="verificarRestriccionModulo('facturas')">Facturas</a></li>
+            <li><a href="#" onclick="verificarRestriccionModulo('facturas')" class="sub-item">Nueva factura</a></li>
             <li><a href="cotizaciones.html">Cotizaciones</a></li>
             <li><a href="nueva-cotizacion.html" class="sub-item">Nueva cotización</a></li>
-            <li><a href="notas-credito.html">Notas de crédito</a></li>
-            <li><a href="orden-servicio.html">Orden de Servicio</a></li>
-            <li><a href="nueva-orden-servicio.html" class="sub-item">Nueva orden</a></li>
-            <li><a href="pagos.html">Pagos</a></li>
+            <li><a href="#" onclick="verificarRestriccionModulo('notas')">Notas de crédito</a></li>
+            <li><a href="#" onclick="verificarRestriccionModulo('ordenes')">Orden de Servicio</a></li>
+            <li><a href="#" onclick="verificarRestriccionModulo('ordenes')" class="sub-item">Nueva orden</a></li>
+            <li><a href="#" onclick="verificarRestriccionModulo('pagos')">Pagos</a></li>
             <li><a href="reembolsos.html">Reembolsos</a></li>
             <li><a href="articulos.html">Artículos</a></li>
             <li><a href="informes.html">Informes</a></li>
             <li><a href="herramientas.html">Herramientas</a></li>
             <li><a href="configuracion.html">Configuración</a></li>
-            <li><a href="subscription.html">Subscription</a></li>
+            <li><a href="subscription.html" style="color: #ffd700;">Subscription Pro</a></li>
         </ul>
         <div class="sidebar-footer">
             GesPyme © 2026
@@ -77,7 +104,7 @@
     <!-- Área Principal -->
     <div class="main-content">
         <header>
-            <div class="user-profile">
+            <div class="user-profile" id="userProfileDisplay">
                 <span>👤 Mi Cuenta</span>
             </div>
         </header>
@@ -116,5 +143,37 @@
         </div>
     </div>
 
+    <script>
+        function obtenerPlanActual() {
+            return localStorage.getItem("gespyme_plan") || "free";
+        }
+
+        function verificarRestriccionModulo(modulo) {
+            let planKey = obtenerPlanActual();
+            if (planKey === 'free') {
+                let nombresModulos = {
+                    'facturas': 'Facturación',
+                    'notas': 'Notas de Crédito',
+                    'ordenes': 'Órdenes de Servicio',
+                    'pagos': 'Gestión de Pagos'
+                };
+                document.getElementById("pro-message").innerHTML = `El módulo de <strong>${nombresModulos[modulo]}</strong> está reservado para planes superiores.<br><br>Actualiza tu suscripción para desbloquearlo.`;
+                document.getElementById("pro-modal").style.display = "flex";
+                return;
+            }
+            alert(`¡Acceso concedido al módulo de ${modulo}!`);
+        }
+
+        function cerrarModalPro() {
+            document.getElementById("pro-modal").style.display = "none";
+        }
+
+        window.onload = function() {
+            let usuario = localStorage.getItem("gespyme_usuario");
+            if (usuario) {
+                document.getElementById("userProfileDisplay").innerHTML = `<span>👤</span> ${usuario}`;
+            }
+        };
+    </script>
 </body>
 </html>
