@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GesPyme - Nueva Factura</title>
+    <style>
+        :root {
+            --primary-color: #1a73e8;
+            --sidebar-bg: #2b3856;
+            --text-color: #333;
+            --bg-color: #f4f6f9;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-color); display: flex; height: 100vh; overflow: hidden; }
+        
+        /* Menú lateral */
+        sidebar { width: 250px; background-color: var(--sidebar-bg); color: white; display: flex; flex-direction: column; overflow-y: auto; }
+        .sidebar-brand { padding: 1.2rem; font-size: 1.1rem; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
+        .sidebar-menu { list-style: none; padding: 0.5rem 0; flex: 1; }
+        .sidebar-menu li a { display: block; padding: 0.6rem 1.2rem; color: #b0c4de; text-decoration: none; font-size: 0.9rem; transition: 0.2s; }
+        .sidebar-menu li.active a, .sidebar-menu li a:hover { background-color: rgba(255,255,255,0.1); color: white; }
+        .sidebar-menu .sub-item { padding-left: 2.2rem; font-size: 0.85rem; }
+        .sidebar-footer { padding: 1rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.8rem; color: #a0a0a0; text-align: center; }
+
+        /* Contenido principal */
+        .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
+        header { background: white; padding: 0.8rem 2rem; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: flex-end; align-items: center; }
+        .user-profile { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: #555; font-weight: 500; }
+        
+        .container { padding: 2rem; max-width: 1000px; width: 100%; margin: 0 auto; }
+        
+        /* Formulario */
+        .panel-section { background: white; border-radius: 8px; padding: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .panel-section h2 { margin-bottom: 1.5rem; font-size: 1.3rem; color: #333; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; }
+        
+        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 1.2rem; }
+        .form-group { margin-bottom: 1.2rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.9rem; color: #555; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95rem; }
+        
+        /* Tabla de ítems de factura */
+        .invoice-items-table { width: 100%; border-collapse: collapse; margin-top: 1rem; margin-bottom: 1.5rem; }
+        .invoice-items-table th, .invoice-items-table td { padding: 0.75rem; border-bottom: 1px solid #eee; text-align: left; }
+        .invoice-items-table th { background-color: #f8f9fa; font-size: 0.85rem; color: #5f6368; }
+        .invoice-items-table input { width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.9rem; }
+        
+        .totals-section { display: flex; justify-content: flex-end; margin-bottom: 2rem; }
+        .totals-box { width: 300px; font-size: 0.95rem; }
+        .totals-row { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #eee; }
+        .totals-row.final { font-weight: bold; font-size: 1.1rem; border-bottom: 2px solid #333; color: var(--primary-color); }
+
+        .form-actions { display: flex; gap: 1rem; }
+        .btn-primary { background-color: #28a745; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-weight: 500; font-size: 0.95rem; }
+        .btn-primary:hover { background-color: #218838; }
+        .btn-secondary { background-color: #6c757d; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-weight: 500; text-decoration: none; display: inline-block; font-size: 0.95rem; }
+        .btn-secondary:hover { background-color: #5a6268; }
+    </style>
+</head>
+<body>
+
+    <!-- Menú Lateral -->
+    <sidebar>
+        <div class="sidebar-brand">
+            <span>⚙️</span> GesPyme
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="index.html">Panel</a></li>
+            <li><a href="clientes.html">Clientes</a></li>
+            <li><a href="facturas.html">Facturas</a></li>
+            <li class="active"><a href="nueva-factura.html" class="sub-item">Nueva factura</a></li>
+            <li><a href="cotizaciones.html">Cotizaciones</a></li>
+            <li><a href="nueva-cotizacion.html" class="sub-item">Nueva cotización</a></li>
+            <li><a href="notas-credito.html">Notas de crédito</a></li>
+            <li><a href="pagos.html">Pagos</a></li>
+            <li><a href="reembolsos.html">Reembolsos</a></li>
+            <li><a href="articulos.html">Artículos</a></li>
+            <li><a href="informes.html">Informes</a></li>
+            <li><a href="herramientas.html">Herramientas</a></li>
+            <li><a href="configuracion.html">Configuración</a></li>
+            <li><a href="subscription.html">Subscription</a></li>
+        </ul>
+        <div class="sidebar-footer">
+            GesPyme © 2026
+        </div>
+    </sidebar>
+
+    <!-- Área Principal -->
+    <div class="main-content">
+        <header>
+            <div class="user-profile">
+                <span>👤 Mi Cuenta</span>
+            </div>
+        </header>
+
+        <div class="container">
+            <div class="panel-section">
+                <h2>Nueva Factura</h2>
+                <form onsubmit="event.preventDefault(); alert('Factura creada con éxito'); window.location.href='facturas.html';">
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Cliente</label>
+                            <select required>
+                                <option value="">Seleccione un cliente...</option>
+                                <option value="1">Ejemplo: Juan Pérez</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Número de Factura</label>
+                            <input type="text" value="FAC-0001" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Fecha de Emisión</label>
+                            <input type="date" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Fecha de Vencimiento</label>
+                            <input type="date" required>
+                        </div>
+                    </div>
+
+                    <!-- Detalle de Ítems -->
+                    <table class="invoice-items-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 45%;">Descripción del Artículo / Servicio</th>
+                                <th style="width: 15%;">Cantidad</th>
+                                <th style="width: 20%;">Precio Unitario</th>
+                                <th style="width: 20%;">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="text" placeholder="Concepto o descripción..."></td>
+                                <td><input type="number" value="1" min="1"></td>
+                                <td><input type="text" placeholder="0.00"></td>
+                                <td><input type="text" placeholder="0.00" readonly></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Totales -->
+                    <div class="totals-section">
+                        <div class="totals-box">
+                            <div class="totals-row">
+                                <span>Subtotal:</span>
+                                <span>$0.00</span>
+                            </div>
+                            <div class="totals-row">
+                                <span>Impuestos / IVA:</span>
+                                <span>$0.00</span>
+                            </div>
+                            <div class="totals-row final">
+                                <span>Total a Pagar:</span>
+                                <span>$0.00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">Generar Factura</button>
+                        <a href="facturas.html" class="btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
