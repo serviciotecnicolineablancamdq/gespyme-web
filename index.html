@@ -7,107 +7,186 @@
     <style>
         :root {
             --primary-color: #1a73e8;
-            --sidebar-bg: #202124;
+            --sidebar-bg: #2b3856;
             --text-color: #333;
-            --bg-color: #f8f9fa;
+            --bg-color: #f4f6f9;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-color); display: flex; height: 100vh; overflow: hidden; }
         
-        /* Menú lateral */
-        sidebar { width: 260px; background-color: var(--sidebar-bg); color: white; display: flex; flex-direction: column; }
-        .sidebar-brand { padding: 1.5rem; font-size: 1.25rem; font-weight: bold; border-bottom: 1px solid #3c4043; display: flex; align-items: center; gap: 10px; }
-        .sidebar-menu { list-style: none; padding: 1rem 0; overflow-y: auto; flex: 1; }
-        .sidebar-menu li a { display: block; padding: 0.75rem 1.5rem; color: #bdc1c6; text-decoration: none; transition: 0.2s; }
+        /* Menú lateral estilo SaaS */
+        sidebar { width: 250px; background-color: var(--sidebar-bg); color: white; display: flex; flex-direction: column; overflow-y: auto; }
+        .sidebar-brand { padding: 1.2rem; font-size: 1.1rem; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
+        .sidebar-menu { list-style: none; padding: 0.5rem 0; flex: 1; }
+        .sidebar-menu li a { display: block; padding: 0.6rem 1.2rem; color: #b0c4de; text-decoration: none; font-size: 0.9rem; transition: 0.2s; }
         .sidebar-menu li.active a, .sidebar-menu li a:hover { background-color: rgba(255,255,255,0.1); color: white; }
+        .sidebar-menu .sub-item { padding-left: 2.2rem; font-size: 0.85rem; }
+        .sidebar-footer { padding: 1rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.8rem; color: #a0a0a0; }
 
         /* Contenido principal */
         .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
-        header { background: white; padding: 1rem 2rem; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; }
+        header { background: white; padding: 0.8rem 2rem; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: flex-end; align-items: center; }
         .container { padding: 2rem; max-width: 1200px; width: 100%; margin: 0 auto; }
         
-        /* Tarjetas de Acceso Rápido */
-        .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
-        .card { background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.2s; text-decoration: none; color: inherit; display: block; }
-        .card:hover { transform: translateY(-3px); }
-        .card h3 { font-size: 1.1rem; color: var(--primary-color); margin-bottom: 0.5rem; }
-        .card p { font-size: 0.9rem; color: #666; }
+        /* Barra de Acciones Rápidas (Crear) */
+        .create-panel { background: white; border-radius: 8px; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .create-panel h2 { font-size: 1.2rem; margin-bottom: 1rem; color: #333; }
+        .create-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 1rem; text-align: center; }
+        .create-item { padding: 0.8rem 0.4rem; border: 1px solid #eaeaea; border-radius: 6px; text-decoration: none; color: #333; transition: 0.2s; background: #fff; }
+        .create-item:hover { border-color: var(--primary-color); background: #f8fbff; }
+        .create-item span { display: block; font-size: 1.5rem; margin-bottom: 0.3rem; }
+        .create-item p { font-size: 0.8rem; font-weight: 500; }
 
-        /* Sección de tablas / listas */
-        .panel-section { background: white; border-radius: 8px; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        /* Sección de Facturas Pendientes */
+        .panel-section { background: white; border-radius: 8px; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 2rem; }
         .panel-section h2 { margin-bottom: 1rem; font-size: 1.2rem; }
-        table { width: 100%; border-collapse: collapse; text-align: left; }
+        .filters-bar { display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; align-items: center; }
+        .filters-bar select, .filters-bar input { padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.9rem; }
+        .btn-primary { background-color: #28a745; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-weight: 500; }
+        
+        table { width: 100%; border-collapse: collapse; text-align: left; margin-top: 1rem; }
         th, td { padding: 0.75rem; border-bottom: 1px solid #eee; font-size: 0.9rem; }
-        th { background-color: #f1f3f4; color: #5f6368; }
+        th { background-color: #f8f9fa; color: #5f6368; }
+
+        /* Sección Comenzar y Gráficos */
+        .bottom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+        @media(max-width: 900px) { .bottom-grid { grid-template-columns: 1fr; } }
+        
+        .getting-started ul { list-style: none; margin-top: 0.8rem; }
+        .getting-started li { padding: 0.4rem 0; font-size: 0.9rem; color: #555; display: flex; align-items: center; gap: 8px; }
+        .getting-started li::before { content: "▪"; color: var(--primary-color); }
+
+        .chart-placeholder { display: flex; justify-content: space-between; align-items: flex-end; height: 120px; border-bottom: 2px solid #ddd; padding-bottom: 0.5rem; margin-top: 1rem; }
+        .bar-col { text-align: center; flex: 1; }
+        .bar { background-color: #e2e8f0; width: 30px; margin: 0 auto; border-radius: 4px 4px 0 0; height: 20px; }
+        .bar-col span { font-size: 0.75rem; color: #666; display: block; margin-top: 5px; }
     </style>
 </head>
 <body>
 
-    <!-- Menú Lateral con Enlaces -->
+    <!-- Menú Lateral -->
     <sidebar>
         <div class="sidebar-brand">
             <span>⚙️</span> GesPyme
         </div>
         <ul class="sidebar-menu">
-            <li class="active"><a href="index.html">Panel Principal</a></li>
-            <li><a href="clientes.html">Clientes</a></li>
-            <li><a href="facturas.html">Facturas</a></li>
-            <li><a href="cotizaciones.html">Cotizaciones</a></li>
-            <li><a href="articulos.html">Artículos / Servicios</a></li>
-            <li><a href="configuracion.html">Configuración</a></li>
+            <li class="active"><a href="#">Panel</a></li>
+            <li><a href="#">Clientes</a></li>
+            <li><a href="#">Facturas</a></li>
+            <li><a href="#" class="sub-item">Nueva factura</a></li>
+            <li><a href="#">Cotizaciones</a></li>
+            <li><a href="#" class="sub-item">Nueva cotización</a></li>
+            <li><a href="#">Notas de crédito</a></li>
+            <li><a href="#">Pagos</a></li>
+            <li><a href="#">Reembolsos</a></li>
+            <li><a href="#">Artículos</a></li>
+            <li><a href="#">Informes</a></li>
+            <li><a href="#">Herramientas</a></li>
+            <li><a href="#">Configuración</a></li>
+            <li><a href="#">Subscription</a></li>
         </ul>
+        <div class="sidebar-footer">
+            GesPyme © 2026<br>refri234gonza@gmail.com
+        </div>
     </sidebar>
 
     <!-- Área Principal -->
     <div class="main-content">
         <header>
-            <h1>Panel de Control</h1>
             <span>refri234gonza@gmail.com</span>
         </header>
 
         <div class="container">
-            <!-- Accesos Rápidos -->
-            <div class="cards-grid">
-                <a href="facturas.html" class="card">
-                    <h3>➕ Nueva Factura</h3>
-                    <p>Emite comprobantes para tus clientes rápidamente.</p>
-                </a>
-                <a href="clientes.html" class="card">
-                    <h3>👤 Nuevo Cliente</h3>
-                    <p>Registra empresas, comercios o monotributistas.</p>
-                </a>
-                <a href="articulos.html" class="card">
-                    <h3>📦 Nuevo Artículo</h3>
-                    <p>Carga repuestos, servicios técnicos o productos.</p>
-                </a>
-                <a href="cotizaciones.html" class="card">
-                    <h3>📊 Cotización</h3>
-                    <p>Prepara presupuestos detallados.</p>
-                </a>
+            
+            <!-- Panel de Creación Rápida -->
+            <div class="create-panel">
+                <h2>Crear</h2>
+                <div class="create-grid">
+                    <a href="#" class="create-item">
+                        <span>📄</span>
+                        <p>Factura</p>
+                    </a>
+                    <a href="#" class="create-item">
+                        <span>📑</span>
+                        <p>Recurrente</p>
+                    </a>
+                    <a href="#" class="create-item">
+                        <span>👤</span>
+                        <p>Cliente</p>
+                    </a>
+                    <a href="#" class="create-item">
+                        <span>📊</span>
+                        <p>Cotización</p>
+                    </a>
+                    <a href="#" class="create-item">
+                        <span>🔄</span>
+                        <p>Nota de crédito</p>
+                    </a>
+                    <a href="#" class="create-item">
+                        <span>💳</span>
+                        <p>Pago</p>
+                    </a>
+                </div>
             </div>
 
-            <!-- Tabla de Actividad -->
+            <!-- Facturas Pendientes -->
             <div class="panel-section">
-                <h2>Facturas Pendientes</h2>
+                <h2>Facturas pendientes</h2>
+                <div class="filters-bar">
+                    <select><option>Período: Todos</option></select>
+                    <input type="text" placeholder="Palabra clave: Cliente, Número...">
+                    <button class="btn-primary">Crear una factura</button>
+                </div>
                 <table>
                     <thead>
                         <tr>
                             <th>Fecha</th>
                             <th>Número</th>
                             <th>Cliente</th>
+                            <th>Importe a pagar</th>
                             <th>Total</th>
                             <th>Estado</th>
+                            <th>Enviado</th>
+                            <th>Acción</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td colspan="5" style="text-align: center; color: #70757a; padding: 2rem;">
-                                No hay facturas pendientes registradas por el momento. ¡Crea la primera!
+                            <td colspan="8" style="text-align: center; color: #70757a; padding: 2rem;">
+                                No se han encontrado facturas
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+
+            <!-- Grid Inferior: Comenzar e Ingresos por Mes -->
+            <div class="bottom-grid">
+                <div class="panel-section getting-started">
+                    <h2>Comenzar</h2>
+                    <ul>
+                        <li>Ingrese el nombre de su empresa</li>
+                        <li>Crear una factura</li>
+                        <li>Crear un cliente</li>
+                        <li>Verificar mi cuenta</li>
+                        <li>Agregar un logotipo</li>
+                        <li>Establecer mi contraseña</li>
+                    </ul>
+                </div>
+
+                <div class="panel-section">
+                    <h2>Ingresos por mes</h2>
+                    <div class="chart-placeholder">
+                        <div class="bar-col"><div class="bar"></div><span>Abril</span></div>
+                        <div class="bar-col"><div class="bar"></div><span>Mayo</span></div>
+                        <div class="bar-col"><div class="bar"></div><span>Junio</span></div>
+                        <div class="bar-col"><div class="bar"></div><span>Julio</span></div>
+                        <div class="bar-col"><div class="bar"></div><span>Agosto</span></div>
+                        <div class="bar-col"><div class="bar"></div><span>Septiembre</span></div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
