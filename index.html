@@ -64,7 +64,7 @@
             background: white; padding: 2.5rem; border-radius: 12px; width: 90%; max-width: 420px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.3); text-align: center; position: relative; border-top: 5px solid #ff9800;
         }
-        .pro-card h2 { color: #d97706; margin-bottom: 0.5rem; font-size: 1.4rem; }
+        .pro-card h2 { color: #d97706; margin-bottom: 0.5rem; font-size: 1.4rem; border: none; padding: 0; }
         .pro-card p { color: #555; font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.4; }
         .pro-btn {
             background-color: #28a745; color: white; border: none; padding: 0.8rem 1.5rem;
@@ -144,37 +144,35 @@
     <div id="pro-modal">
         <div class="pro-card">
             <button class="close-modal" onclick="cerrarModalPro()">×</button>
-            <h2>⭐ Función Exclusiva / Límite de Plan</h2>
-            <p id="pro-message">Has alcanzado el límite de tu plan actual o estás intentando acceder a una función Pro.</p>
+            <h2>⭐ Función Exclusiva</h2>
+            <p id="pro-message">Este módulo está reservado para planes superiores.</p>
             <a href="subscription.html" class="pro-btn">Ver Planes y Actualizar</a>
         </div>
     </div>
 
-    <!-- Menú Lateral BLINDADO -->
+    <!-- Menú Lateral -->
     <sidebar>
         <div class="sidebar-brand">
             <span>⚙️</span> GesPyme
         </div>
         <ul class="sidebar-menu">
-            <li class="active"><a href="index.html">🏠 Panel</a></li>
-            <li><a href="clientes.html">👥 Clientes</a></li>
-            
-            <!-- Bloqueadas / Limitadas estrictamente -->
-            <li><a href="#" onclick="verificarRestriccionModulo('facturas')">📄 Facturas</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('facturas')">➕ Nueva factura</a></li>
-            
-            <li><a href="cotizaciones.html">📊 Cotizaciones</a></li>
-            <li><a href="nueva-cotizacion.html" class="sub-item">➕ Nueva cotización</a></li>
-            
-            <li><a href="#" onclick="verificarRestriccionModulo('notas')">🔄 Notas de crédito</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('ordenes')">🛠 Orden de Servicio</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('pagos')">💳 Pagos</a></li>
-            
-            <li><a href="articulos.html">📦 Artículos</a></li>
-            <li><a href="informes.html">📈 Informes</a></li>
-            <li><a href="configuracion.html">🔧 Configuración</a></li>
-            <li><a href="subscription.html" style="color: #ffd700;">⭐ Subscription Pro</a></li>
-            <li id="menuCerrarSesion" style="display:none;"><a href="#" onclick="cerrarSesion();" style="color: #ff9999;">🚪 Cerrar Sesión</a></li>
+            <li class="active"><a href="index.html">Panel</a></li>
+            <li><a href="clientes.html">Clientes</a></li>
+            <li><a href="#" onclick="verificarRestriccionModulo('facturas')">Facturas</a></li>
+            <li><a href="#" onclick="verificarRestriccionModulo('facturas')" class="sub-item">Nueva factura</a></li>
+            <li><a href="cotizaciones.html">Cotizaciones</a></li>
+            <li><a href="nueva-cotizacion.html" class="sub-item">Nueva cotización</a></li>
+            <li><a href="#" onclick="verificarRestriccionModulo('notas')">Notas de crédito</a></li>
+            <li><a href="#" onclick="verificarRestriccionModulo('ordenes')">Orden de Servicio</a></li>
+            <li><a href="#" onclick="verificarRestriccionModulo('ordenes')" class="sub-item">Nueva orden</a></li>
+            <li><a href="#" onclick="verificarRestriccionModulo('pagos')">Pagos</a></li>
+            <li><a href="reembolsos.html">Reembolsos</a></li>
+            <li><a href="articulos.html">Artículos</a></li>
+            <li><a href="informes.html">Informes</a></li>
+            <li><a href="herramientas.html">Herramientas</a></li>
+            <li><a href="configuracion.html">Configuración</a></li>
+            <li><a href="subscription.html" style="color: #ffd700;">Subscription Pro</a></li>
+            <li id="menuCerrarSesion" style="display:none;"><a href="#" onclick="cerrarSesion();" style="color: #ff9999;">Cerrar Sesión</a></li>
         </ul>
         <div class="sidebar-footer">
             GesPyme © 2026
@@ -296,7 +294,6 @@
             let planKey = obtenerPlanActual();
             let usoActual = obtenerUsoActual();
             
-            // Si está en plan gratuito y trata de entrar a módulos restringidos (facturas, notas, órdenes, pagos)
             if (planKey === 'free' && (modulo === 'facturas' || modulo === 'notas' || modulo === 'ordenes' || modulo === 'pagos')) {
                 let nombresModulos = {
                     'facturas': 'Facturación',
@@ -304,12 +301,11 @@
                     'ordenes': 'Órdenes de Servicio',
                     'pagos': 'Gestión de Pagos'
                 };
-                document.getElementById("pro-message").innerHTML = `El módulo de <strong>${nombresModulos[modulo]}</strong> está reservado para planes superiores.<br><br>Actualiza tu suscripción para desbloquearlo y potenciar tu negocio.`;
+                document.getElementById("pro-message").innerHTML = `El módulo de <strong>${nombresModulos[modulo]}</strong> está reservado para planes superiores.<br><br>Actualiza tu suscripción para desbloquearlo.`;
                 document.getElementById("pro-modal").style.display = "flex";
                 return;
             }
 
-            // Validación por límite general de documentos alcanzado
             let planInfo = PLANES_LIMITES[planKey] || PLANES_LIMITES['free'];
             if (usoActual >= planInfo.limite) {
                 document.getElementById("pro-message").innerHTML = `Has alcanzado el límite de <strong>${planInfo.limite} documentos</strong> de tu <strong>${planInfo.nombre}</strong>.<br><br>Actualiza tu plan para continuar operando.`;
@@ -317,7 +313,6 @@
                 return;
             }
 
-            // Si pasa todas las validaciones
             alert(`¡Acceso concedido al módulo de ${modulo}!`);
         }
 
