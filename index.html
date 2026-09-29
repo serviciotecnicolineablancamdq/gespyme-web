@@ -156,23 +156,23 @@
             <span>⚙️</span> GesPyme
         </div>
         <ul class="sidebar-menu">
-            <li class="active"><a href="index.html">Panel</a></li>
-            <li><a href="clientes.html">Clientes</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('facturas')">Facturas</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('facturas')" class="sub-item">Nueva factura</a></li>
-            <li><a href="cotizaciones.html">Cotizaciones</a></li>
-            <li><a href="nueva-cotizacion.html" class="sub-item">Nueva cotización</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('notas')">Notas de crédito</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('ordenes')">Orden de Servicio</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('ordenes')" class="sub-item">Nueva orden</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('pagos')">Pagos</a></li>
-            <li><a href="reembolsos.html">Reembolsos</a></li>
-            <li><a href="articulos.html">Artículos</a></li>
-            <li><a href="informes.html">Informes</a></li>
-            <li><a href="herramientas.html">Herramientas</a></li>
-            <li><a href="configuracion.html">Configuración</a></li>
-            <li><a href="subscription.html" style="color: #ffd700;">Subscription Pro</a></li>
-            <li id="menuCerrarSesion" style="display:none;"><a href="#" onclick="cerrarSesion();" style="color: #ff9999;">Cerrar Sesión</a></li>
+            <li class="active"><a href="index.html">🏠 Panel</a></li>
+            <li><a href="clientes.html">👥 Clientes</a></li>
+            <li><a href="#" onclick="verificarRestriccionModulo('facturas')">📄 Facturas</a></li>
+            <li><a href="#" onclick="verificarRestriccionModulo('facturas')" class="sub-item">➕ Nueva factura</a></li>
+            <li><a href="cotizaciones.html">📊 Cotizaciones</a></li>
+            <li><a href="nueva-cotizacion.html" class="sub-item">➕ Nueva cotización</a></li>
+            <li><a href="#" onclick="verificarRestriccionModulo('notas')">🔄 Notas de crédito</a></li>
+            <li><a href="#" onclick="verificarRestriccionModulo('ordenes')">🛠️ Orden de Servicio</a></li>
+            <li><a href="#" onclick="verificarRestriccionModulo('ordenes')" class="sub-item">➕ Nueva orden</a></li>
+            <li><a href="#" onclick="verificarRestriccionModulo('pagos')">💳 Pagos</a></li>
+            <li><a href="reembolsos.html">💸 Reembolsos</a></li>
+            <li><a href="articulos.html">📦 Artículos</a></li>
+            <li><a href="informes.html">📈 Informes</a></li>
+            <li><a href="herramientas.html">🔧 Herramientas</a></li>
+            <li><a href="configuracion.html">⚙️ Configuración</a></li>
+            <li><a href="subscription.html" style="color: #ffd700;">⭐ Subscription Pro</a></li>
+            <li id="menuCerrarSesion" style="display:none;"><a href="#" onclick="cerrarSesion();" style="color: #ff9999;">🚪 Cerrar Sesión</a></li>
         </ul>
         <div class="sidebar-footer">
             GesPyme © 2026
@@ -289,7 +289,6 @@
             return uso ? parseInt(uso) : 0;
         }
 
-        // FUNCIÓN CENTRAL DE SEGURIDAD PARA BLOQUEAR MÓDULOS PRO / LÍMITES
         function verificarRestriccionModulo(modulo) {
             let planKey = obtenerPlanActual();
             let usoActual = obtenerUsoActual();
