@@ -370,7 +370,8 @@
             let marcaSide = document.getElementById("lblBrandTextSide");
             let marcaBottom = document.getElementById("lblBrandTextBottom");
             
-            let textoHtml = esDev ? "GesPyme <span style='color: #4ade80; font-size: 0.75rem;'>[DEV]</span>" : "GesPyme";
+            let textoHtml = esDev ? "GesPyme <span style='color: #4ade80; font-size: 0.75rem;'>[DEV]</span>{" : "GesPyme";
+
             
             if(marcaSide) marcaSide.innerHTML = textoHtml;
             if(marcaBottom) marcaBottom.innerHTML = "⚙ " + textoHtml;
