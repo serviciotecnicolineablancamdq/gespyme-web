@@ -22,7 +22,6 @@
         
         body { background-color: var(--bg-color); color: var(--text-color); display: flex; min-height: 100vh; overflow-x: hidden; width: 100%; flex-direction: column; }
         
-        /* Botón de menú hamburguesa para celulares */
         .menu-toggle {
             display: none; background: var(--sidebar-bg); color: white; border: none;
             padding: 0.5rem 0.8rem; border-radius: 4px; font-size: 1.2rem; cursor: pointer; z-index: 1001;
@@ -31,29 +30,14 @@
             .menu-toggle { display: inline-block; }
         }
 
-        /* Banner inferior flotante adaptado para no pisar el menú lateral en escritorio */
         #welcome-banner {
-            position: fixed;
-            bottom: 0;
-            right: 0;
-            width: 100%;
+            position: fixed; bottom: 0; right: 0; width: 100%;
             background: linear-gradient(135deg, #1a73e8, #2b3856);
-            color: white; 
-            padding: 10px 20px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-            box-shadow: 0 -4px 15px rgba(0,0,0,0.25); 
-            font-size: 0.85rem; 
-            gap: 10px; 
-            flex-wrap: wrap;
-            z-index: 9999;
+            color: white; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.25); font-size: 0.85rem; gap: 10px; flex-wrap: wrap; z-index: 9999;
         }
         @media (min-width: 768px) {
-            #welcome-banner {
-                width: calc(100% - 260px);
-                left: 260px;
-            }
+            #welcome-banner { width: calc(100% - 260px); left: 260px; }
         }
         #welcome-banner .banner-info { display: flex; align-items: center; gap: 10px; }
         #welcome-banner button {
@@ -61,7 +45,6 @@
             border-radius: 4px; font-weight: bold; cursor: pointer; white-space: nowrap;
         }
 
-        /* Modales generales */
         #auth-modal, #admin-modal, #pro-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.6); display: none; justify-content: center; align-items: center; z-index: 20000; padding: 15px;
@@ -82,10 +65,8 @@
         }
         .close-modal { position: absolute; top: 12px; right: 15px; background: none; border: none; font-size: 1.4rem; cursor: pointer; color: #888; }
 
-        /* Contenedor principal de la app */
         .app-wrapper { display: flex; width: 100%; flex: 1; position: relative; }
 
-        /* Menú Lateral Responsivo */
         sidebar { 
             width: 260px; background-color: var(--sidebar-bg); color: white; display: flex; flex-direction: column; 
             position: fixed; height: 100vh; top: 0; left: 0; z-index: 1000; transition: transform 0.3s ease;
@@ -101,37 +82,29 @@
         .sidebar-menu .sub-item { padding-left: 2.2rem; font-size: 0.85rem; }
         .sidebar-footer { padding: 0.8rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.8rem; color: #a0a0a0; text-align: center; }
 
-        /* Contenido principal */
         .main-content { flex: 1; display: flex; flex-direction: column; width: 100%; margin-left: 0; padding-bottom: 70px; }
         @media (min-width: 768px) {
             .main-content { margin-left: 260px; }
         }
 
         header { background: white; padding: 0.8rem 1.5rem; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
-
         .plan-badge { background: #e2e8f0; color: #475569; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
         .user-profile { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: #555; font-weight: 500; background: #f8f9fa; padding: 0.4rem 0.8rem; border-radius: 4px; border: 1px solid #ddd; }
-        
         .container { padding: 1.5rem; max-width: 1200px; width: 100%; margin: 0 auto; flex: 1; }
-        
         .panel-section { background: white; border-radius: 8px; padding: 1.2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 1.5rem; }
         .panel-section h2 { margin-bottom: 1rem; font-size: 1.1rem; color: #333; }
-        
         .quick-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 0.8rem; }
         .action-card { background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 6px; padding: 0.8rem; text-align: center; text-decoration: none; color: #333; transition: 0.2s; display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; }
         .action-card:hover { background: #e9ecef; border-color: #cbd3da; }
         .action-icon { font-size: 1.4rem; }
         .action-text { font-size: 0.8rem; font-weight: 500; }
-
         .filters-bar { display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; align-items: center; }
         .filters-bar select, .filters-bar input { padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.9rem; width: 100%; max-width: 250px; }
         .btn-primary { background-color: #28a745; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-weight: 500; text-decoration: none; display: inline-block; text-align: center; }
-        
         .table-responsive { width: 100%; overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; text-align: left; margin-top: 1rem; min-width: 500px; }
         th, td { padding: 0.75rem; border-bottom: 1px solid #eee; font-size: 0.9rem; }
         th { background-color: #f8f9fa; color: #5f6368; }
-
         .bottom-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
         @media (min-width: 768px) { .bottom-grid { grid-template-columns: 2fr 1fr; } }
         .checklist { list-style: none; padding-left: 0; }
@@ -141,7 +114,6 @@
 </head>
 <body>
 
-    <!-- MODAL DE REGISTRO RÁPIDO -->
     <div id="auth-modal">
         <div class="auth-card">
             <button class="close-modal" onclick="cerrarModalRegistro()">×</button>
@@ -153,16 +125,13 @@
         </div>
     </div>
 
-    <!-- PANEL ADMIN MANUAL DE PLANES -->
     <div id="admin-modal">
         <div class="admin-card" style="border-top: 5px solid #28a745;">
             <button class="close-modal" onclick="cerrarModalAdmin()">×</button>
             <h2 style="color: #28a745;">👑 Panel Admin de Planes</h2>
             <p>Actualización manual tras verificar pago.</p>
-            
             <label style="font-size: 0.85rem; font-weight: bold; display: block; text-align: left; margin-bottom: 5px;">Correo del Cliente:</label>
             <input type="email" id="adminClientEmail" placeholder="ejemplo@correo.com">
-
             <label style="font-size: 0.85rem; font-weight: bold; display: block; text-align: left; margin-bottom: 5px;">Seleccionar Nuevo Plan:</label>
             <select id="selectNuevoPlan">
                 <option value="free">Plan Gratuito (5 documentos)</option>
@@ -175,7 +144,6 @@
         </div>
     </div>
 
-    <!-- MODAL DE RESTRICCIÓN DE PLANES -->
     <div id="pro-modal">
         <div class="pro-card" style="border-top: 5px solid #ff9800;">
             <button class="close-modal" onclick="cerrarModalPro()">×</button>
@@ -186,7 +154,6 @@
     </div>
 
     <div class="app-wrapper">
-        <!-- Menú Lateral -->
         <sidebar id="sidebarMenu">
             <div class="sidebar-brand" onclick="intentarActivarModoDev()" title="Haz 3 clics aquí para Modo Desarrollador">
                 <span>⚙</span> <span id="lblBrandTextSide">GesPyme</span>
@@ -211,12 +178,9 @@
                 <li><a href="#" onclick="abrirAdminModal(event)" style="color: #4ade80;">👑 Activar Plan (Admin)</a></li>
                 <li id="menuCerrarSesion" style="display:none;"><a href="#" onclick="cerrarSesion();" style="color: #ff9999;">🚪 Cerrar Sesión</a></li>
             </ul>
-            <div class="sidebar-footer">
-                GesPyme © 2026
-            </div>
+            <div class="sidebar-footer">GesPyme © 2026</div>
         </sidebar>
 
-        <!-- Área Principal -->
         <div class="main-content">
             <header>
                 <div style="display: flex; align-items: center; gap: 12px;">
@@ -229,39 +193,30 @@
             </header>
 
             <div class="container">
-                
-                <!-- Crear -->
                 <div class="panel-section">
                     <h2>Crear</h2>
                     <div class="quick-actions">
                         <a href="nueva-cotizacion.html" class="action-card" onclick="return verificarRestriccionModuloLink('cotizaciones', event)">
-                            <span class="action-icon">📊</span>
-                            <span class="action-text">Cotización</span>
+                            <span class="action-icon">📊</span><span class="action-text">Cotización</span>
                         </a>
                         <a href="facturas.html" class="action-card" onclick="return verificarRestriccionModuloLink('facturas', event)">
-                            <span class="action-icon">📄</span>
-                            <span class="action-text">Factura</span>
+                            <span class="action-icon">📄</span><span class="action-text">Factura</span>
                         </a>
                         <a href="ordenes.html" class="action-card" onclick="return verificarRestriccionModuloLink('ordenes', event)">
-                            <span class="action-icon">🛠️</span>
-                            <span class="action-text">Orden Serv.</span>
+                            <span class="action-icon">🛠️</span><span class="action-text">Orden Serv.</span>
                         </a>
                         <a href="clientes.html" class="action-card" onclick="return verificarRestriccionModuloLink('clientes', event)">
-                            <span class="action-icon">👤</span>
-                            <span class="action-text">Cliente</span>
+                            <span class="action-icon">👤</span><span class="action-text">Cliente</span>
                         </a>
                         <a href="notas-credito.html" class="action-card" onclick="return verificarRestriccionModuloLink('notas', event)">
-                            <span class="action-icon">🔄</span>
-                            <span class="action-text">Nota crédito</span>
+                            <span class="action-icon">🔄</span><span class="action-text">Nota crédito</span>
                         </a>
                         <a href="pagos.html" class="action-card" onclick="return verificarRestriccionModuloLink('pagos', event)">
-                            <span class="action-icon">💳</span>
-                            <span class="action-text">Pago</span>
+                            <span class="action-icon">💳</span><span class="action-text">Pago</span>
                         </a>
                     </div>
                 </div>
 
-                <!-- Cotizaciones recientes -->
                 <div class="panel-section">
                     <h2>Cotizaciones Recientes</h2>
                     <div class="filters-bar">
@@ -272,12 +227,7 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Fecha</th>
-                                    <th>Nº Cotización</th>
-                                    <th>Cliente</th>
-                                    <th>Validez</th>
-                                    <th>Total</th>
-                                    <th>Acción</th>
+                                    <th>Fecha</th><th>Nº Cotización</th><th>Cliente</th><th>Validez</th><th>Total</th><th>Acción</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -291,7 +241,6 @@
                     </div>
                 </div>
 
-                <!-- Sección Inferior -->
                 <div class="bottom-grid">
                     <div class="panel-section" style="margin-bottom: 0;">
                         <h2>Límites de tu Plan Actual</h2>
@@ -302,16 +251,12 @@
                     </div>
                     <div class="panel-section" style="margin-bottom: 0; background: #fff8e1; border: 1px solid #ffe0b2;">
                         <h2 style="color: #d97706;">⚡ Actualiza tu Plan</h2>
-                        <p style="font-size: 0.85rem; color: #555; line-height: 1.4; margin-bottom: 10px;">
-                            Escala tus operaciones con los planes superiores.
-                        </p>
+                        <p style="font-size: 0.85rem; color: #555; line-height: 1.4; margin-bottom: 10px;">Escala tus operaciones con los planes superiores.</p>
                         <a href="subscription.html" style="font-size: 0.85rem; font-weight: bold; color: #d97706; text-decoration: none;">Ver detalles y precios →</a>
                     </div>
                 </div>
-
             </div>
 
-            <!-- BANNER INFERIOR FLOTANTE -->
             <div id="welcome-banner">
                 <div class="banner-info">
                     <span>🚀</span>
@@ -327,7 +272,6 @@
         </div>
     </div>
 
-    <!-- Script de Lógica -->
     <script>
         const PLANES_LIMITES = {
             'free': { limite: 5, nombre: 'Plan Gratuito' },
@@ -386,6 +330,7 @@
         }
 
         function verificarRestriccionModuloLink(modulo, event) {
+            // VERIFICACIÓN CLAVE: Si el modo dev está activo, salta cualquier bloqueo
             if (localStorage.getItem("gespyme_modo_dev") === "true") {
                 return true; 
             }
@@ -484,11 +429,6 @@
 
         function cerrarModalPro() {
             document.getElementById("pro-modal").style.display = "none";
-        }
-
-        function verificarAccion(accion) {
-            if (localStorage.getItem("gespyme_modo_dev") === "true") return;
-            alert(`¡Acción permitida! Estás gestionando: ${accion}`);
         }
 
         function registrarYAcceder() {
