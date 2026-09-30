@@ -20,29 +20,33 @@
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
         
-        /* Estructura general adaptada para móviles y escritorio */
-        body { background-color: var(--bg-color); color: var(--text-color); display: flex; flex-direction: column; min-height: 100vh; overflow-x: hidden; }
-        @media (min-width: 768px) {
-            body { flex-direction: row; height: 100vh; overflow: hidden; }
-        }
+        body { background-color: var(--bg-color); color: var(--text-color); display: flex; min-height: 100vh; overflow-x: hidden; width: 100%; }
         
+        /* Botón de menú hamburguesa para celulares */
+        .menu-toggle {
+            display: none; background: var(--sidebar-bg); color: white; border: none;
+            padding: 0.5rem 0.8rem; border-radius: 4px; font-size: 1.2rem; cursor: pointer; z-index: 1001;
+        }
+        @media (max-width: 767px) {
+            .menu-toggle { display: inline-block; }
+        }
+
         /* Banner superior de bienvenida */
         #welcome-banner {
-            width: 100%; background: linear-gradient(135deg, #1a73e8, #2b3856);
-            color: white; padding: 12px 20px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
-            z-index: 9999; box-shadow: 0 4px 12px rgba(0,0,0,0.2); font-size: 0.9rem; gap: 10px;
+            position: fixed; top: 0; left: 0; width: 100%; background: linear-gradient(135deg, #1a73e8, #2b3856);
+            color: white; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center;
+            z-index: 10002; box-shadow: 0 4px 12px rgba(0,0,0,0.2); font-size: 0.85rem; gap: 10px;
         }
-        #welcome-banner .banner-info { display: flex; align-items: center; gap: 15px; }
+        #welcome-banner .banner-info { display: flex; align-items: center; gap: 10px; }
         #welcome-banner button {
-            background: white; color: var(--primary-color); border: none; padding: 6px 14px;
-            border-radius: 4px; font-weight: bold; cursor: pointer; transition: 0.2s;
+            background: white; color: var(--primary-color); border: none; padding: 5px 12px;
+            border-radius: 4px; font-weight: bold; cursor: pointer; white-space: nowrap;
         }
-        #welcome-banner button:hover { background: #f0f0f0; }
 
-        /* Modales generales (Pantalla completa y centrados) */
+        /* Modales generales */
         #auth-modal, #admin-modal, #pro-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.6); display: none; justify-content: center; align-items: center; z-index: 10000; padding: 15px;
+            background: rgba(0, 0, 0, 0.6); display: none; justify-content: center; align-items: center; z-index: 20000; padding: 15px;
         }
         .auth-card, .admin-card, .pro-card {
             background: white; padding: 2rem; border-radius: 12px; width: 100%; max-width: 400px;
@@ -60,26 +64,33 @@
         }
         .close-modal { position: absolute; top: 12px; right: 15px; background: none; border: none; font-size: 1.4rem; cursor: pointer; color: #888; }
 
-        /* Menú Lateral Responsivo */
+        /* Menú Lateral Responsivo (Oculto en móvil por defecto, fijo en escritorio) */
         sidebar { 
-            width: 100%; background-color: var(--sidebar-bg); color: white; display: flex; flex-direction: column; flex-shrink: 0; 
+            width: 260px; background-color: var(--sidebar-bg); color: white; display: flex; flex-direction: column; 
+            position: fixed; height: 100vh; top: 0; left: 0; z-index: 1000; transition: transform 0.3s ease;
         }
-        @media (min-width: 768px) {
-            sidebar { width: 250px; height: 100vh; overflow-y: auto; }
+        @media (max-width: 767px) {
+            sidebar { transform: translateX(-100%); }
+            sidebar.open { transform: translateX(0); }
         }
         .sidebar-brand { padding: 1.2rem; font-size: 1.1rem; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
-        .sidebar-menu { list-style: none; padding: 0.5rem 0; }
-        .sidebar-menu li a { display: block; padding: 0.7rem 1.2rem; color: #b0c4de; text-decoration: none; font-size: 0.9rem; transition: 0.2s; }
+        .sidebar-menu { list-style: none; padding: 0.5rem 0; overflow-y: auto; flex: 1; max-height: calc(100vh - 120px); }
+        .sidebar-menu li a { display: block; padding: 0.6rem 1.2rem; color: #b0c4de; text-decoration: none; font-size: 0.9rem; transition: 0.2s; }
         .sidebar-menu li.active a, .sidebar-menu li a:hover { background-color: rgba(255,255,255,0.1); color: white; }
         .sidebar-menu .sub-item { padding-left: 2.2rem; font-size: 0.85rem; }
-        .sidebar-footer { padding: 1rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.8rem; color: #a0a0a0; text-align: center; }
+        .sidebar-footer { padding: 0.8rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.8rem; color: #a0a0a0; text-align: center; }
 
-        /* Contenido principal */
-        .main-content { flex: 1; display: flex; flex-direction: column; width: 100%; }
+        /* Contenido principal con margen izquierdo para dejar espacio al menú en escritorio */
+        .main-content { flex: 1; display: flex; flex-direction: column; width: 100%; margin-left: 0; min-height: 100vh; }
         @media (min-width: 768px) {
-            .main-content { height: 100vh; overflow-y: auto; }
+            .main-content { margin-left: 260px; }
         }
-        header { background: white; padding: 0.8rem 1.5rem; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+
+        header { background: white; padding: 0.8rem 1.5rem; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 45px; }
+        @media (min-width: 768px) {
+            header { margin-top: 0; }
+        }
+
         .plan-badge { background: #e2e8f0; color: #475569; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
         .user-profile { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: #555; font-weight: 500; background: #f8f9fa; padding: 0.4rem 0.8rem; border-radius: 4px; border: 1px solid #ddd; }
         
@@ -98,7 +109,6 @@
         .filters-bar select, .filters-bar input { padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.9rem; width: 100%; max-width: 250px; }
         .btn-primary { background-color: #28a745; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-weight: 500; text-decoration: none; display: inline-block; text-align: center; }
         
-        /* Contenedor con scroll horizontal para tablas en móviles */
         .table-responsive { width: 100%; overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; text-align: left; margin-top: 1rem; min-width: 500px; }
         th, td { padding: 0.75rem; border-bottom: 1px solid #eee; font-size: 0.9rem; }
@@ -117,11 +127,9 @@
     <div id="welcome-banner">
         <div class="banner-info">
             <span>🚀</span>
-            <div>
-                <strong>¡Bienvenido a GesPyme!</strong> Estás en el Plan Gratuito.
-            </div>
+            <div><strong>¡Bienvenido a GesPyme!</strong> Plan Gratuito.</div>
         </div>
-        <button onclick="abrirModalRegistro()">Crear mi cuenta</button>
+        <button onclick="abrirModalRegistro()">Crear cuenta</button>
     </div>
 
     <!-- MODAL DE REGISTRO RÁPIDO -->
@@ -141,7 +149,7 @@
         <div class="admin-card" style="border-top: 5px solid #28a745;">
             <button class="close-modal" onclick="cerrarModalAdmin()">×</button>
             <h2 style="color: #28a745;">👑 Panel Admin de Planes</h2>
-            <p>Actualización manual tras verificar pago. Se enviará un correo de aviso.</p>
+            <p>Actualización manual tras verificar pago.</p>
             
             <label style="font-size: 0.85rem; font-weight: bold; display: block; text-align: left; margin-bottom: 5px;">Correo del Cliente:</label>
             <input type="email" id="adminClientEmail" placeholder="ejemplo@correo.com">
@@ -158,7 +166,7 @@
         </div>
     </div>
 
-    <!-- MODAL DE RESTRICCIÓN DE PLANES Y LÍMITES -->
+    <!-- MODAL DE RESTRICCIÓN DE PLANES -->
     <div id="pro-modal">
         <div class="pro-card" style="border-top: 5px solid #ff9800;">
             <button class="close-modal" onclick="cerrarModalPro()">×</button>
@@ -169,7 +177,7 @@
     </div>
 
     <!-- Menú Lateral -->
-    <sidebar>
+    <sidebar id="sidebarMenu">
         <div class="sidebar-brand" onclick="intentarActivarModoDev()" title="Haz 3 clics aquí para Modo Desarrollador">
             <span>⚙</span> <span id="lblBrandText">GesPyme</span>
         </div>
@@ -201,7 +209,10 @@
     <!-- Área Principal -->
     <div class="main-content">
         <header>
-            <span class="plan-badge" id="lblPlanBadge">Plan Gratuito</span>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+                <span class="plan-badge" id="lblPlanBadge">Plan Gratuito</span>
+            </div>
             <div class="user-profile">
                 <span>👤</span> <span id="lblUsuario">Visitante</span>
             </div>
@@ -303,6 +314,11 @@
 
         let clicsDev = 0;
         let tiempoUltimoClic = 0;
+
+        function toggleSidebar() {
+            let sidebar = document.getElementById("sidebarMenu");
+            sidebar.classList.toggle("open");
+        }
 
         function intentarActivarModoDev() {
             let ahora = new Date().getTime();
