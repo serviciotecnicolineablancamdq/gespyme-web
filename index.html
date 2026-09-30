@@ -31,12 +31,29 @@
             .menu-toggle { display: inline-block; }
         }
 
-        /* Banner inferior de bienvenida y activación Dev */
+        /* Banner inferior flotante adaptado para no pisar el menú lateral en escritorio */
         #welcome-banner {
-            width: 100%; background: linear-gradient(135deg, #1a73e8, #2b3856);
-            color: white; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 -4px 12px rgba(0,0,0,0.15); font-size: 0.85rem; gap: 10px; flex-wrap: wrap;
-            margin-top: auto; z-index: 100;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            background: linear-gradient(135deg, #1a73e8, #2b3856);
+            color: white; 
+            padding: 10px 20px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.25); 
+            font-size: 0.85rem; 
+            gap: 10px; 
+            flex-wrap: wrap;
+            z-index: 9999;
+        }
+        @media (min-width: 768px) {
+            #welcome-banner {
+                width: calc(100% - 260px); /* Deja libre el espacio del menú lateral */
+                left: 260px;
+            }
         }
         #welcome-banner .banner-info { display: flex; align-items: center; gap: 10px; }
         #welcome-banner button {
@@ -65,7 +82,7 @@
         }
         .close-modal { position: absolute; top: 12px; right: 15px; background: none; border: none; font-size: 1.4rem; cursor: pointer; color: #888; }
 
-        /* Contenedor principal de la app para alinear menú y contenido */
+        /* Contenedor principal de la app */
         .app-wrapper { display: flex; width: 100%; flex: 1; position: relative; }
 
         /* Menú Lateral Responsivo */
@@ -85,7 +102,7 @@
         .sidebar-footer { padding: 0.8rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.8rem; color: #a0a0a0; text-align: center; }
 
         /* Contenido principal */
-        .main-content { flex: 1; display: flex; flex-direction: column; width: 100%; margin-left: 0; }
+        .main-content { flex: 1; display: flex; flex-direction: column; width: 100%; margin-left: 0; padding-bottom: 70px; } /* Margen abajo para que el contenido no quede tapado por el banner flotante */
         @media (min-width: 768px) {
             .main-content { margin-left: 260px; }
         }
@@ -294,7 +311,7 @@
 
             </div>
 
-            <!-- BANNER INFERIOR DE BIENVENIDA Y ACCESO DEV (Hacer 3 clics sobre GesPyme aquí abajo) -->
+            <!-- BANNER INFERIOR FLOTANTE (No se solapa con el menú lateral de escritorio) -->
             <div id="welcome-banner">
                 <div class="banner-info">
                     <span>🚀</span>
@@ -522,7 +539,6 @@
             let usuarioGuardado = localStorage.getItem("gespyme_usuario");
             if (usuarioGuardado) {
                 document.getElementById("welcome-banner").style.display = "none";
-                actualizarIntentarModoDev = true;
             }
         };
     </script>
