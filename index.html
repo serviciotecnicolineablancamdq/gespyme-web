@@ -8,7 +8,7 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="text/javascript">
         (function() {
-            emailjs.init("QmQpltvvFAOghrfot"); // Clave pública configurada
+            emailjs.init("QmQpltvvFAOghrfot");
         })();
     </script>
     <style>
@@ -19,13 +19,18 @@
             --bg-color: #f4f6f9;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-color); display: flex; height: 100vh; overflow: hidden; }
+        
+        /* Estructura general adaptada para móviles y escritorio */
+        body { background-color: var(--bg-color); color: var(--text-color); display: flex; flex-direction: column; min-height: 100vh; overflow-x: hidden; }
+        @media (min-width: 768px) {
+            body { flex-direction: row; height: 100vh; overflow: hidden; }
+        }
         
         /* Banner superior de bienvenida */
         #welcome-banner {
-            position: fixed; top: 0; left: 0; width: 100%; background: linear-gradient(135deg, #1a73e8, #2b3856);
-            color: white; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center;
-            z-index: 9999; box-shadow: 0 4px 12px rgba(0,0,0,0.2); font-size: 0.9rem;
+            width: 100%; background: linear-gradient(135deg, #1a73e8, #2b3856);
+            color: white; padding: 12px 20px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+            z-index: 9999; box-shadow: 0 4px 12px rgba(0,0,0,0.2); font-size: 0.9rem; gap: 10px;
         }
         #welcome-banner .banner-info { display: flex; align-items: center; gap: 15px; }
         #welcome-banner button {
@@ -34,18 +39,18 @@
         }
         #welcome-banner button:hover { background: #f0f0f0; }
 
-        /* Modal de Registro rápido */
-        #auth-modal {
+        /* Modales generales (Pantalla completa y centrados) */
+        #auth-modal, #admin-modal, #pro-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.6); display: none; justify-content: center; align-items: center; z-index: 10000;
+            background: rgba(0, 0, 0, 0.6); display: none; justify-content: center; align-items: center; z-index: 10000; padding: 15px;
         }
-        .auth-card {
-            background: white; padding: 2.5rem; border-radius: 12px; width: 90%; max-width: 400px;
+        .auth-card, .admin-card, .pro-card {
+            background: white; padding: 2rem; border-radius: 12px; width: 100%; max-width: 400px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.3); text-align: center; position: relative;
         }
-        .auth-card h2 { color: var(--sidebar-bg); margin-bottom: 0.5rem; font-size: 1.5rem; }
-        .auth-card p { color: #666; font-size: 0.9rem; margin-bottom: 1.5rem; }
-        .auth-card input {
+        .auth-card h2, .admin-card h2, .pro-card h2 { margin-bottom: 0.5rem; font-size: 1.4rem; }
+        .auth-card p, .admin-card p, .pro-card p { color: #666; font-size: 0.9rem; margin-bottom: 1.2rem; }
+        .auth-card input, .admin-card select, .admin-card input {
             width: 100%; padding: 0.8rem; margin-bottom: 1rem; border: 1px solid #ccc;
             border-radius: 6px; font-size: 1rem; outline: none;
         }
@@ -53,60 +58,54 @@
             width: 100%; background-color: var(--primary-color); color: white; border: none;
             padding: 0.8rem; border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer;
         }
-        .close-modal { position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #888; }
+        .close-modal { position: absolute; top: 12px; right: 15px; background: none; border: none; font-size: 1.4rem; cursor: pointer; color: #888; }
 
-        /* Modal de Panel Admin de Planes */
-        #admin-modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.6); display: none; justify-content: center; align-items: center; z-index: 10000;
+        /* Menú Lateral Responsivo */
+        sidebar { 
+            width: 100%; background-color: var(--sidebar-bg); color: white; display: flex; flex-direction: column; flex-shrink: 0; 
         }
-        .admin-card {
-            background: white; padding: 2.5rem; border-radius: 12px; width: 90%; max-width: 450px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.3); text-align: center; position: relative; border-top: 5px solid #28a745;
+        @media (min-width: 768px) {
+            sidebar { width: 250px; height: 100vh; overflow-y: auto; }
         }
-        .admin-card h2 { color: #28a745; margin-bottom: 0.5rem; font-size: 1.4rem; }
-        .admin-card p { color: #555; font-size: 0.9rem; margin-bottom: 1.2rem; }
-        .admin-card select, .admin-card input {
-            width: 100%; padding: 0.8rem; margin-bottom: 1rem; border: 1px solid #ccc;
-            border-radius: 6px; font-size: 0.95rem; outline: none;
-        }
-
-        /* Menú Lateral */
-        sidebar { width: 250px; background-color: var(--sidebar-bg); color: white; display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; margin-top: 45px; }
         .sidebar-brand { padding: 1.2rem; font-size: 1.1rem; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
-        .sidebar-menu { list-style: none; padding: 0.5rem 0; flex: 1; }
-        .sidebar-menu li a { display: block; padding: 0.6rem 1.2rem; color: #b0c4de; text-decoration: none; font-size: 0.9rem; transition: 0.2s; }
+        .sidebar-menu { list-style: none; padding: 0.5rem 0; }
+        .sidebar-menu li a { display: block; padding: 0.7rem 1.2rem; color: #b0c4de; text-decoration: none; font-size: 0.9rem; transition: 0.2s; }
         .sidebar-menu li.active a, .sidebar-menu li a:hover { background-color: rgba(255,255,255,0.1); color: white; }
         .sidebar-menu .sub-item { padding-left: 2.2rem; font-size: 0.85rem; }
         .sidebar-footer { padding: 1rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.8rem; color: #a0a0a0; text-align: center; }
 
         /* Contenido principal */
-        .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; margin-top: 45px; }
-        header { background: white; padding: 0.8rem 2rem; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; }
+        .main-content { flex: 1; display: flex; flex-direction: column; width: 100%; }
+        @media (min-width: 768px) {
+            .main-content { height: 100vh; overflow-y: auto; }
+        }
+        header { background: white; padding: 0.8rem 1.5rem; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
         .plan-badge { background: #e2e8f0; color: #475569; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
         .user-profile { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: #555; font-weight: 500; background: #f8f9fa; padding: 0.4rem 0.8rem; border-radius: 4px; border: 1px solid #ddd; }
         
-        .container { padding: 2rem; max-width: 1200px; width: 100%; margin: 0 auto; }
+        .container { padding: 1.5rem; max-width: 1200px; width: 100%; margin: 0 auto; }
         
-        .panel-section { background: white; border-radius: 8px; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .panel-section { background: white; border-radius: 8px; padding: 1.2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 1.5rem; }
         .panel-section h2 { margin-bottom: 1rem; font-size: 1.1rem; color: #333; }
         
-        .quick-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 1rem; }
-        .action-card { background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 6px; padding: 1rem; text-align: center; text-decoration: none; color: #333; transition: 0.2s; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; }
+        .quick-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 0.8rem; }
+        .action-card { background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 6px; padding: 0.8rem; text-align: center; text-decoration: none; color: #333; transition: 0.2s; display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; }
         .action-card:hover { background: #e9ecef; border-color: #cbd3da; }
-        .action-icon { font-size: 1.5rem; }
-        .action-text { font-size: 0.85rem; font-weight: 500; }
+        .action-icon { font-size: 1.4rem; }
+        .action-text { font-size: 0.8rem; font-weight: 500; }
 
         .filters-bar { display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; align-items: center; }
-        .filters-bar select, .filters-bar input { padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.9rem; }
-        .btn-primary { background-color: #28a745; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-weight: 500; text-decoration: none; display: inline-block; }
+        .filters-bar select, .filters-bar input { padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.9rem; width: 100%; max-width: 250px; }
+        .btn-primary { background-color: #28a745; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-weight: 500; text-decoration: none; display: inline-block; text-align: center; }
         
-        table { width: 100%; border-collapse: collapse; text-align: left; margin-top: 1rem; }
+        /* Contenedor con scroll horizontal para tablas en móviles */
+        .table-responsive { width: 100%; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; text-align: left; margin-top: 1rem; min-width: 500px; }
         th, td { padding: 0.75rem; border-bottom: 1px solid #eee; font-size: 0.9rem; }
         th { background-color: #f8f9fa; color: #5f6368; }
 
-        .bottom-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; }
-        @media (max-width: 768px) { .bottom-grid { grid-template-columns: 1fr; } }
+        .bottom-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+        @media (min-width: 768px) { .bottom-grid { grid-template-columns: 2fr 1fr; } }
         .checklist { list-style: none; padding-left: 0; }
         .checklist li { padding: 0.4rem 0; font-size: 0.9rem; color: #555; display: flex; align-items: center; gap: 8px; }
         .checklist li::before { content: "•"; color: var(--primary-color); font-weight: bold; }
@@ -137,14 +136,14 @@
         </div>
     </div>
 
-    <!-- PANEL ADMIN MANUAL DE PLANES (CON CORREO DE AVISO) -->
+    <!-- PANEL ADMIN MANUAL DE PLANES -->
     <div id="admin-modal">
-        <div class="admin-card">
+        <div class="admin-card" style="border-top: 5px solid #28a745;">
             <button class="close-modal" onclick="cerrarModalAdmin()">×</button>
-            <h2>👑 Panel Admin de Planes</h2>
+            <h2 style="color: #28a745;">👑 Panel Admin de Planes</h2>
             <p>Actualización manual tras verificar pago. Se enviará un correo de aviso.</p>
             
-            <label style="font-size: 0.85rem; font-weight: bold; display: block; text-align: left; margin-bottom: 5px;">Correo del Cliente / Usuario:</label>
+            <label style="font-size: 0.85rem; font-weight: bold; display: block; text-align: left; margin-bottom: 5px;">Correo del Cliente:</label>
             <input type="email" id="adminClientEmail" placeholder="ejemplo@correo.com">
 
             <label style="font-size: 0.85rem; font-weight: bold; display: block; text-align: left; margin-bottom: 5px;">Seleccionar Nuevo Plan:</label>
@@ -161,10 +160,10 @@
 
     <!-- MODAL DE RESTRICCIÓN DE PLANES Y LÍMITES -->
     <div id="pro-modal">
-        <div class="pro-card" style="background: white; padding: 2.5rem; border-radius: 12px; width: 90%; max-width: 420px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); text-align: center; position: relative; border-top: 5px solid #ff9800;">
+        <div class="pro-card" style="border-top: 5px solid #ff9800;">
             <button class="close-modal" onclick="cerrarModalPro()">×</button>
-            <h2 style="color: #d97706; margin-bottom: 0.5rem; font-size: 1.4rem;">⭐ Función Exclusiva</h2>
-            <p id="pro-message" style="color: #555; font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.4;">Este módulo está reservado para planes superiores.</p>
+            <h2 style="color: #d97706;">⭐ Función Exclusiva</h2>
+            <p id="pro-message" style="line-height: 1.4;">Este módulo está reservado para planes superiores.</p>
             <a href="subscription.html" style="background-color: #28a745; color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; width: 100%;">Ver Planes y Actualizar</a>
         </div>
     </div>
@@ -191,7 +190,6 @@
             <li><a href="herramientas.html">🔧 Herramientas</a></li>
             <li><a href="configuracion.html">⚙ Configuración</a></li>
             <li><a href="subscription.html" style="color: #ffd700;">⭐ Subscription Pro</a></li>
-            <!-- BOTÓN SECRETO EN EL MENÚ PARA ABRIR EL PANEL ADMIN DE PAGOS -->
             <li><a href="#" onclick="abrirAdminModal(event)" style="color: #4ade80;">👑 Activar Plan (Admin)</a></li>
             <li id="menuCerrarSesion" style="display:none;"><a href="#" onclick="cerrarSesion();" style="color: #ff9999;">🚪 Cerrar Sesión</a></li>
         </ul>
@@ -211,7 +209,7 @@
 
         <div class="container">
             
-            <!-- Crear (Accesos Directos con Control Estricto) -->
+            <!-- Crear -->
             <div class="panel-section">
                 <h2>Crear</h2>
                 <div class="quick-actions">
@@ -246,28 +244,30 @@
             <div class="panel-section">
                 <h2>Cotizaciones Recientes</h2>
                 <div class="filters-bar">
-                    <input type="text" placeholder="Buscar cotización por cliente...">
+                    <input type="text" placeholder="Buscar cotización...">
                     <a href="nueva-cotizacion.html" class="btn-primary">Crear una cotización</a>
                 </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Fecha</th>
-                            <th>Nº Cotización</th>
-                            <th>Cliente</th>
-                            <th>Validez</th>
-                            <th>Total</th>
-                            <th>Acción</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td colspan="6" style="text-align: center; color: #70757a; padding: 2rem;">
-                                No tienes cotizaciones creadas todavía. <a href="nueva-cotizacion.html" style="color: var(--primary-color);">¡Crea la primera ahora!</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Nº Cotización</th>
+                                <th>Cliente</th>
+                                <th>Validez</th>
+                                <th>Total</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="6" style="text-align: center; color: #70757a; padding: 2rem;">
+                                    No tienes cotizaciones creadas todavía. <a href="nueva-cotizacion.html" style="color: var(--primary-color);">¡Crea la primera ahora!</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <!-- Sección Inferior -->
@@ -276,13 +276,13 @@
                     <h2>Límites de tu Plan Actual</h2>
                     <ul class="checklist" id="listaLimitesInfo">
                         <li>Plan Gratuito: Cotizaciones ilimitadas.</li>
-                        <li>Facturas, Órdenes y Notas de Crédito requieren actualización a un plan superior.</li>
+                        <li>Facturas, Órdenes y Notas de Crédito requieren actualización.</li>
                     </ul>
                 </div>
                 <div class="panel-section" style="margin-bottom: 0; background: #fff8e1; border: 1px solid #ffe0b2;">
                     <h2 style="color: #d97706;">⚡ Actualiza tu Plan</h2>
                     <p style="font-size: 0.85rem; color: #555; line-height: 1.4; margin-bottom: 10px;">
-                        Escala tus operaciones con los planes Básico, Estándar o Plus.
+                        Escala tus operaciones con los planes superiores.
                     </p>
                     <a href="subscription.html" style="font-size: 0.85rem; font-weight: bold; color: #d97706; text-decoration: none;">Ver detalles y precios →</a>
                 </div>
@@ -291,7 +291,7 @@
         </div>
     </div>
 
-    <!-- Script de Lógica de Seguridad, Planes y Modo Desarrollador -->
+    <!-- Script de Lógica -->
     <script>
         const PLANES_LIMITES = {
             'free': { limite: 5, nombre: 'Plan Gratuito' },
@@ -301,7 +301,6 @@
             'pro': { limite: 99999, nombre: 'Plan Pro Ilimitado' }
         };
 
-        // Lógica de clics para activar el Modo Desarrollador de forma secreta (sin alertas molestas)
         let clicsDev = 0;
         let tiempoUltimoClic = 0;
 
@@ -316,11 +315,7 @@
 
             if (clicsDev >= 3) {
                 let modoActual = localStorage.getItem("gespyme_modo_dev") === "true";
-                if (modoActual) {
-                    localStorage.setItem("gespyme_modo_dev", "false");
-                } else {
-                    localStorage.setItem("gespyme_modo_dev", "true");
-                }
+                localStorage.setItem("gespyme_modo_dev", !modoActual);
                 clicsDev = 0;
                 actualizarIndicadorModoDev();
             }
@@ -346,7 +341,6 @@
         }
 
         function verificarRestriccionModuloLink(modulo, event) {
-            // Si está en modo dev, permite el acceso directo de forma completamente silenciosa
             if (localStorage.getItem("gespyme_modo_dev") === "true") {
                 return true; 
             }
@@ -378,11 +372,10 @@
             return true;
         }
 
-        // Funciones del Panel Admin de Planes Manual con notificación de correo
         function abrirAdminModal(event) {
             if (event) event.preventDefault();
-            let passwordAdmin = prompt("Introduce tu clave de Administrador para desbloquear planes:");
-            if (passwordAdmin === "admin123") { // Clave de seguridad de admin
+            let passwordAdmin = prompt("Introduce tu clave de Administrador:");
+            if (passwordAdmin === "admin123") {
                 let usuarioActual = localStorage.getItem("gespyme_usuario");
                 if(usuarioActual) {
                     document.getElementById("adminClientEmail").value = usuarioActual;
@@ -414,17 +407,17 @@
             let templateParams = {
                 nombre: clienteEmail,
                 email: clienteEmail,
-                mensaje: `¡Pago confirmado!\nSe ha activado el plan: ${PLANES_LIMITES[nuevoPlan].nombre} para el cliente/usuario: ${clienteEmail}\nFecha y hora: ${new Date().toLocaleString()}`,
+                mensaje: `¡Pago confirmado!\nSe ha activado el plan: ${PLANES_LIMITES[nuevoPlan].nombre} para el cliente: ${clienteEmail}\nFecha: ${new Date().toLocaleString()}`,
                 title: "Confirmación de Pago y Activación de Plan - GesPyme"
             };
 
             emailjs.send('service_dz3lb36', 'template_khlwu4x', templateParams)
                 .then(function(response) {
-                    alert(`¡Plan actualizado a "${PLANES_LIMITES[nuevoPlan].nombre}" y correo de aviso enviado con éxito!`);
+                    alert(`¡Plan actualizado a "${PLANES_LIMITES[nuevoPlan].nombre}" y correo enviado con éxito!`);
                     cerrarModalAdmin();
                     location.reload();
                 }, function(error) {
-                    alert(`El plan se actualizó localmente, pero hubo un error al enviar el correo: ${JSON.stringify(error)}`);
+                    alert(`El plan se actualizó, pero hubo un error al enviar el correo: ${JSON.stringify(error)}`);
                     cerrarModalAdmin();
                     location.reload();
                 });
@@ -443,9 +436,7 @@
         }
 
         function verificarAccion(accion) {
-            if (localStorage.getItem("gespyme_modo_dev") === "true") {
-                return;
-            }
+            if (localStorage.getItem("gespyme_modo_dev") === "true") return;
             alert(`¡Acción permitida! Estás gestionando: ${accion}`);
         }
 
@@ -468,22 +459,15 @@
             document.getElementById("auth-modal").style.display = "none";
             
             actualizarInterfazUsuario(email);
-
             alert("¡Cuenta creada con éxito! Ya puedes operar con tu Plan Gratuito.");
 
             let templateParams = {
                 nombre: email,
                 email: email,
-                mensaje: "Se ha registrado un nuevo usuario en la plataforma con el correo: " + email + "\nFecha y hora: " + new Date().toLocaleString(),
-                title: "Nuevo Registro de Usuario en GesPyme"
+                mensaje: "Se ha registrado un nuevo usuario: " + email + "\nFecha: " + new Date().toLocaleString(),
+                title: "Nuevo Registro en GesPyme"
             };
-
-            emailjs.send('service_dz3lb36', 'template_khlwu4x', templateParams)
-                .then(function(response) {
-                    console.log('Notificación enviada con éxito.', response.status, response.text);
-                }, function(error) {
-                    console.log('Error al enviar notificación:', error);
-                });
+            emailjs.send('service_dz3lb36', 'template_khlwu4x', templateParams);
         }
 
         function actualizarInterfazUsuario(email) {
