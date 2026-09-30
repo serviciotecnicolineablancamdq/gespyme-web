@@ -301,7 +301,7 @@
             'pro': { limite: 99999, nombre: 'Plan Pro Ilimitado' }
         };
 
-        // Lógica de clics para activar el Modo Desarrollador de forma secreta
+        // Lógica de clics para activar el Modo Desarrollador de forma secreta (sin alertas molestas)
         let clicsDev = 0;
         let tiempoUltimoClic = 0;
 
@@ -318,10 +318,8 @@
                 let modoActual = localStorage.getItem("gespyme_modo_dev") === "true";
                 if (modoActual) {
                     localStorage.setItem("gespyme_modo_dev", "false");
-                    alert("🛠 MODO DESARROLLADOR DESACTIVADO.");
                 } else {
                     localStorage.setItem("gespyme_modo_dev", "true");
-                    alert("🚀 MODO DESARROLLADOR ACTIVADO.");
                 }
                 clicsDev = 0;
                 actualizarIndicadorModoDev();
@@ -348,6 +346,7 @@
         }
 
         function verificarRestriccionModuloLink(modulo, event) {
+            // Si está en modo dev, permite el acceso directo de forma completamente silenciosa
             if (localStorage.getItem("gespyme_modo_dev") === "true") {
                 return true; 
             }
@@ -384,7 +383,6 @@
             if (event) event.preventDefault();
             let passwordAdmin = prompt("Introduce tu clave de Administrador para desbloquear planes:");
             if (passwordAdmin === "admin123") { // Clave de seguridad de admin
-                // Autocompletar con el usuario actual si existe en sesión
                 let usuarioActual = localStorage.getItem("gespyme_usuario");
                 if(usuarioActual) {
                     document.getElementById("adminClientEmail").value = usuarioActual;
@@ -408,13 +406,11 @@
                 return;
             }
 
-            // Aplicamos localmente si es el mismo usuario logueado en este navegador
             let usuarioActual = localStorage.getItem("gespyme_usuario");
             if(usuarioActual === clienteEmail || !usuarioActual) {
                 localStorage.setItem("gespyme_plan", nuevoPlan);
             }
 
-            // Parámetros para enviar la notificación por correo vía EmailJS
             let templateParams = {
                 nombre: clienteEmail,
                 email: clienteEmail,
@@ -422,7 +418,6 @@
                 title: "Confirmación de Pago y Activación de Plan - GesPyme"
             };
 
-            // Enviando correo de alerta de pago
             emailjs.send('service_dz3lb36', 'template_khlwu4x', templateParams)
                 .then(function(response) {
                     alert(`¡Plan actualizado a "${PLANES_LIMITES[nuevoPlan].nombre}" y correo de aviso enviado con éxito!`);
