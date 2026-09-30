@@ -20,7 +20,7 @@
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
         
-        body { background-color: var(--bg-color); color: var(--text-color); display: flex; min-height: 100vh; overflow-x: hidden; width: 100%; }
+        body { background-color: var(--bg-color); color: var(--text-color); display: flex; min-height: 100vh; overflow-x: hidden; width: 100%; flex-direction: column; }
         
         /* Botón de menú hamburguesa para celulares */
         .menu-toggle {
@@ -31,15 +31,16 @@
             .menu-toggle { display: inline-block; }
         }
 
-        /* Banner superior de bienvenida */
+        /* Banner inferior de bienvenida y activación Dev */
         #welcome-banner {
-            position: fixed; top: 0; left: 0; width: 100%; background: linear-gradient(135deg, #1a73e8, #2b3856);
-            color: white; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center;
-            z-index: 10002; box-shadow: 0 4px 12px rgba(0,0,0,0.2); font-size: 0.85rem; gap: 10px;
+            width: 100%; background: linear-gradient(135deg, #1a73e8, #2b3856);
+            color: white; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 -4px 12px rgba(0,0,0,0.15); font-size: 0.85rem; gap: 10px; flex-wrap: wrap;
+            margin-top: auto; z-index: 100;
         }
         #welcome-banner .banner-info { display: flex; align-items: center; gap: 10px; }
         #welcome-banner button {
-            background: white; color: var(--primary-color); border: none; padding: 5px 12px;
+            background: white; color: var(--primary-color); border: none; padding: 6px 14px;
             border-radius: 4px; font-weight: bold; cursor: pointer; white-space: nowrap;
         }
 
@@ -64,6 +65,9 @@
         }
         .close-modal { position: absolute; top: 12px; right: 15px; background: none; border: none; font-size: 1.4rem; cursor: pointer; color: #888; }
 
+        /* Contenedor principal de la app para alinear menú y contenido */
+        .app-wrapper { display: flex; width: 100%; flex: 1; position: relative; }
+
         /* Menú Lateral Responsivo */
         sidebar { 
             width: 260px; background-color: var(--sidebar-bg); color: white; display: flex; flex-direction: column; 
@@ -73,7 +77,7 @@
             sidebar { transform: translateX(-100%); }
             sidebar.open { transform: translateX(0); }
         }
-        .sidebar-brand { padding: 1.2rem; font-size: 1.1rem; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
+        .sidebar-brand { padding: 1.2rem; font-size: 1.1rem; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
         .sidebar-menu { list-style: none; padding: 0.5rem 0; overflow-y: auto; flex: 1; max-height: calc(100vh - 120px); }
         .sidebar-menu li a { display: block; padding: 0.6rem 1.2rem; color: #b0c4de; text-decoration: none; font-size: 0.9rem; transition: 0.2s; }
         .sidebar-menu li.active a, .sidebar-menu li a:hover { background-color: rgba(255,255,255,0.1); color: white; }
@@ -81,25 +85,17 @@
         .sidebar-footer { padding: 0.8rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.8rem; color: #a0a0a0; text-align: center; }
 
         /* Contenido principal */
-        .main-content { flex: 1; display: flex; flex-direction: column; width: 100%; margin-left: 0; min-height: 100vh; }
+        .main-content { flex: 1; display: flex; flex-direction: column; width: 100%; margin-left: 0; }
         @media (min-width: 768px) {
             .main-content { margin-left: 260px; }
         }
 
-        header { background: white; padding: 0.8rem 1.5rem; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 45px; }
-        @media (min-width: 768px) {
-            header { margin-top: 0; }
-        }
-
-        .header-brand {
-            display: flex; align-items: center; gap: 10px; font-weight: bold; font-size: 1.1rem; 
-            color: var(--sidebar-bg); cursor: pointer; user-select: none;
-        }
+        header { background: white; padding: 0.8rem 1.5rem; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
 
         .plan-badge { background: #e2e8f0; color: #475569; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
         .user-profile { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: #555; font-weight: 500; background: #f8f9fa; padding: 0.4rem 0.8rem; border-radius: 4px; border: 1px solid #ddd; }
         
-        .container { padding: 1.5rem; max-width: 1200px; width: 100%; margin: 0 auto; }
+        .container { padding: 1.5rem; max-width: 1200px; width: 100%; margin: 0 auto; flex: 1; }
         
         .panel-section { background: white; border-radius: 8px; padding: 1.2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 1.5rem; }
         .panel-section h2 { margin-bottom: 1rem; font-size: 1.1rem; color: #333; }
@@ -127,15 +123,6 @@
     </style>
 </head>
 <body>
-
-    <!-- BANNER SUPERIOR DE BIENVENIDA -->
-    <div id="welcome-banner">
-        <div class="banner-info">
-            <span>🚀</span>
-            <div><strong>¡Bienvenido a GesPyme!</strong> Plan Gratuito.</div>
-        </div>
-        <button onclick="abrirModalRegistro()">Crear cuenta</button>
-    </div>
 
     <!-- MODAL DE REGISTRO RÁPIDO -->
     <div id="auth-modal">
@@ -181,133 +168,145 @@
         </div>
     </div>
 
-    <!-- Menú Lateral -->
-    <sidebar id="sidebarMenu">
-        <div class="sidebar-brand">
-            <span>⚙</span> <span>GesPyme</span>
-        </div>
-        <ul class="sidebar-menu">
-            <li class="active"><a href="index.html">🏠 Panel</a></li>
-            <li><a href="clientes.html">👥 Clientes</a></li>
-            <li><a href="facturas.html" onclick="return verificarRestriccionModuloLink('facturas', event)">📄 Facturas</a></li>
-            <li><a href="facturas.html" onclick="return verificarRestriccionModuloLink('facturas', event)" class="sub-item">➕ Nueva factura</a></li>
-            <li><a href="cotizaciones.html">📊 Cotizaciones</a></li>
-            <li><a href="nueva-cotizacion.html" class="sub-item">➕ Nueva cotización</a></li>
-            <li><a href="notas-credito.html" onclick="return verificarRestriccionModuloLink('notas', event)">🔄 Notas de crédito</a></li>
-            <li><a href="ordenes.html" onclick="return verificarRestriccionModuloLink('ordenes', event)">🛠️ Orden de Servicio</a></li>
-            <li><a href="ordenes.html" onclick="return verificarRestriccionModuloLink('ordenes', event)" class="sub-item">➕ Nueva orden</a></li>
-            <li><a href="pagos.html" onclick="return verificarRestriccionModuloLink('pagos', event)">💳 Pagos</a></li>
-            <li><a href="reembolsos.html">💸 Reembolsos</a></li>
-            <li><a href="articulos.html">📦 Artículos</a></li>
-            <li><a href="informes.html">📈 Informes</a></li>
-            <li><a href="herramientas.html">🔧 Herramientas</a></li>
-            <li><a href="configuracion.html">⚙ Configuración</a></li>
-            <li><a href="subscription.html" style="color: #ffd700;">⭐ Subscription Pro</a></li>
-            <li><a href="#" onclick="abrirAdminModal(event)" style="color: #4ade80;">👑 Activar Plan (Admin)</a></li>
-            <li id="menuCerrarSesion" style="display:none;"><a href="#" onclick="cerrarSesion();" style="color: #ff9999;">🚪 Cerrar Sesión</a></li>
-        </ul>
-        <div class="sidebar-footer">
-            GesPyme © 2026
-        </div>
-    </sidebar>
+    <div class="app-wrapper">
+        <!-- Menú Lateral -->
+        <sidebar id="sidebarMenu">
+            <div class="sidebar-brand" onclick="intentarActivarModoDev()" title="Haz 3 clics aquí para Modo Desarrollador">
+                <span>⚙</span> <span id="lblBrandTextSide">GesPyme</span>
+            </div>
+            <ul class="sidebar-menu">
+                <li class="active"><a href="index.html">🏠 Panel</a></li>
+                <li><a href="clientes.html">👥 Clientes</a></li>
+                <li><a href="facturas.html" onclick="return verificarRestriccionModuloLink('facturas', event)">📄 Facturas</a></li>
+                <li><a href="facturas.html" onclick="return verificarRestriccionModuloLink('facturas', event)" class="sub-item">➕ Nueva factura</a></li>
+                <li><a href="cotizaciones.html">📊 Cotizaciones</a></li>
+                <li><a href="nueva-cotizacion.html" class="sub-item">➕ Nueva cotización</a></li>
+                <li><a href="notas-credito.html" onclick="return verificarRestriccionModuloLink('notas', event)">🔄 Notas de crédito</a></li>
+                <li><a href="ordenes.html" onclick="return verificarRestriccionModuloLink('ordenes', event)">🛠️ Orden de Servicio</a></li>
+                <li><a href="ordenes.html" onclick="return verificarRestriccionModuloLink('ordenes', event)" class="sub-item">➕ Nueva orden</a></li>
+                <li><a href="pagos.html" onclick="return verificarRestriccionModuloLink('pagos', event)">💳 Pagos</a></li>
+                <li><a href="reembolsos.html">💸 Reembolsos</a></li>
+                <li><a href="articulos.html">📦 Artículos</a></li>
+                <li><a href="informes.html">📈 Informes</a></li>
+                <li><a href="herramientas.html">🔧 Herramientas</a></li>
+                <li><a href="configuracion.html">⚙ Configuración</a></li>
+                <li><a href="subscription.html" style="color: #ffd700;">⭐ Subscription Pro</a></li>
+                <li><a href="#" onclick="abrirAdminModal(event)" style="color: #4ade80;">👑 Activar Plan (Admin)</a></li>
+                <li id="menuCerrarSesion" style="display:none;"><a href="#" onclick="cerrarSesion();" style="color: #ff9999;">🚪 Cerrar Sesión</a></li>
+            </ul>
+            <div class="sidebar-footer">
+                GesPyme © 2026
+            </div>
+        </sidebar>
 
-    <!-- Área Principal -->
-    <div class="main-content">
-        <header>
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
-                <!-- Logo GesPyme visible arriba con los 3 clics para Modo Dev -->
-                <div class="header-brand" onclick="intentarActivarModoDev()" title="Haz 3 clics aquí para Modo Desarrollador">
-                    <span>⚙</span> <span id="lblBrandText">GesPyme</span>
+        <!-- Área Principal -->
+        <div class="main-content">
+            <header>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+                    <span class="plan-badge" id="lblPlanBadge">Plan Gratuito</span>
                 </div>
-                <span class="plan-badge" id="lblPlanBadge">Plan Gratuito</span>
-            </div>
-            <div class="user-profile">
-                <span>👤</span> <span id="lblUsuario">Visitante</span>
-            </div>
-        </header>
+                <div class="user-profile">
+                    <span>👤</span> <span id="lblUsuario">Visitante</span>
+                </div>
+            </header>
 
-        <div class="container">
-            
-            <!-- Crear -->
-            <div class="panel-section">
-                <h2>Crear</h2>
-                <div class="quick-actions">
-                    <a href="nueva-cotizacion.html" class="action-card">
-                        <span class="action-icon">📊</span>
-                        <span class="action-text">Cotización</span>
-                    </a>
-                    <a href="facturas.html" class="action-card" onclick="return verificarRestriccionModuloLink('facturas', event)">
-                        <span class="action-icon">📄</span>
-                        <span class="action-text">Factura</span>
-                    </a>
-                    <a href="ordenes.html" class="action-card" onclick="return verificarRestriccionModuloLink('ordenes', event)">
-                        <span class="action-icon">🛠️</span>
-                        <span class="action-text">Orden Serv.</span>
-                    </a>
-                    <div class="action-card" onclick="verificarAccion('Cliente')">
-                        <span class="action-icon">👤</span>
-                        <span class="action-text">Cliente</span>
+            <div class="container">
+                
+                <!-- Crear -->
+                <div class="panel-section">
+                    <h2>Crear</h2>
+                    <div class="quick-actions">
+                        <a href="nueva-cotizacion.html" class="action-card">
+                            <span class="action-icon">📊</span>
+                            <span class="action-text">Cotización</span>
+                        </a>
+                        <a href="facturas.html" class="action-card" onclick="return verificarRestriccionModuloLink('facturas', event)">
+                            <span class="action-icon">📄</span>
+                            <span class="action-text">Factura</span>
+                        </a>
+                        <a href="ordenes.html" class="action-card" onclick="return verificarRestriccionModuloLink('ordenes', event)">
+                            <span class="action-icon">🛠️</span>
+                            <span class="action-text">Orden Serv.</span>
+                        </a>
+                        <div class="action-card" onclick="verificarAccion('Cliente')">
+                            <span class="action-icon">👤</span>
+                            <span class="action-text">Cliente</span>
+                        </div>
+                        <a href="notas-credito.html" class="action-card" onclick="return verificarRestriccionModuloLink('notas', event)">
+                            <span class="action-icon">🔄</span>
+                            <span class="action-text">Nota crédito</span>
+                        </a>
+                        <a href="pagos.html" class="action-card" onclick="return verificarRestriccionModuloLink('pagos', event)">
+                            <span class="action-icon">💳</span>
+                            <span class="action-text">Pago</span>
+                        </a>
                     </div>
-                    <a href="notas-credito.html" class="action-card" onclick="return verificarRestriccionModuloLink('notas', event)">
-                        <span class="action-icon">🔄</span>
-                        <span class="action-text">Nota crédito</span>
-                    </a>
-                    <a href="pagos.html" class="action-card" onclick="return verificarRestriccionModuloLink('pagos', event)">
-                        <span class="action-icon">💳</span>
-                        <span class="action-text">Pago</span>
-                    </a>
                 </div>
+
+                <!-- Cotizaciones recientes -->
+                <div class="panel-section">
+                    <h2>Cotizaciones Recientes</h2>
+                    <div class="filters-bar">
+                        <input type="text" placeholder="Buscar cotización...">
+                        <a href="nueva-cotizacion.html" class="btn-primary">Crear una cotización</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Nº Cotización</th>
+                                    <th>Cliente</th>
+                                    <th>Validez</th>
+                                    <th>Total</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="6" style="text-align: center; color: #70757a; padding: 2rem;">
+                                        No tienes cotizaciones creadas todavía. <a href="nueva-cotizacion.html" style="color: var(--primary-color);">¡Crea la primera ahora!</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Sección Inferior -->
+                <div class="bottom-grid">
+                    <div class="panel-section" style="margin-bottom: 0;">
+                        <h2>Límites de tu Plan Actual</h2>
+                        <ul class="checklist" id="listaLimitesInfo">
+                            <li>Plan Gratuito: Cotizaciones ilimitadas.</li>
+                            <li>Facturas, Órdenes y Notas de Crédito requieren actualización.</li>
+                        </ul>
+                    </div>
+                    <div class="panel-section" style="margin-bottom: 0; background: #fff8e1; border: 1px solid #ffe0b2;">
+                        <h2 style="color: #d97706;">⚡ Actualiza tu Plan</h2>
+                        <p style="font-size: 0.85rem; color: #555; line-height: 1.4; margin-bottom: 10px;">
+                            Escala tus operaciones con los planes superiores.
+                        </p>
+                        <a href="subscription.html" style="font-size: 0.85rem; font-weight: bold; color: #d97706; text-decoration: none;">Ver detalles y precios →</a>
+                    </div>
+                </div>
+
             </div>
 
-            <!-- Cotizaciones recientes -->
-            <div class="panel-section">
-                <h2>Cotizaciones Recientes</h2>
-                <div class="filters-bar">
-                    <input type="text" placeholder="Buscar cotización...">
-                    <a href="nueva-cotizacion.html" class="btn-primary">Crear una cotización</a>
+            <!-- BANNER INFERIOR DE BIENVENIDA Y ACCESO DEV (Hacer 3 clics sobre GesPyme aquí abajo) -->
+            <div id="welcome-banner">
+                <div class="banner-info">
+                    <span>🚀</span>
+                    <div><strong>¡Bienvenido a GesPyme!</strong> Plan Gratuito.</div>
                 </div>
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Fecha</th>
-                                <th>Nº Cotización</th>
-                                <th>Cliente</th>
-                                <th>Validez</th>
-                                <th>Total</th>
-                                <th>Acción</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td colspan="6" style="text-align: center; color: #70757a; padding: 2rem;">
-                                    No tienes cotizaciones creadas todavía. <a href="nueva-cotizacion.html" style="color: var(--primary-color);">¡Crea la primera ahora!</a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <span id="lblBrandTextBottom" onclick="intentarActivarModoDev()" title="Haz 3 clics aquí para Modo Desarrollador" style="font-weight: bold; cursor: pointer; user-select: none; background: rgba(255,255,255,0.15); padding: 5px 10px; border-radius: 4px;">
+                        ⚙ GesPyme
+                    </span>
+                    <button onclick="abrirModalRegistro()">Crear cuenta</button>
                 </div>
             </div>
-
-            <!-- Sección Inferior -->
-            <div class="bottom-grid">
-                <div class="panel-section" style="margin-bottom: 0;">
-                    <h2>Límites de tu Plan Actual</h2>
-                    <ul class="checklist" id="listaLimitesInfo">
-                        <li>Plan Gratuito: Cotizaciones ilimitadas.</li>
-                        <li>Facturas, Órdenes y Notas de Crédito requieren actualización.</li>
-                    </ul>
-                </div>
-                <div class="panel-section" style="margin-bottom: 0; background: #fff8e1; border: 1px solid #ffe0b2;">
-                    <h2 style="color: #d97706;">⚡ Actualiza tu Plan</h2>
-                    <p style="font-size: 0.85rem; color: #555; line-height: 1.4; margin-bottom: 10px;">
-                        Escala tus operaciones con los planes superiores.
-                    </p>
-                    <a href="subscription.html" style="font-size: 0.85rem; font-weight: bold; color: #d97706; text-decoration: none;">Ver detalles y precios →</a>
-                </div>
-            </div>
-
         </div>
     </div>
 
@@ -344,7 +343,6 @@
                 clicsDev = 0;
                 actualizarIndicadorModoDev();
                 
-                // Mensaje visual rápido para confirmar
                 let nuevoEstado = !modoActual ? "ACTIVADO 🚀" : "DESACTIVADO";
                 alert(`Modo Desarrollador ${nuevoEstado}`);
             }
@@ -352,12 +350,13 @@
 
         function actualizarIndicadorModoDev() {
             let esDev = localStorage.getItem("gespyme_modo_dev") === "true";
-            let marca = document.getElementById("lblBrandText");
-            if (esDev) {
-                marca.innerHTML = "GesPyme <span style='color: #28a745; font-size: 0.75rem; background: #e6f4ea; padding: 2px 6px; border-radius: 4px;'>[DEV]</span>";
-            } else {
-                marca.innerText = "GesPyme";
-            }
+            let marcaSide = document.getElementById("lblBrandTextSide");
+            let marcaBottom = document.getElementById("lblBrandTextBottom");
+            
+            let textoHtml = esDev ? "GesPyme <span style='color: #4ade80; font-size: 0.75rem;'>[DEV]</span>" : "GesPyme";
+            
+            if(marcaSide) marcaSide.innerHTML = textoHtml;
+            if(marcaBottom) marcaBottom.innerHTML = "⚙ " + textoHtml;
         }
 
         function obtenerPlanActual() {
@@ -523,7 +522,7 @@
             let usuarioGuardado = localStorage.getItem("gespyme_usuario");
             if (usuarioGuardado) {
                 document.getElementById("welcome-banner").style.display = "none";
-                actualizarInterfazUsuario(usuarioGuardado);
+                actualizarIntentarModoDev = true;
             }
         };
     </script>
