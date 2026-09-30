@@ -51,7 +51,7 @@
         }
         @media (min-width: 768px) {
             #welcome-banner {
-                width: calc(100% - 260px); /* Deja libre el espacio del menú lateral */
+                width: calc(100% - 260px);
                 left: 260px;
             }
         }
@@ -102,7 +102,7 @@
         .sidebar-footer { padding: 0.8rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.8rem; color: #a0a0a0; text-align: center; }
 
         /* Contenido principal */
-        .main-content { flex: 1; display: flex; flex-direction: column; width: 100%; margin-left: 0; padding-bottom: 70px; } /* Margen abajo para que el contenido no quede tapado por el banner flotante */
+        .main-content { flex: 1; display: flex; flex-direction: column; width: 100%; margin-left: 0; padding-bottom: 70px; }
         @media (min-width: 768px) {
             .main-content { margin-left: 260px; }
         }
@@ -193,20 +193,20 @@
             </div>
             <ul class="sidebar-menu">
                 <li class="active"><a href="index.html">🏠 Panel</a></li>
-                <li><a href="clientes.html">👥 Clientes</a></li>
+                <li><a href="clientes.html" onclick="return verificarRestriccionModuloLink('clientes', event)">👥 Clientes</a></li>
                 <li><a href="facturas.html" onclick="return verificarRestriccionModuloLink('facturas', event)">📄 Facturas</a></li>
                 <li><a href="facturas.html" onclick="return verificarRestriccionModuloLink('facturas', event)" class="sub-item">➕ Nueva factura</a></li>
-                <li><a href="cotizaciones.html">📊 Cotizaciones</a></li>
-                <li><a href="nueva-cotizacion.html" class="sub-item">➕ Nueva cotización</a></li>
+                <li><a href="cotizaciones.html" onclick="return verificarRestriccionModuloLink('cotizaciones', event)">📊 Cotizaciones</a></li>
+                <li><a href="nueva-cotizacion.html" onclick="return verificarRestriccionModuloLink('cotizaciones', event)" class="sub-item">➕ Nueva cotización</a></li>
                 <li><a href="notas-credito.html" onclick="return verificarRestriccionModuloLink('notas', event)">🔄 Notas de crédito</a></li>
                 <li><a href="ordenes.html" onclick="return verificarRestriccionModuloLink('ordenes', event)">🛠️ Orden de Servicio</a></li>
                 <li><a href="ordenes.html" onclick="return verificarRestriccionModuloLink('ordenes', event)" class="sub-item">➕ Nueva orden</a></li>
                 <li><a href="pagos.html" onclick="return verificarRestriccionModuloLink('pagos', event)">💳 Pagos</a></li>
-                <li><a href="reembolsos.html">💸 Reembolsos</a></li>
-                <li><a href="articulos.html">📦 Artículos</a></li>
-                <li><a href="informes.html">📈 Informes</a></li>
-                <li><a href="herramientas.html">🔧 Herramientas</a></li>
-                <li><a href="configuracion.html">⚙ Configuración</a></li>
+                <li><a href="reembolsos.html" onclick="return verificarRestriccionModuloLink('reembolsos', event)">💸 Reembolsos</a></li>
+                <li><a href="articulos.html" onclick="return verificarRestriccionModuloLink('articulos', event)">📦 Artículos</a></li>
+                <li><a href="informes.html" onclick="return verificarRestriccionModuloLink('informes', event)">📈 Informes</a></li>
+                <li><a href="herramientas.html" onclick="return verificarRestriccionModuloLink('herramientas', event)">🔧 Herramientas</a></li>
+                <li><a href="configuracion.html" onclick="return verificarRestriccionModuloLink('configuracion', event)">⚙ Configuración</a></li>
                 <li><a href="subscription.html" style="color: #ffd700;">⭐ Subscription Pro</a></li>
                 <li><a href="#" onclick="abrirAdminModal(event)" style="color: #4ade80;">👑 Activar Plan (Admin)</a></li>
                 <li id="menuCerrarSesion" style="display:none;"><a href="#" onclick="cerrarSesion();" style="color: #ff9999;">🚪 Cerrar Sesión</a></li>
@@ -234,7 +234,7 @@
                 <div class="panel-section">
                     <h2>Crear</h2>
                     <div class="quick-actions">
-                        <a href="nueva-cotizacion.html" class="action-card">
+                        <a href="nueva-cotizacion.html" class="action-card" onclick="return verificarRestriccionModuloLink('cotizaciones', event)">
                             <span class="action-icon">📊</span>
                             <span class="action-text">Cotización</span>
                         </a>
@@ -246,10 +246,10 @@
                             <span class="action-icon">🛠️</span>
                             <span class="action-text">Orden Serv.</span>
                         </a>
-                        <div class="action-card" onclick="verificarAccion('Cliente')">
+                        <a href="clientes.html" class="action-card" onclick="return verificarRestriccionModuloLink('clientes', event)">
                             <span class="action-icon">👤</span>
                             <span class="action-text">Cliente</span>
-                        </div>
+                        </a>
                         <a href="notas-credito.html" class="action-card" onclick="return verificarRestriccionModuloLink('notas', event)">
                             <span class="action-icon">🔄</span>
                             <span class="action-text">Nota crédito</span>
@@ -266,7 +266,7 @@
                     <h2>Cotizaciones Recientes</h2>
                     <div class="filters-bar">
                         <input type="text" placeholder="Buscar cotización...">
-                        <a href="nueva-cotizacion.html" class="btn-primary">Crear una cotización</a>
+                        <a href="nueva-cotizacion.html" class="btn-primary" onclick="return verificarRestriccionModuloLink('cotizaciones', event)">Crear una cotización</a>
                     </div>
                     <div class="table-responsive">
                         <table>
@@ -283,7 +283,7 @@
                             <tbody>
                                 <tr>
                                     <td colspan="6" style="text-align: center; color: #70757a; padding: 2rem;">
-                                        No tienes cotizaciones creadas todavía. <a href="nueva-cotizacion.html" style="color: var(--primary-color);">¡Crea la primera ahora!</a>
+                                        No tienes cotizaciones creadas todavía. <a href="nueva-cotizacion.html" style="color: var(--primary-color);" onclick="return verificarRestriccionModuloLink('cotizaciones', event)">¡Crea la primera ahora!</a>
                                     </td>
                                 </tr>
                             </tbody>
@@ -311,7 +311,7 @@
 
             </div>
 
-            <!-- BANNER INFERIOR FLOTANTE (No se solapa con el menú lateral de escritorio) -->
+            <!-- BANNER INFERIOR FLOTANTE -->
             <div id="welcome-banner">
                 <div class="banner-info">
                     <span>🚀</span>
@@ -386,6 +386,7 @@
         }
 
         function verificarRestriccionModuloLink(modulo, event) {
+            // PRIMERO: Comprobamos si el modo desarrollador está activo de inmediato
             if (localStorage.getItem("gespyme_modo_dev") === "true") {
                 return true; 
             }
@@ -395,14 +396,20 @@
             let planKey = obtenerPlanActual();
             let usoActual = obtenerUsoActual();
             
-            if (planKey === 'free' && (modulo === 'facturas' || modulo === 'notas' || modulo === 'ordenes' || modulo === 'pagos')) {
+            if (planKey === 'free' && (modulo === 'facturas' || modulo === 'notas' || modulo === 'ordenes' || modulo === 'pagos' || modulo === 'clientes' || modulo === 'reembolsos' || modulo === 'articulos' || modulo === 'informes' || modulo === 'herramientas' || modulo === 'configuracion')) {
                 let nombresModulos = {
                     'facturas': 'Facturación',
                     'notas': 'Notas de Crédito',
                     'ordenes': 'Órdenes de Servicio',
-                    'pagos': 'Gestión de Pagos'
+                    'pagos': 'Gestión de Pagos',
+                    'clientes': 'Clientes',
+                    'reembolsos': 'Reembolsos',
+                    'articulos': 'Artículos',
+                    'informes': 'Informes',
+                    'herramientas': 'Herramientas',
+                    'configuracion': 'Configuración'
                 };
-                document.getElementById("pro-message").innerHTML = `El módulo de <strong>${nombresModulos[modulo]}</strong> está reservado para planes superiores.<br><br>Actualiza tu suscripción para desbloquearlo.`;
+                document.getElementById("pro-message").innerHTML = `El módulo de <strong>${nombresModulos[modulo] || modulo}</strong> está reservado para planes superiores.<br><br>Actualiza tu suscripción para desbloquearlo.`;
                 document.getElementById("pro-modal").style.display = "flex";
                 return false;
             }
@@ -515,7 +522,7 @@
             emailjs.send('service_dz3lb36', 'template_khlwu4x', templateParams);
         }
 
-        function actualizarInterfazUsuario(email) {
+        function actualizarInterfazUsuario(email} {
             let planKey = obtenerPlanActual();
             let planInfo = PLANES_LIMITES[planKey];
             let usoActual = obtenerUsoActual();
