@@ -64,7 +64,7 @@
         }
         .close-modal { position: absolute; top: 12px; right: 15px; background: none; border: none; font-size: 1.4rem; cursor: pointer; color: #888; }
 
-        /* Menú Lateral Responsivo (Oculto en móvil por defecto, fijo en escritorio) */
+        /* Menú Lateral Responsivo */
         sidebar { 
             width: 260px; background-color: var(--sidebar-bg); color: white; display: flex; flex-direction: column; 
             position: fixed; height: 100vh; top: 0; left: 0; z-index: 1000; transition: transform 0.3s ease;
@@ -73,14 +73,14 @@
             sidebar { transform: translateX(-100%); }
             sidebar.open { transform: translateX(0); }
         }
-        .sidebar-brand { padding: 1.2rem; font-size: 1.1rem; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
+        .sidebar-brand { padding: 1.2rem; font-size: 1.1rem; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
         .sidebar-menu { list-style: none; padding: 0.5rem 0; overflow-y: auto; flex: 1; max-height: calc(100vh - 120px); }
         .sidebar-menu li a { display: block; padding: 0.6rem 1.2rem; color: #b0c4de; text-decoration: none; font-size: 0.9rem; transition: 0.2s; }
         .sidebar-menu li.active a, .sidebar-menu li a:hover { background-color: rgba(255,255,255,0.1); color: white; }
         .sidebar-menu .sub-item { padding-left: 2.2rem; font-size: 0.85rem; }
         .sidebar-footer { padding: 0.8rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.8rem; color: #a0a0a0; text-align: center; }
 
-        /* Contenido principal con margen izquierdo para dejar espacio al menú en escritorio */
+        /* Contenido principal */
         .main-content { flex: 1; display: flex; flex-direction: column; width: 100%; margin-left: 0; min-height: 100vh; }
         @media (min-width: 768px) {
             .main-content { margin-left: 260px; }
@@ -89,6 +89,11 @@
         header { background: white; padding: 0.8rem 1.5rem; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 45px; }
         @media (min-width: 768px) {
             header { margin-top: 0; }
+        }
+
+        .header-brand {
+            display: flex; align-items: center; gap: 10px; font-weight: bold; font-size: 1.1rem; 
+            color: var(--sidebar-bg); cursor: pointer; user-select: none;
         }
 
         .plan-badge { background: #e2e8f0; color: #475569; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
@@ -178,8 +183,8 @@
 
     <!-- Menú Lateral -->
     <sidebar id="sidebarMenu">
-        <div class="sidebar-brand" onclick="intentarActivarModoDev()" title="Haz 3 clics aquí para Modo Desarrollador">
-            <span>⚙</span> <span id="lblBrandText">GesPyme</span>
+        <div class="sidebar-brand">
+            <span>⚙</span> <span>GesPyme</span>
         </div>
         <ul class="sidebar-menu">
             <li class="active"><a href="index.html">🏠 Panel</a></li>
@@ -209,8 +214,12 @@
     <!-- Área Principal -->
     <div class="main-content">
         <header>
-            <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
                 <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+                <!-- Logo GesPyme visible arriba con los 3 clics para Modo Dev -->
+                <div class="header-brand" onclick="intentarActivarModoDev()" title="Haz 3 clics aquí para Modo Desarrollador">
+                    <span>⚙</span> <span id="lblBrandText">GesPyme</span>
+                </div>
                 <span class="plan-badge" id="lblPlanBadge">Plan Gratuito</span>
             </div>
             <div class="user-profile">
@@ -334,6 +343,10 @@
                 localStorage.setItem("gespyme_modo_dev", !modoActual);
                 clicsDev = 0;
                 actualizarIndicadorModoDev();
+                
+                // Mensaje visual rápido para confirmar
+                let nuevoEstado = !modoActual ? "ACTIVADO 🚀" : "DESACTIVADO";
+                alert(`Modo Desarrollador ${nuevoEstado}`);
             }
         }
 
@@ -341,7 +354,7 @@
             let esDev = localStorage.getItem("gespyme_modo_dev") === "true";
             let marca = document.getElementById("lblBrandText");
             if (esDev) {
-                marca.innerHTML = "GesPyme <span style='color: #4ade80; font-size: 0.75rem;'>[DEV]</span>";
+                marca.innerHTML = "GesPyme <span style='color: #28a745; font-size: 0.75rem; background: #e6f4ea; padding: 2px 6px; border-radius: 4px;'>[DEV]</span>";
             } else {
                 marca.innerText = "GesPyme";
             }
