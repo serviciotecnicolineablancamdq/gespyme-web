@@ -73,18 +73,18 @@
 
     <!-- Menú Lateral -->
     <sidebar>
-        <div class="sidebar-brand"><span>⚙️️</span> GesPyme</div>
+        <div class="sidebar-brand"><span>⚙</span> GesPyme</div>
         <ul class="sidebar-menu">
             <li><a href="index.html">Panel</a></li>
             <li><a href="clientes.html">Clientes</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('facturas', event)">Facturas</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('facturas', event)" class="sub-item">Nueva factura</a></li>
+            <li><a href="facturas.html" onclick="return verificarRestriccionModulo('facturas', event)">Facturas</a></li>
+            <li><a href="facturas.html" onclick="return verificarRestriccionModulo('facturas', event)" class="sub-item">Nueva factura</a></li>
             <li><a href="cotizaciones.html">Cotizaciones</a></li>
             <li><a href="nueva-cotizacion.html" class="sub-item">Nueva cotización</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('notas', event)">Notas de crédito</a></li>
-            <li class="active"><a href="#" onclick="verificarRestriccionModulo('ordenes', event)">Orden de Servicio</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('ordenes', event)" class="sub-item">Nueva orden</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('pagos', event)">Pagos</a></li>
+            <li><a href="notas-credito.html" onclick="return verificarRestriccionModulo('notas', event)">Notas de crédito</a></li>
+            <li class="active"><a href="orden-servicio.html" onclick="return verificarRestriccionModulo('ordenes', event)">Orden de Servicio</a></li>
+            <li><a href="nueva-orden-servicio.html" onclick="return verificarRestriccionModulo('ordenes', event)" class="sub-item">Nueva orden</a></li>
+            <li><a href="pagos.html" onclick="return verificarRestriccionModulo('pagos', event)">Pagos</a></li>
             <li><a href="reembolsos.html">Reembolsos</a></li>
             <li><a href="articulos.html">Artículos</a></li>
             <li><a href="informes.html">Informes</a></li>
@@ -107,7 +107,7 @@
             <div class="panel-section">
                 <h2>
                     <span>Órdenes de Servicio Técnico</span>
-                    <a href="nueva-orden-servicio.html" class="btn-primary" onclick="verificarRestriccionModulo('ordenes', event)">+ Nueva Orden de Servicio</a>
+                    <a href="nueva-orden-servicio.html" class="btn-primary" onclick="return verificarRestriccionModulo('ordenes', event)">+ Nueva Orden de Servicio</a>
                 </h2>
                 
                 <div class="filters-bar">
