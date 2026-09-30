@@ -365,7 +365,7 @@
             }
         }
 
-          function actualizarIndicadorModoDev() {
+        function actualizarIndicadorModoDev() {
             let esDev = localStorage.getItem("gespyme_modo_dev") === "true";
             let marcaSide = document.getElementById("lblBrandTextSide");
             let marcaBottom = document.getElementById("lblBrandTextBottom");
@@ -375,7 +375,6 @@
             if(marcaSide) marcaSide.innerHTML = textoHtml;
             if(marcaBottom) marcaBottom.innerHTML = "⚙ " + textoHtml;
         }
-
 
         function obtenerPlanActual() {
             return localStorage.getItem("gespyme_plan") || "free";
@@ -387,7 +386,6 @@
         }
 
         function verificarRestriccionModuloLink(modulo, event) {
-            // PRIMERO: Comprobamos si el modo desarrollador está activo de inmediato
             if (localStorage.getItem("gespyme_modo_dev") === "true") {
                 return true; 
             }
@@ -523,7 +521,7 @@
             emailjs.send('service_dz3lb36', 'template_khlwu4x', templateParams);
         }
 
-        function actualizarInterfazUsuario(email} {
+        function actualizarInterfazUsuario(email) {
             let planKey = obtenerPlanActual();
             let planInfo = PLANES_LIMITES[planKey];
             let usoActual = obtenerUsoActual();
@@ -547,6 +545,7 @@
             let usuarioGuardado = localStorage.getItem("gespyme_usuario");
             if (usuarioGuardado) {
                 document.getElementById("welcome-banner").style.display = "none";
+                actualizarInterfazUsuario(usuarioGuardado);
             }
         };
     </script>
