@@ -14,6 +14,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-color); display: flex; height: 100vh; overflow: hidden; }
         
+        /* Menú lateral */
         sidebar { width: 250px; background-color: var(--sidebar-bg); color: white; display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; }
         .sidebar-brand { padding: 1.2rem; font-size: 1.1rem; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
         .sidebar-menu { list-style: none; padding: 0.5rem 0; flex: 1; }
@@ -22,40 +23,63 @@
         .sidebar-menu .sub-item { padding-left: 2.2rem; font-size: 0.85rem; }
         .sidebar-footer { padding: 1rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.8rem; color: #a0a0a0; text-align: center; }
 
+        /* Contenido principal */
         .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
         header { background: white; padding: 0.8rem 2rem; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: flex-end; align-items: center; }
-        .user-profile { font-size: 0.9rem; color: #555; font-weight: 500; display: flex; align-items: center; gap: 8px; }
+        .user-profile { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: #555; font-weight: 500; }
         
-        .container { padding: 2rem; max-width: 1000px; width: 100%; margin: 0 auto; background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-top: 2rem; margin-bottom: 2rem; }
-        h2 { font-size: 1.4rem; color: #333; margin-bottom: 1.5rem; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; }
-
+        .container { padding: 2rem; max-width: 1000px; width: 100%; margin: 0 auto; }
+        
+        /* Formulario */
+        .panel-section { background: white; border-radius: 8px; padding: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .panel-section h2 { margin-bottom: 1.5rem; font-size: 1.3rem; color: #333; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; }
+        
         /* Estilo para la caja del logotipo */
         .logo-upload-box {
             width: 130px; height: 130px; border: 2px dashed #ccc; border-radius: 6px;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             cursor: pointer; background: #fafafa; position: relative; overflow: hidden; text-align: center;
-            margin-bottom: 1.5rem; transition: 0.2s;
+            margin-bottom: 1rem; transition: 0.2s;
         }
         .logo-upload-box:hover { border-color: #1a73e8; background: #f0f4f8; }
         .logo-upload-box img { width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0; left: 0; background: white; }
         .logo-upload-box span { font-size: 0.8rem; color: #666; padding: 0.5rem; }
 
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
-        .form-group { margin-bottom: 1rem; }
-        .form-group label { display: block; margin-bottom: 0.4rem; font-weight: 500; font-size: 0.85rem; color: #555; }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.6rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.9rem; }
+        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 1.2rem; }
+        .form-group { margin-bottom: 1.2rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.9rem; color: #555; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95rem; }
         
-        table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; margin-bottom: 1rem; }
-        th, td { padding: 0.75rem; border-bottom: 1px solid #eee; font-size: 0.9rem; text-align: left; }
-        th { background-color: #f8f9fa; color: #5f6368; }
+        /* Tabla de ítems de cotización */
+        .invoice-items-table { width: 100%; border-collapse: collapse; margin-top: 1rem; margin-bottom: 1rem; }
+        .invoice-items-table th, .invoice-items-table td { padding: 0.75rem; border-bottom: 1px solid #eee; text-align: left; }
+        .invoice-items-table th { background-color: #f8f9fa; font-size: 0.85rem; color: #5f6368; }
+        .invoice-items-table input { width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.9rem; }
         
-        .totals-section { display: flex; flex-direction: column; align-items: flex-end; margin-top: 1rem; font-size: 0.95rem; }
-        .totals-row { display: flex; justify-content: space-between; width: 250px; margin-bottom: 0.5rem; }
-        .totals-row.total { font-weight: bold; font-size: 1.1rem; border-top: 2px solid #333; padding-top: 0.5rem; }
+        .actions-group { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+        .btn-action { background-color: #1a73e8; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: 500; }
+        .btn-action:hover { background-color: #1558b0; }
+        .btn-action-alt { background-color: #007bff; color: white; }
+        .btn-danger { background-color: #dc3545; color: white; border: none; padding: 0.3rem 0.6rem; border-radius: 4px; cursor: pointer; }
+        .btn-danger:hover { background-color: #c82333; }
 
+        .totals-section { display: flex; justify-content: flex-end; margin-bottom: 1.5rem; }
+        .totals-box { width: 320px; font-size: 0.95rem; }
+        .totals-row { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #eee; }
+        .totals-row.final { font-weight: bold; font-size: 1.1rem; border-bottom: 2px solid #333; color: var(--primary-color); }
+
+        .form-actions { display: flex; gap: 1rem; }
         .btn-primary { background-color: #28a745; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-weight: 500; font-size: 0.95rem; }
         .btn-primary:hover { background-color: #218838; }
-        .btn-secondary { background-color: #1a73e8; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem; margin-top: 0.5rem; }
+        .btn-secondary { background-color: #6c757d; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-weight: 500; text-decoration: none; display: inline-block; font-size: 0.95rem; }
+        .btn-secondary:hover { background-color: #5a6268; }
+
+        /* Pestañas de notas */
+        .tabs-header { display: flex; gap: 5px; margin-bottom: 0.5rem; }
+        .tab-btn { background: #e2e8f0; border: none; padding: 6px 12px; font-size: 0.85rem; cursor: pointer; border-radius: 4px 4px 0 0; color: #475569; font-weight: 500; }
+        .tab-btn.active { background: #1a73e8; color: white; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
 
         /* Modal de Restricción de Planes */
         #pro-modal {
@@ -73,6 +97,18 @@
             border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; width: 100%;
         }
         .close-modal { position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #888; }
+
+        /* Estilo exclusivo para la impresión en PDF */
+        @media print {
+            sidebar, header, .form-actions, .panel-section h2, .form-row, .invoice-items-table input, .btn-action, .btn-danger, #pro-modal, .no-print { display: none !important; }
+            body { background: white; height: auto; overflow: visible; }
+            .main-content { overflow: visible; }
+            .container { padding: 0; max-width: 100%; }
+            .panel-section { box-shadow: none; padding: 0; margin: 0; }
+            #pdf-preview { display: block !important; border: none; padding: 20px; }
+        }
+
+        #pdf-preview { display: none; }
     </style>
 </head>
 <body>
@@ -87,19 +123,22 @@
         </div>
     </div>
 
+    <!-- Menú Lateral -->
     <sidebar>
-        <div class="sidebar-brand"><span>⚙️</span> GesPyme</div>
+        <div class="sidebar-brand">
+            <span>⚙</span> GesPyme
+        </div>
         <ul class="sidebar-menu">
             <li><a href="index.html">Panel</a></li>
             <li><a href="clientes.html">Clientes</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('facturas')">Facturas</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('facturas')" class="sub-item">Nueva factura</a></li>
+            <li><a href="facturas.html" onclick="return verificarRestriccionModulo('facturas', event)">Facturas</a></li>
+            <li><a href="facturas.html" onclick="return verificarRestriccionModulo('facturas', event)" class="sub-item">Nueva factura</a></li>
             <li><a href="cotizaciones.html">Cotizaciones</a></li>
             <li class="active"><a href="nueva-cotizacion.html" class="sub-item">Nueva cotización</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('notas')">Notas de crédito</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('ordenes')">Orden de Servicio</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('ordenes')" class="sub-item">Nueva orden</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('pagos')">Pagos</a></li>
+            <li><a href="notas-credito.html" onclick="return verificarRestriccionModulo('notas', event)">Notas de crédito</a></li>
+            <li><a href="orden-servicio.html" onclick="return verificarRestriccionModulo('ordenes', event)">Orden de Servicio</a></li>
+            <li><a href="nueva-orden-servicio.html" onclick="return verificarRestriccionModulo('ordenes', event)" class="sub-item">Nueva orden</a></li>
+            <li><a href="pagos.html" onclick="return verificarRestriccionModulo('pagos', event)">Pagos</a></li>
             <li><a href="reembolsos.html">Reembolsos</a></li>
             <li><a href="articulos.html">Artículos</a></li>
             <li><a href="informes.html">Informes</a></li>
@@ -107,101 +146,242 @@
             <li><a href="configuracion.html">Configuración</a></li>
             <li><a href="subscription.html" style="color: #ffd700;">Subscription Pro</a></li>
         </ul>
-        <div class="sidebar-footer">GesPyme © 2026</div>
+        <div class="sidebar-footer">
+            GesPyme © 2026
+        </div>
     </sidebar>
 
+    <!-- Área Principal -->
     <div class="main-content">
         <header>
             <div class="user-profile" id="userProfileDisplay">
                 <span>👤 Mi Cuenta</span>
             </div>
         </header>
-        <div class="container">
-            <h2>Nueva Cotización</h2>
-            <form onsubmit="event.preventDefault(); alert('¡Cotización generada y guardada con éxito!'); window.location.href='cotizaciones.html';">
-                
-                <!-- Bloque para Añadir Logotipo -->
-                <div class="form-group">
-                    <label>Logotipo de la Empresa</label>
-                    <div class="logo-upload-box" onclick="document.getElementById('input-logo').click()">
-                        <span id="logo-text">+ Añadir un logotipo</span>
-                        <img id="logo-preview" style="display: none;" alt="Logotipo">
-                    </div>
-                    <input type="file" id="input-logo" accept="image/*" style="display: none;" onchange="cargarLogotipo(event)">
-                </div>
 
-                <div class="form-grid">
-                    <div>
+        <div class="container">
+            <div class="panel-section">
+                <h2>Nueva Cotización</h2>
+                <form id="cotizacionForm" onsubmit="generarPDF(event)">
+                    
+                    <!-- Bloque para Añadir Logotipo y Datos de la Empresa -->
+                    <div class="form-row no-print">
                         <div class="form-group">
-                            <label>Cliente</label>
-                            <select required>
-                                <option value="">Seleccione un cliente...</option>
-                                <option value="1">Empresa S.A.</option>
-                                <option value="2">Cliente Particular</option>
+                            <label>Logotipo de la Empresa</label>
+                            <div class="logo-upload-box" onclick="document.getElementById('input-logo').click()">
+                                <span id="logo-text">+ Añadir un logotipo</span>
+                                <img id="logo-preview" style="display: none;" alt="Logotipo">
+                            </div>
+                            <input type="file" id="input-logo" accept="image/*" style="display: none;" onchange="cargarLogotipo(event)">
+                        </div>
+                        <div class="form-group" style="display: flex; flex-direction: column; justify-content: flex-end; gap: 1rem;">
+                            <div>
+                                <label>Nombre de la Empresa</label>
+                                <input type="text" id="nombreEmpresa" placeholder="Ej: Reparaciones Mar del Plata">
+                            </div>
+                            <div>
+                                <label>Dirección Comercial</label>
+                                <input type="text" id="direccionComercial" placeholder="Ej: Av. Luro 3400, Mar del Plata">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Campos Profesionales Adicionales -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Fecha de Emisión</label>
+                            <input type="date" id="fechaEmision" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Número de Cotización</label>
+                            <input type="text" id="numCotizacion" value="COT-10001" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Condiciones de Pago</label>
+                            <select id="condicionesPago">
+                                <option value="Contado">Contado</option>
+                                <option value="Pago en días - 15">Pago en días - 15</option>
+                                <option value="Pago en días - 30">Pago en días - 30</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>Dirección de facturación</label>
-                            <textarea placeholder="Dirección del cliente..."></textarea>
+                            <label>Vendedor (Opcional)</label>
+                            <input type="text" id="vendedor" placeholder="Opcional">
                         </div>
                     </div>
-                    <div>
+
+                    <div class="form-row">
                         <div class="form-group">
-                            <label>Fecha de emisión</label>
-                            <input type="date" id="fechaHoy" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Nº de Cotización</label>
-                            <input type="text" value="COT-10001" required>
+                            <label>Cliente</label>
+                            <select id="clienteSelect" required>
+                                <option value="">Seleccione un cliente...</option>
+                                <option value="Juan Pérez">Juan Pérez</option>
+                                <option value="Empresa S.A.">Empresa S.A.</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label>Validez (Días)</label>
-                            <input type="number" value="15">
+                            <input type="number" id="validezDias" value="15">
                         </div>
                     </div>
-                </div>
 
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Cant.</th>
-                            <th>Descripción del Artículo / Servicio</th>
-                            <th>Precio Unitario</th>
-                            <th>Impuesto</th>
-                            <th>Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><input type="number" value="1" style="width: 60px; padding: 4px;" oninput="calcularTotal()"></td>
-                            <td><input type="text" placeholder="Descripción del producto o servicio" style="width: 100%; padding: 4px;" required></td>
-                            <td><input type="number" value="0.00" step="any" id="precio" style="width: 100px; padding: 4px;" oninput="calcularTotal()" required></td>
-                            <td>
-                                <select style="padding: 4px;">
-                                    <option>IVA (21%)</option>
-                                    <option>Exento (0%)</option>
-                                </select>
-                            </td>
-                            <td id="filaTotal">$0.00</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <button type="button" class="btn-secondary">+ Añadir artículo</button>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Dirección de Facturación</label>
+                            <textarea id="dirFacturacion" placeholder="Dirección del cliente..." rows="2"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Dirección de Envío</label>
+                            <textarea id="dirEnvio" placeholder="Déjelo en blanco si es igual que la dirección de facturación" rows="2"></textarea>
+                        </div>
+                    </div>
 
-                <div class="totals-section">
-                    <div class="totals-row"><span>Subtotal:</span><span id="lblSubtotal">$0.00</span></div>
-                    <div class="totals-row total"><span>Total:</span><span id="lblTotal">$0.00</span></div>
-                </div>
+                    <!-- Detalle de Ítems (Múltiples filas dinámicas) -->
+                    <table class="items-table invoice-items-table" id="tabla-items-cotizacion">
+                        <thead>
+                            <tr>
+                                <th style="width: 10%;">Cant.</th>
+                                <th style="width: 35%;">Descripción del Artículo / Servicio</th>
+                                <th style="width: 20%;">Precio Unitario</th>
+                                <th style="width: 20%;">Impuestos</th>
+                                <th style="width: 10%;">Total</th>
+                                <th style="width: 5%;" class="no-print">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="number" class="cant-item" value="1" min="1" oninput="calcularTotales()" required></td>
+                                <td><input type="text" class="desc-item" placeholder="Concepto o descripción..." required></td>
+                                <td><input type="number" class="precio-item" placeholder="0.00" step="any" oninput="calcularTotales()" required></td>
+                                <td>
+                                    <select class="impuesto-item" style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; width: 100%;" onchange="calcularTotales()">
+                                        <option value="0.21">IVA (21%)</option>
+                                        <option value="0.105">IVA (10.5%)</option>
+                                        <option value="0">Exento (0%)</option>
+                                    </select>
+                                </td>
+                                <td class="item-total">$0.00</td>
+                                <td class="no-print"><button type="button" class="btn-danger" onclick="eliminarFila(this)">X</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <!-- Botones de Acción de Ítems (Añadir artículo, descuento, envío) -->
+                    <div class="actions-group no-print">
+                        <button type="button" class="btn-action" onclick="agregarFila()">+ Agregar artículo</button>
+                        <button type="button" class="btn-action btn-action-alt" onclick="agregarDescuento()">+ Añadir descuento</button>
+                        <button type="button" class="btn-action btn-action-alt" onclick="agregarEnvio()">+ Añadir envío</button>
+                    </div>
 
-                <div style="margin-top: 2rem; display: flex; justify-content: flex-end; gap: 1rem;">
-                    <button type="submit" class="btn-primary">Crear Cotización</button>
-                </div>
-            </form>
+                    <!-- Sistema de Pestañas para Notas -->
+                    <div class="form-row no-print" style="margin-top: 1rem;">
+                        <div class="form-group" style="grid-column: span 2;">
+                            <div class="tabs-header">
+                                <button type="button" class="tab-btn active" onclick="cambiarTab('publica', event)">Nota pública</button>
+                                <button type="button" class="tab-btn" onclick="cambiarTab('privada', event)">Nota privada</button>
+                                <button type="button" class="tab-btn" onclick="cambiarTab('pie', event)">Nota al pie</button>
+                            </div>
+                            <div id="tab-publica" class="tab-content active">
+                                <textarea id="notaPublica" placeholder="Nota visible para el cliente en la cotización..." rows="3"></textarea>
+                            </div>
+                            <div id="tab-privada" class="tab-content">
+                                <textarea id="notaPrivada" placeholder="Notas internas de uso exclusivo para la empresa..." rows="3"></textarea>
+                            </div>
+                            <div id="tab-pie" class="tab-content">
+                                <textarea id="notaPie" placeholder="Términos, condiciones o pie de página..." rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Totales -->
+                    <div class="totals-section">
+                        <div class="totals-box">
+                            <div class="totals-row">
+                                <span>Subtotal:</span>
+                                <span id="subtotalText">$0.00</span>
+                            </div>
+                            <div class="totals-row">
+                                <span>Impuestos / IVA:</span>
+                                <span id="ivaText">$0.00</span>
+                            </div>
+                            <div class="totals-row final">
+                                <span>Total a Pagar:</span>
+                                <span id="totalFinalText">$0.00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Plantilla oculta que se convierte en PDF al imprimir -->
+                    <div id="pdf-preview" style="background: white; padding: 20px; font-family: sans-serif;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
+                            <div>
+                                <h1 style="color: #1a73e8; margin-bottom: 5px;">COTIZACIÓN</h1>
+                                <p><strong id="lblNombreEmpresa"></strong></p>
+                                <p><span id="lblDirComercial"></span></p>
+                                <br>
+                                <p><strong>Nº Cotización:</strong> <span id="lblNum">COT-10001</span></p>
+                                <p><strong>Fecha de Emisión:</strong> <span id="lblEmision"></span></p>
+                                <p><strong>Validez:</strong> <span id="lblValidez"></span> días</p>
+                                <p><strong>Condiciones de Pago:</strong> <span id="lblCondPago"></span></p>
+                            </div>
+                            <div>
+                                <img id="pdf-logo-img" style="max-height: 80px; max-width: 150px; display: none;" alt="Logo Empresa">
+                            </div>
+                        </div>
+                        <hr style="margin: 15px 0; border: 0; border-top: 1px solid #ccc;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                            <div>
+                                <p><strong>Cliente:</strong> <span id="lblCliente"></span></p>
+                                <p><strong>Dirección de Facturación:</strong> <span id="lblDirFactura"></span></p>
+                            </div>
+                            <div id="lblDirEnvioCont" style="display:none;">
+                                <p><strong>Dirección de Envío:</strong> <span id="lblDirEnvio"></span></p>
+                            </div>
+                        </div>
+                        <table style="width: 100%; border-collapse: collapse; margin-top: 10px;" id="pdf-tabla-items">
+                            <thead>
+                                <tr style="background: #f8f9fa; border-bottom: 2px solid #ddd;">
+                                    <th style="text-align: center; padding: 8px;">Cant.</th>
+                                    <th style="text-align: left; padding: 8px;">Descripción</th>
+                                    <th style="text-align: right; padding: 8px;">Precio Unit.</th>
+                                    <th style="text-align: right; padding: 8px;">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pdf-tbody">
+                                <!-- Se rellena dinámicamente -->
+                            </tbody>
+                        </table>
+                        <br>
+                        <div style="text-align: right; font-size: 1rem; line-height: 1.5;">
+                            <p>Subtotal: <span id="pdfSubtotal">$0.00</span></p>
+                            <p>IVA: <span id="pdfIva">$0.00</span></p>
+                            <p style="font-size: 1.2rem; margin-top: 5px;"><strong>Total a Pagar: <span id="lblTotalFinal" style="color: #1a73e8;">$0.00</span></strong></p>
+                        </div>
+                        <div id="pdfNotaPublicaCont" style="margin-top: 15px; font-size: 0.9rem; color: #555; display:none;">
+                            <p><strong>Nota pública:</strong></p>
+                            <p id="lblNotaPublicaText"></p>
+                        </div>
+                        <div id="pdfNotaPieCont" style="margin-top: 15px; font-size: 0.9rem; color: #555; display:none;">
+                            <p><strong>Nota al pie:</strong></p>
+                            <p id="lblNotaPieText"></p>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">Crear Cotización (Generar PDF)</button>
+                        <a href="cotizaciones.html" class="btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
     <script>
-        document.getElementById('fechaHoy').valueAsDate = new Date();
+        // Poner fecha de hoy por defecto
+        document.getElementById('fechaEmision').valueAsDate = new Date();
 
         let logoDataUrl = "";
 
@@ -221,18 +401,122 @@
             }
         }
 
-        function calcularTotal() {
-            let precio = parseFloat(document.getElementById('precio').value) || 0;
-            document.getElementById('filaTotal').innerText = '$' + precio.toFixed(2);
-            document.getElementById('lblSubtotal').innerText = '$' + precio.toFixed(2);
-            document.getElementById('lblTotal').innerText = '$' + precio.toFixed(2);
+        function cambiarTab(tabName, event) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById('tab-' + tabName).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        function agregarFila() {
+            const tbody = document.querySelector('#tabla-items-cotizacion tbody');
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><input type="number" class="cant-item" value="1" min="1" oninput="calcularTotales()" required></td>
+                <td><input type="text" class="desc-item" placeholder="Concepto o descripción..." required></td>
+                <td><input type="number" class="precio-item" placeholder="0.00" step="any" oninput="calcularTotales()" required></td>
+                <td>
+                    <select class="impuesto-item" style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; width: 100%;" onchange="calcularTotales()">
+                        <option value="0.21">IVA (21%)</option>
+                        <option value="0.105">IVA (10.5%)</option>
+                        <option value="0">Exento (0%)</option>
+                    </select>
+                </td>
+                <td class="item-total">$0.00</td>
+                <td class="no-print"><button type="button" class="btn-danger" onclick="eliminarFila(this)">X</button></td>
+            `;
+            tbody.appendChild(tr);
+            calcularTotales();
+        }
+
+        function agregarDescuento() {
+            const tbody = document.querySelector('#tabla-items-cotizacion tbody');
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><input type="number" class="cant-item" value="1" style="display:none;" value="1">1</td>
+                <td><input type="text" class="desc-item" value="Descuento aplicado" required></td>
+                <td><input type="number" class="precio-item" placeholder="0.00" step="any" value="-1000" oninput="calcularTotales()" required></td>
+                <td>
+                    <select class="impuesto-item" style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; width: 100%;" onchange="calcularTotales()">
+                        <option value="0">Exento (0%)</option>
+                        <option value="0.21">IVA (21%)</option>
+                    </select>
+                </td>
+                <td class="item-total">$0.00</td>
+                <td class="no-print"><button type="button" class="btn-danger" onclick="eliminarFila(this)">X</button></td>
+            `;
+            tbody.appendChild(tr);
+            calcularTotales();
+        }
+
+        function agregarEnvio() {
+            const tbody = document.querySelector('#tabla-items-cotizacion tbody');
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><input type="number" class="cant-item" value="1" style="display:none;" value="1">1</td>
+                <td><input type="text" class="desc-item" value="Servicio de Envío / Logística" required></td>
+                <td><input type="number" class="precio-item" placeholder="0.00" step="any" value="5000" oninput="calcularTotales()" required></td>
+                <td>
+                    <select class="impuesto-item" style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; width: 100%;" onchange="calcularTotales()">
+                        <option value="0.21">IVA (21%)</option>
+                        <option value="0">Exento (0%)</option>
+                    </select>
+                </td>
+                <td class="item-total">$0.00</td>
+                <td class="no-print"><button type="button" class="btn-danger" onclick="eliminarFila(this)">X</button></td>
+            `;
+            tbody.appendChild(tr);
+            calcularTotales();
+        }
+
+        function eliminarFila(btn) {
+            const filas = document.querySelectorAll('#tabla-items-cotizacion tbody tr');
+            if (filas.length > 1) {
+                btn.closest('tr').remove();
+                calcularTotales();
+            } else {
+                alert("La cotización debe contener al menos un ítem.");
+            }
+        }
+
+        function calcularTotales() {
+            const filas = document.querySelectorAll('#tabla-items-cotizacion tbody tr');
+            let subtotalGeneral = 0;
+            let totalIvaGeneral = 0;
+
+            filas.forEach(fila => {
+                const cantidad = parseFloat(fila.querySelector('.cant-item').value) || 0;
+                const precio = parseFloat(fila.querySelector('.precio-item').value) || 0;
+                const tasaIva = parseFloat(fila.querySelector('.impuesto-item').value) || 0;
+                
+                const subtotalItem = cantidad * precio;
+                const ivaItem = subtotalItem * tasaIva;
+                const totalItem = subtotalItem + ivaItem;
+
+                subtotalGeneral += subtotalItem;
+                totalIvaGeneral += ivaItem;
+
+                fila.querySelector('.item-total').innerText = '$' + totalItem.toFixed(2);
+            });
+
+            let totalGeneral = subtotalGeneral + totalIvaGeneral;
+
+            document.getElementById('subtotalText').innerText = '$' + subtotalGeneral.toFixed(2);
+            document.getElementById('ivaText').innerText = '$' + totalIvaGeneral.toFixed(2);
+            document.getElementById('totalFinalText').innerText = '$' + totalGeneral.toFixed(2);
         }
 
         function obtenerPlanActual() {
             return localStorage.getItem("gespyme_plan") || "free";
         }
 
-        function verificarRestriccionModulo(modulo) {
+        function verificarRestriccionModulo(modulo, event) {
+            if (localStorage.getItem("gespyme_modo_dev") === "true") {
+                return true;
+            }
+
+            if (event) event.preventDefault();
+
             let planKey = obtenerPlanActual();
             if (planKey === 'free') {
                 let nombresModulos = {
@@ -241,11 +525,11 @@
                     'ordenes': 'Órdenes de Servicio',
                     'pagos': 'Gestión de Pagos'
                 };
-                document.getElementById("pro-message").innerHTML = `El módulo de <strong>${nombresModulos[modulo]}</strong> está reservado para planes superiores.<br><br>Actualiza tu suscripción para desbloquearlo.`;
+                document.getElementById("pro-message").innerHTML = `El módulo de <strong>${nombresModulos[modulo] || modulo}</strong> está reservado para planes superiores.<br><br>Actualiza tu suscripción para desbloquearlo.`;
                 document.getElementById("pro-modal").style.display = "flex";
-                return;
+                return false;
             }
-            alert(`¡Acceso concedido al módulo de ${modulo}!`);
+            return true;
         }
 
         function cerrarModalPro() {
@@ -257,7 +541,93 @@
             if (usuario) {
                 document.getElementById("userProfileDisplay").innerHTML = `<span>👤</span> ${usuario}`;
             }
+
+            // Validar restricciones si no está en modo desarrollador
+            if (localStorage.getItem("gespyme_modo_dev") !== "true" && obtenerPlanActual() === 'free') {
+                // Permitido cotizaciones según límites previos o restricciones
+            }
         };
+
+        function generarPDF(event) {
+            event.preventDefault();
+
+            // Rellenar cabecera de la plantilla oculta
+            document.getElementById('lblNombreEmpresa').innerText = document.getElementById('nombreEmpresa').value;
+            document.getElementById('lblDirComercial').innerText = document.getElementById('direccionComercial').value;
+            document.getElementById('lblNum').innerText = document.getElementById('numCotizacion').value;
+            document.getElementById('lblEmision').innerText = document.getElementById('fechaEmision').value;
+            document.getElementById('lblValidez').innerText = document.getElementById('validezDias').value;
+            document.getElementById('lblCondPago').innerText = document.getElementById('condicionesPago').value;
+
+            document.getElementById('lblCliente').innerText = document.getElementById('clienteSelect').value;
+            document.getElementById('lblDirFactura').innerText = document.getElementById('dirFacturacion').value;
+            
+            let dirEnvio = document.getElementById('dirEnvio').value;
+            if(dirEnvio) {
+                document.getElementById('lblDirEnvio').innerText = dirEnvio;
+                document.getElementById('lblDirEnvioCont').style.display = 'block';
+            } else {
+                document.getElementById('lblDirEnvioCont').style.display = 'none';
+            }
+
+            // Rellenar tabla de ítems para el PDF impreso
+            const pdfTbody = document.getElementById('pdf-tbody');
+            pdfTbody.innerHTML = "";
+            const filas = document.querySelectorAll('#tabla-items-cotizacion tbody tr');
+            
+            filas.forEach(fila => {
+                let cant = fila.querySelector('.cant-item').value;
+                let desc = fila.querySelector('.desc-item').value;
+                let precio = parseFloat(fila.querySelector('.precio-item').value || 0).toFixed(2);
+                let tasaIva = parseFloat(fila.querySelector('.impuesto-item').value) || 0;
+                let totalItem = (parseFloat(cant) * parseFloat(precio)) * (1 + tasaIva);
+
+                let tr = document.createElement('tr');
+                tr.style.borderBottom = "1px solid #eee";
+                tr.innerHTML = `
+                    <td style="text-align: center; padding: 8px;">${cant}</td>
+                    <td style="text-align: left; padding: 8px;">${desc}</td>
+                    <td style="text-align: right; padding: 8px;">$${precio}</td>
+                    <td style="text-align: right; padding: 8px;">$${totalItem.toFixed(2)}</td>
+                `;
+                pdfTbody.appendChild(tr);
+            });
+
+            // Rellenar totales en la vista PDF
+            document.getElementById('pdfSubtotal').innerText = document.getElementById('subtotalText').innerText;
+            document.getElementById('pdfIva').innerText = document.getElementById('ivaText').innerText;
+            document.getElementById('lblTotalFinal').innerText = document.getElementById('totalFinalText').innerText;
+
+            // Notas
+            let notaPublica = document.getElementById('notaPublica').value;
+            if(notaPublica) {
+                document.getElementById('lblNotaPublicaText').innerText = notaPublica;
+                document.getElementById('pdfNotaPublicaCont').style.display = 'block';
+            } else {
+                document.getElementById('pdfNotaPublicaCont').style.display = 'none';
+            }
+
+            let notaPie = document.getElementById('notaPie').value;
+            if(notaPie) {
+                document.getElementById('lblNotaPieText').innerText = notaPie;
+                document.getElementById('pdfNotaPieCont').style.display = 'block';
+            } else {
+                document.getElementById('pdfNotaPieCont').style.display = 'none';
+            }
+
+            // Manejar la visualización del logotipo en el PDF impreso
+            const pdfLogoImg = document.getElementById('pdf-logo-img');
+            if (logoDataUrl) {
+                pdfLogoImg.src = logoDataUrl;
+                pdfLogoImg.style.display = 'block';
+            } else {
+                pdfLogoImg.style.display = 'none';
+            }
+
+            // Abrir el diálogo de impresión del navegador configurado como "Guardar como PDF"
+            window.print();
+        }
     </script>
+
 </body>
 </html>
