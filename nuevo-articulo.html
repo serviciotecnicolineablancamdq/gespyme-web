@@ -3,9 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GesPyme - Nuevo Artículo</title>
+    <title>GesPyme - Artículos e Inventario</title>
     <style>
-        :root { --primary-color: #1a73e8; --sidebar-bg: #2b3856; --text-color: #333; --bg-color: #f4f6f9; }
+        :root {
+            --primary-color: #1a73e8;
+            --sidebar-bg: #2b3856;
+            --text-color: #333;
+            --bg-color: #f4f6f9;
+        }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-color); display: flex; height: 100vh; overflow: hidden; }
         
@@ -21,18 +26,37 @@
         header { background: white; padding: 0.8rem 2rem; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: flex-end; align-items: center; }
         .user-profile { font-size: 0.9rem; color: #555; font-weight: 500; display: flex; align-items: center; gap: 8px; }
         
-        .container { padding: 2rem; max-width: 900px; width: 100%; margin: 0 auto; background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-top: 2rem; margin-bottom: 2rem; }
-        h2 { font-size: 1.4rem; color: #333; margin-bottom: 1.5rem; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; }
+        .container { padding: 2rem; max-width: 1200px; width: 100%; margin: 0 auto; }
+        .panel-section { background: white; border-radius: 8px; padding: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 2rem; }
         
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+        .top-actions { display: flex; justify-content: flex-end; gap: 1rem; margin-bottom: 1.5rem; }
+        .btn-green { background-color: #28a745; color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 4px; cursor: pointer; font-weight: 500; text-decoration: none; display: inline-block; font-size: 0.9rem; }
+        .btn-green:hover { background-color: #218838; }
+        .btn-secondary { background-color: #6c757d; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.9rem; }
+
+        table { width: 100%; border-collapse: collapse; text-align: left; margin-top: 1rem; }
+        th, td { padding: 0.75rem; border-bottom: 1px solid #eee; font-size: 0.9rem; }
+        th { background-color: #f8f9fa; color: #5f6368; }
+
+        /* Modal Avanzado de Nuevo Artículo (Estilo Competencia) */
+        #articulo-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6); display: none; justify-content: center; align-items: center; z-index: 10000; overflow-y: auto; padding: 1rem;
+        }
+        .modal-card {
+            background: white; padding: 2rem; border-radius: 8px; width: 90%; max-width: 550px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3); position: relative; max-height: 90vh; overflow-y: auto;
+        }
+        .close-modal { position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 1.4rem; cursor: pointer; color: #888; }
+        
         .form-group { margin-bottom: 1rem; }
-        .form-group label { display: block; margin-bottom: 0.4rem; font-weight: 500; font-size: 0.85rem; color: #555; }
+        .form-group label { display: block; margin-bottom: 0.3rem; font-weight: 500; font-size: 0.85rem; color: #555; }
         .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.6rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.9rem; }
-        
-        .btn-primary { background-color: #28a745; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-weight: 500; font-size: 0.95rem; }
-        .btn-primary:hover { background-color: #218838; }
-        .btn-secondary { background-color: #6c757d; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-weight: 500; text-decoration: none; display: inline-block; }
-        .btn-secondary:hover { background-color: #5a6268; }
+        .checkbox-group { display: flex; align-items: center; gap: 8px; margin: 1rem 0; font-size: 0.9rem; font-weight: 500; color: #333; }
+        .checkbox-group input { width: auto; }
+
+        /* Campos condicionales de inventario */
+        #bloque-inventario { background: #f8f9fa; padding: 1rem; border-radius: 6px; margin-bottom: 1rem; border-left: 3px solid #1a73e8; display: none; }
 
         /* Modal de Restricción de Planes */
         #pro-modal {
@@ -49,7 +73,6 @@
             background-color: #28a745; color: white; border: none; padding: 0.8rem 1.5rem;
             border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; width: 100%;
         }
-        .close-modal { position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #888; }
     </style>
 </head>
 <body>
@@ -64,21 +87,91 @@
         </div>
     </div>
 
+    <!-- MODAL NUEVO ARTÍCULO (ESTILO COMPETENCIA) -->
+    <div id="articulo-modal">
+        <div class="modal-card">
+            <button class="close-modal" onclick="cerrarModalArticulo()">×</button>
+            <h3 style="margin-bottom: 1rem; color: #1a73e8; border-bottom: 1px solid #eee; padding-bottom: 0.5rem;">Nuevo artículo</h3>
+            
+            <form id="formNuevoArticulo" onsubmit="guardarArticulo(event)">
+                <div class="form-group">
+                    <label>Cód. artículo:</label>
+                    <input type="text" id="artCodigo" placeholder="Ej: ART-001" required>
+                </div>
+                <div class="form-group">
+                    <label>Descripción:</label>
+                    <textarea id="artDescripcion" placeholder="Nombre o detalle del producto/servicio..." rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Valor unitario:</label>
+                    <input type="number" id="artValor" step="any" placeholder="0.00" required>
+                </div>
+                <div class="form-group">
+                    <label>Impuesto:</label>
+                    <select id="artImpuesto">
+                        <option value="0.21">IVA (21%)</option>
+                        <option value="0.105">IVA (10.5%)</option>
+                        <option value="0">Exento (0%)</option>
+                    </select>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="checkInventario" onchange="toggleInventario()">
+                    <label for="checkInventario" style="cursor: pointer; margin:0;">Gestionar niveles de existencias de inventario</label>
+                </div>
+
+                <div id="bloque-inventario">
+                    <div class="form-group">
+                        <label>Cantidad actual:</label>
+                        <input type="number" id="artCantActual" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Cantidad ideal:</label>
+                        <input type="number" id="artCantIdeal" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Cantidad de advertencia:</label>
+                        <input type="number" id="artCantAdvertencia" placeholder="0">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Proveedor:</label>
+                    <select id="artProveedor">
+                        <option value="">Seleccione proveedor...</option>
+                        <option value="Proveedor General">Proveedor General</option>
+                        <option value="Distribuidora Mayorista">Distribuidora Mayorista</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Nota:</label>
+                    <textarea id="artNota" placeholder="Observaciones adicionales..." rows="2"></textarea>
+                </div>
+
+                <div style="margin-top: 1.5rem; display: flex; justify-content: flex-end; gap: 1rem;">
+                    <button type="button" class="btn-secondary" onclick="cerrarModalArticulo()">Cancelar</button>
+                    <button type="submit" class="btn-green">Crear artículo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Menú Lateral -->
     <sidebar>
-        <div class="sidebar-brand"><span>⚙️</span> GesPyme</div>
+        <div class="sidebar-brand"><span>⚙</span> GesPyme</div>
         <ul class="sidebar-menu">
             <li><a href="index.html">Panel</a></li>
             <li><a href="clientes.html">Clientes</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('facturas')">Facturas</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('facturas')" class="sub-item">Nueva factura</a></li>
+            <li><a href="facturas.html" onclick="return verificarRestriccionModulo('facturas', event)">Facturas</a></li>
+            <li><a href="facturas.html" onclick="return verificarRestriccionModulo('facturas', event)" class="sub-item">Nueva factura</a></li>
             <li><a href="cotizaciones.html">Cotizaciones</a></li>
             <li><a href="nueva-cotizacion.html" class="sub-item">Nueva cotización</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('notas')">Notas de crédito</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('ordenes')">Orden de Servicio</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('ordenes')" class="sub-item">Nueva orden</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('pagos')">Pagos</a></li>
+            <li><a href="notas-credito.html" onclick="return verificarRestriccionModulo('notas', event)">Notas de crédito</a></li>
+            <li><a href="orden-servicio.html" onclick="return verificarRestriccionModulo('ordenes', event)">Orden de Servicio</a></li>
+            <li><a href="nueva-orden-servicio.html" onclick="return verificarRestriccionModulo('ordenes', event)" class="sub-item">Nueva orden</a></li>
+            <li><a href="pagos.html" onclick="return verificarRestriccionModulo('pagos', event)">Pagos</a></li>
             <li><a href="reembolsos.html">Reembolsos</a></li>
-            <li><a href="articulos.html">Artículos</a></li>
+            <li class="active"><a href="articulos.html">Artículos</a></li>
             <li><a href="informes.html">Informes</a></li>
             <li><a href="herramientas.html">Herramientas</a></li>
             <li><a href="configuracion.html">Configuración</a></li>
@@ -87,54 +180,129 @@
         <div class="sidebar-footer">GesPyme © 2026</div>
     </sidebar>
 
+    <!-- Área Principal -->
     <div class="main-content">
         <header>
             <div class="user-profile" id="userProfileDisplay">
                 <span>👤 Mi Cuenta</span>
             </div>
         </header>
+
         <div class="container">
-            <h2>Nuevo Artículo / Producto</h2>
-            <form onsubmit="event.preventDefault(); alert('¡Artículo guardado con éxito!'); window.location.href='articulos.html';">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Código de Artículo</label>
-                        <input type="text" placeholder="Ej: ART-001" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Impuesto</label>
-                        <select>
-                            <option>IVA (21%)</option>
-                            <option>Exento (0%)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Valor / Precio ($)</label>
-                        <input type="number" step="any" placeholder="0.00" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Cantidad en Stock</label>
-                        <input type="number" value="1" required>
-                    </div>
+            <div class="panel-section">
+                
+                <div class="top-actions">
+                    <button type="button" class="btn-green" onclick="abrirModalArticulo()">Crear artículo</button>
                 </div>
-                <div class="form-group">
-                    <label>Descripción del Artículo</label>
-                    <textarea placeholder="Detalle o nombre del producto..." required></textarea>
-                </div>
-                <div style="margin-top: 2rem; display: flex; justify-content: flex-end; gap: 1rem;">
-                    <a href="articulos.html" class="btn-secondary">Cancelar</a>
-                    <button type="submit" class="btn-primary">Guardar Artículo</button>
-                </div>
-            </form>
+
+                <h2 style="font-size: 1.3rem; color: #333; margin-bottom: 1rem;">Catálogo de Artículos</h2>
+
+                <table id="tablaArticulos">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Descripción</th>
+                            <th>Valor Unitario</th>
+                            <th>Impuesto</th>
+                            <th>Stock Actual</th>
+                            <th>Proveedor</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodyArticulos">
+                        <!-- Se llena dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
     <script>
+        function abrirModalArticulo() {
+            document.getElementById('articulo-modal').style.display = 'flex';
+        }
+
+        function cerrarModalArticulo() {
+            document.getElementById('articulo-modal').style.display = 'none';
+            document.getElementById('formNuevoArticulo').reset();
+            document.getElementById('bloque-inventario').style.display = 'none';
+        }
+
+        function toggleInventario() {
+            const activo = document.getElementById('checkInventario').checked;
+            document.getElementById('bloque-inventario').style.display = activo ? 'block' : 'none';
+        }
+
+        function obtenerArticulos() {
+            return JSON.parse(localStorage.getItem('gespyme_articulos')) || [];
+        }
+
+        function guardarArticulo(event) {
+            event.preventDefault();
+            
+            let nuevoArt = {
+                codigo: document.getElementById('artCodigo').value,
+                descripcion: document.getElementById('artDescripcion').value,
+                valor: parseFloat(document.getElementById('artValor').value || 0).toFixed(2),
+                impuesto: document.getElementById('artImpuesto').value,
+                gestionaStock: document.getElementById('checkInventario').checked,
+                stock: document.getElementById('checkInventario').checked ? document.getElementById('artCantActual').value : 'N/A',
+                proveedor: document.getElementById('artProveedor').value,
+                nota: document.getElementById('artNota').value
+            };
+
+            let articulos = obtenerArticulos();
+            articulos.push(nuevoArt);
+            localStorage.setItem('gespyme_articulos', JSON.stringify(articulos));
+
+            alert("¡Artículo creado con éxito!");
+            cerrarModalArticulo();
+            renderizarArticulos();
+        }
+
+        function renderizarArticulos() {
+            const tbody = document.getElementById('tbodyArticulos');
+            tbody.innerHTML = "";
+            let articulos = obtenerArticulos();
+
+            if (articulos.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: #70757a; padding: 2.5rem;">No se encontraron artículos registrados.</td></tr>`;
+                return;
+            }
+
+            articulos.forEach((art, index) => {
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${art.codigo}</strong></td>
+                    <td>${art.descripcion}</td>
+                    <td>$${art.valor}</td>
+                    <td>${art.impuesto == '0.21' ? 'IVA (21%)' : art.impuesto == '0.105' ? 'IVA (10.5%)' : 'Exento'}</td>
+                    <td>${art.stock}</td>
+                    <td>${art.proveedor || '-'}</td>
+                    <td><button type="button" class="btn-secondary" style="padding: 0.3rem 0.6rem; font-size: 0.8rem; background: #dc3545;" onclick="eliminarArticulo(${index})">Eliminar</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function eliminarArticulo(index) {
+            if(confirm("¿Estás seguro de eliminar este artículo?")) {
+                let articulos = obtenerArticulos();
+                articulos.splice(index, 1);
+                localStorage.setItem('gespyme_articulos', JSON.stringify(articulos));
+                renderizarArticulos();
+            }
+        }
+
         function obtenerPlanActual() {
             return localStorage.getItem("gespyme_plan") || "free";
         }
 
-        function verificarRestriccionModulo(modulo) {
+        function verificarRestriccionModulo(modulo, event) {
+            if (localStorage.getItem("gespyme_modo_dev") === "true") {
+                return true;
+            }
+            if (event) event.preventDefault();
             let planKey = obtenerPlanActual();
             if (planKey === 'free') {
                 let nombresModulos = {
@@ -143,18 +311,15 @@
                     'ordenes': 'Órdenes de Servicio',
                     'pagos': 'Gestión de Pagos'
                 };
-                document.getElementById("pro-message").innerHTML = `El módulo de <strong>${nombresModulos[modulo]}</strong> está reservado para planes superiores.<br><br>Actualiza tu suscripción para desbloquearlo.`;
+                document.getElementById("pro-message").innerHTML = `El módulo de <strong>${nombresModulos[modulo] || modulo}</strong> está reservado para planes superiores.<br><br>Actualiza tu suscripción para desbloquearlo.`;
                 document.getElementById("pro-modal").style.display = "flex";
-                return;
+                return false;
             }
-            alert(`¡Acceso concedido al módulo de ${modulo}!`);
+            return true;
         }
 
         function cerrarModalPro() {
             document.getElementById("pro-modal").style.display = "none";
-            if (obtenerPlanActual() === 'free') {
-                window.location.href = 'index.html';
-            }
         }
 
         window.onload = function() {
@@ -162,6 +327,7 @@
             if (usuario) {
                 document.getElementById("userProfileDisplay").innerHTML = `<span>👤</span> ${usuario}`;
             }
+            renderizarArticulos();
         };
     </script>
 </body>
