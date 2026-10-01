@@ -89,13 +89,14 @@
         }
         .close-modal { position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #888; }
 
-        /* Estilos de Impresión PDF */
+        /* Estilos de Impresión PDF limpios */
         @media print {
             sidebar, header, .actions-bar, .btn-action, .btn-danger, .no-print, #pro-modal { display: none !important; }
-            body { background: white; height: auto; overflow: visible; }
-            .container { padding: 0; max-width: 100%; }
-            .form-card { box-shadow: none; padding: 0; margin: 0; }
-            input, select, textarea { border: none; background: transparent; padding: 0; font-size: 0.9rem; }
+            body { background: white; height: auto; overflow: visible; margin: 0; padding: 0; }
+            .main-content { overflow: visible; display: block !important; position: static !important; }
+            .container { padding: 0 !important; max-width: 100% !important; margin: 0 !important; width: 100% !important; }
+            .form-card { box-shadow: none !important; padding: 0 !important; margin: 0 !important; }
+            input, select, textarea { border: none !important; background: transparent !important; padding: 0 !important; font-size: 0.9rem !important; }
         }
     </style>
 </head>
