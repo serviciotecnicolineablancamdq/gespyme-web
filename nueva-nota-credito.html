@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GesPyme - Nueva Nota de Crédito</title>
+    <title>GesPyme - Notas de Crédito</title>
     <style>
         :root {
             --primary-color: #1a73e8;
@@ -26,27 +26,31 @@
         header { background: white; padding: 0.8rem 2rem; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: flex-end; align-items: center; }
         .user-profile { font-size: 0.9rem; color: #555; font-weight: 500; display: flex; align-items: center; gap: 8px; }
         
-        .container { padding: 2rem; max-width: 1000px; width: 100%; margin: 0 auto; background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-top: 2rem; margin-bottom: 2rem; }
-        h2 { font-size: 1.4rem; color: #333; margin-bottom: 1.5rem; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; }
-
-        /* Estilo para la caja del logotipo */
-        .logo-upload-box {
-            width: 130px; height: 130px; border: 2px dashed #ccc; border-radius: 6px;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            cursor: pointer; background: #fafafa; position: relative; overflow: hidden; text-align: center;
-            margin-bottom: 1.5rem; transition: 0.2s;
-        }
-        .logo-upload-box:hover { border-color: #1a73e8; background: #f0f4f8; }
-        .logo-upload-box img { width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0; left: 0; background: white; }
-        .logo-upload-box span { font-size: 0.8rem; color: #666; padding: 0.5rem; }
-
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
-        .form-group { margin-bottom: 1rem; }
-        .form-group label { display: block; margin-bottom: 0.4rem; font-weight: 500; font-size: 0.85rem; color: #555; }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.6rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.9rem; }
+        .container { padding: 2rem; max-width: 1200px; width: 100%; margin: 0 auto; }
+        .panel-section { background: white; border-radius: 8px; padding: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 2rem; }
         
-        .btn-primary { background-color: #28a745; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-weight: 500; font-size: 0.95rem; }
-        .btn-primary:hover { background-color: #218838; }
+        .top-actions { display: flex; justify-content: flex-end; gap: 1rem; margin-bottom: 1.5rem; }
+        .btn-green { background-color: #28a745; color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 4px; cursor: pointer; font-weight: 500; text-decoration: none; display: inline-block; font-size: 0.9rem; }
+        .btn-green:hover { background-color: #218838; }
+
+        .filters-bar { display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; align-items: center; background: #f8f9fa; padding: 1rem; border-radius: 6px; }
+        .filters-bar select, .filters-bar input { padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.9rem; }
+        .btn-secondary { background-color: #6c757d; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.9rem; }
+
+        table { width: 100%; border-collapse: collapse; text-align: left; margin-top: 1rem; }
+        th, td { padding: 0.75rem; border-bottom: 1px solid #eee; font-size: 0.9rem; }
+        th { background-color: #f8f9fa; color: #5f6368; }
+
+        /* Modal de Búsqueda de Facturas (Estilo Competencia) */
+        #factura-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6); display: none; justify-content: center; align-items: center; z-index: 10000;
+        }
+        .modal-card {
+            background: white; padding: 2rem; border-radius: 8px; width: 90%; max-width: 750px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3); position: relative;
+        }
+        .close-modal { position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 1.4rem; cursor: pointer; color: #888; }
 
         /* Modal de Restricción de Planes */
         #pro-modal {
@@ -63,7 +67,6 @@
             background-color: #28a745; color: white; border: none; padding: 0.8rem 1.5rem;
             border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; width: 100%;
         }
-        .close-modal { position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #888; }
     </style>
 </head>
 <body>
@@ -78,19 +81,62 @@
         </div>
     </div>
 
+    <!-- MODAL PARA CREAR DESDE FACTURA (BÚSQUEDA) -->
+    <div id="factura-modal">
+        <div class="modal-card">
+            <button class="close-modal" onclick="cerrarModalFactura()">×</button>
+            <h3 style="margin-bottom: 1rem; color: #1a73e8;">Seleccionar Factura de Referencia</h3>
+            <div class="filters-bar" style="margin-bottom: 1rem;">
+                <select id="modalPeriodo">
+                    <option value="todos">Todos</option>
+                    <option value="hoy">Hoy</option>
+                    <option value="7d">Últimos 7 días</option>
+                    <option value="30d">Últimos 30 días</option>
+                </select>
+                <input type="date" id="modalInicio">
+                <input type="date" id="modalFin">
+                <input type="text" id="modalBusqueda" placeholder="Cliente, Nº de factura..." style="flex:1;">
+                <button type="button" class="btn-secondary" onclick="buscarFacturasModal()">Buscar</button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Número</th>
+                        <th>Cliente</th>
+                        <th>Total</th>
+                        <th>Seleccionar</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaFacturasModalResultados">
+                    <tr>
+                        <td colspan="5" style="text-align: center; color: #70757a; padding: 1.5rem;">
+                            No se han encontrado facturas para relacionar.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div style="margin-top: 1.5rem; display: flex; justify-content: flex-end; gap: 1rem;">
+                <button type="button" class="btn-secondary" onclick="cerrarModalFactura()">Cancelar</button>
+                <button type="button" class="btn-green" onclick="seleccionarFacturaAccion()">Seleccionar factura</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menú Lateral -->
     <sidebar>
-        <div class="sidebar-brand"><span>⚙️</span> GesPyme</div>
+        <div class="sidebar-brand"><span>⚙</span> GesPyme</div>
         <ul class="sidebar-menu">
             <li><a href="index.html">Panel</a></li>
             <li><a href="clientes.html">Clientes</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('facturas')">Facturas</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('facturas')" class="sub-item">Nueva factura</a></li>
+            <li><a href="facturas.html" onclick="return verificarRestriccionModulo('facturas', event)">Facturas</a></li>
+            <li><a href="facturas.html" onclick="return verificarRestriccionModulo('facturas', event)" class="sub-item">Nueva factura</a></li>
             <li><a href="cotizaciones.html">Cotizaciones</a></li>
             <li><a href="nueva-cotizacion.html" class="sub-item">Nueva cotización</a></li>
-            <li class="active"><a href="#" onclick="verificarRestriccionModulo('notas')">Notas de crédito</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('ordenes')">Orden de Servicio</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('ordenes')" class="sub-item">Nueva orden</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('pagos')">Pagos</a></li>
+            <li class="active"><a href="notas-credito.html" onclick="return verificarRestriccionModulo('notas', event)">Notas de crédito</a></li>
+            <li><a href="orden-servicio.html" onclick="return verificarRestriccionModulo('ordenes', event)">Orden de Servicio</a></li>
+            <li><a href="nueva-orden-servicio.html" onclick="return verificarRestriccionModulo('ordenes', event)" class="sub-item">Nueva orden</a></li>
+            <li><a href="pagos.html" onclick="return verificarRestriccionModulo('pagos', event)">Pagos</a></li>
             <li><a href="reembolsos.html">Reembolsos</a></li>
             <li><a href="articulos.html">Artículos</a></li>
             <li><a href="informes.html">Informes</a></li>
@@ -101,84 +147,119 @@
         <div class="sidebar-footer">GesPyme © 2026</div>
     </sidebar>
 
+    <!-- Área Principal -->
     <div class="main-content">
         <header>
             <div class="user-profile" id="userProfileDisplay">
                 <span>👤 Mi Cuenta</span>
             </div>
         </header>
+
         <div class="container">
-            <h2>Nueva Nota de Crédito</h2>
-            <form onsubmit="event.preventDefault(); alert('¡Nota de crédito emitida con éxito!'); window.location.href='index.html';">
+            <div class="panel-section">
                 
-                <!-- Bloque para Añadir Logotipo -->
-                <div class="form-group">
-                    <label>Logotipo de la Empresa</label>
-                    <div class="logo-upload-box" onclick="document.getElementById('input-logo').click()">
-                        <span id="logo-text">+ Añadir un logotipo</span>
-                        <img id="logo-preview" style="display: none;" alt="Logotipo">
-                    </div>
-                    <input type="file" id="input-logo" accept="image/*" style="display: none;" onchange="cargarLogotipo(event)">
+                <div class="top-actions">
+                    <button type="button" class="btn-green" onclick="abrirModalFactura()">Crear a partir de factura</button>
+                    <a href="nueva-nota-credito.html" class="btn-green" onclick="return verificarRestriccionModulo('notas', event)">Crear nota de crédito</a>
                 </div>
 
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Cliente</label>
-                        <select required>
-                            <option value="">Seleccione cliente...</option>
-                            <option value="1">Empresa S.A.</option>
+                <h2 style="font-size: 1.3rem; color: #333; margin-bottom: 1rem;">Notas de crédito</h2>
+
+                <!-- Barra de Filtros (Estilo Competencia) -->
+                <div class="filters-bar">
+                    <div>
+                        <label style="font-size: 0.8rem; color: #666; display: block; margin-bottom: 2px;">Periodo:</label>
+                        <select id="filtroPeriodo">
+                            <option value="todos">Todos</option>
+                            <option value="hoy">Hoy</option>
+                            <option value="7d">Últimos 7 días</option>
+                            <option value="30d">Últimos 30 días</option>
+                            <option value="mes">Este mes</option>
+                            <option value="anio">Este año</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label>Factura Afectada (Referencia)</label>
-                        <input type="text" placeholder="Ej: FAC-0001" required>
+                    <div>
+                        <label style="font-size: 0.8rem; color: #666; display: block; margin-bottom: 2px;">Inicio:</label>
+                        <input type="date" id="filtroInicio">
                     </div>
-                    <div class="form-group">
-                        <label>Fecha de Emisión</label>
-                        <input type="date" id="fechaNC" required>
+                    <div>
+                        <label style="font-size: 0.8rem; color: #666; display: block; margin-bottom: 2px;">Fin:</label>
+                        <input type="date" id="filtroFin">
                     </div>
-                    <div class="form-group">
-                        <label>Monto a Creditar</label>
-                        <input type="number" step="any" placeholder="0.00" required>
+                    <div style="flex: 1; min-width: 220px;">
+                        <label style="font-size: 0.8rem; color: #666; display: block; margin-bottom: 2px;">Palabra clave:</label>
+                        <input type="text" id="filtroBusqueda" placeholder="Cliente, Nota de crédito nº..." style="width: 100%;">
+                    </div>
+                    <div style="align-self: flex-end;">
+                        <button type="button" class="btn-secondary" onclick="aplicarFiltros()">Buscar</button>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label>Motivo de la Nota de Crédito</label>
-                    <textarea placeholder="Razón de la devolución o ajuste..." required></textarea>
-                </div>
-                <div style="margin-top: 2rem; display: flex; justify-content: flex-end;">
-                    <button type="submit" class="btn-primary">Emitir Nota de Crédito</button>
-                </div>
-            </form>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Número</th>
+                            <th>Cliente</th>
+                            <th>Vendedor</th>
+                            <th>Importe no aplicado</th>
+                            <th>Total</th>
+                            <th>Estado</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="8" style="text-align: center; color: #70757a; padding: 2.5rem;">
+                                No se encontraron notas de crédito.
+                                <br><br>
+                                <a href="nueva-nota-credito.html" class="btn-green" style="font-size: 0.85rem;" onclick="return verificarRestriccionModulo('notas', event)">Crear una nota de crédito</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
     <script>
-        document.getElementById('fechaNC').valueAsDate = new Date();
-
-        let logoDataUrl = "";
-
-        function cargarLogotipo(event) {
-            const archivo = event.target.files[0];
-            if (archivo) {
-                const lector = new FileReader();
-                lector.onload = function(e) {
-                    logoDataUrl = e.target.result;
-                    const preview = document.getElementById('logo-preview');
-                    const texto = document.getElementById('logo-text');
-                    preview.src = logoDataUrl;
-                    preview.style.display = 'block';
-                    texto.style.display = 'none';
-                }
-                lector.readAsDataURL(archivo);
+        function abrirModalFactura() {
+            if (localStorage.getItem("gespyme_modo_dev") !== "true" && obtenerPlanActual() === 'free') {
+                verificarRestriccionModulo('notas');
+                return;
             }
+            document.getElementById('factura-modal').style.display = 'flex';
+        }
+
+        function cerrarModalFactura() {
+            document.getElementById('factura-modal').style.display = 'none';
+        }
+
+        function buscarFacturasModal() {
+            // Lógica de búsqueda simulada o conectada a facturas existentes
+            alert("Buscando facturas según los filtros seleccionados...");
+        }
+
+        function seleccionarFacturaAccion() {
+            alert("Factura seleccionada. Redirigiendo a creación de Nota de Crédito...");
+            window.location.href = 'nueva-nota-credito.html';
+        }
+
+        function aplicarFiltros() {
+            alert("Aplicando filtros de búsqueda...");
         }
 
         function obtenerPlanActual() {
             return localStorage.getItem("gespyme_plan") || "free";
         }
 
-        function verificarRestriccionModulo(modulo) {
+        function verificarRestriccionModulo(modulo, event) {
+            if (localStorage.getItem("gespyme_modo_dev") === "true") {
+                return true;
+            }
+
+            if (event) event.preventDefault();
+
             let planKey = obtenerPlanActual();
             if (planKey === 'free') {
                 let nombresModulos = {
@@ -187,18 +268,15 @@
                     'ordenes': 'Órdenes de Servicio',
                     'pagos': 'Gestión de Pagos'
                 };
-                document.getElementById("pro-message").innerHTML = `El módulo de <strong>${nombresModulos[modulo]}</strong> está reservado para planes superiores.<br><br>Actualiza tu suscripción para desbloquearlo.`;
+                document.getElementById("pro-message").innerHTML = `El módulo de <strong>${nombresModulos[modulo] || modulo}</strong> está reservado para planes superiores.<br><br>Actualiza tu suscripción para desbloquearlo.`;
                 document.getElementById("pro-modal").style.display = "flex";
-                return;
+                return false;
             }
-            alert(`¡Acceso concedido al módulo de ${modulo}!`);
+            return true;
         }
 
         function cerrarModalPro() {
             document.getElementById("pro-modal").style.display = "none";
-            if (obtenerPlanActual() === 'free') {
-                window.location.href = 'index.html';
-            }
         }
 
         window.onload = function() {
@@ -207,8 +285,7 @@
                 document.getElementById("userProfileDisplay").innerHTML = `<span>👤</span> ${usuario}`;
             }
 
-            // Validar acceso general al módulo de Notas de Crédito
-            if (obtenerPlanActual() === 'free') {
+            if (localStorage.getItem("gespyme_modo_dev") !== "true" && obtenerPlanActual() === 'free') {
                 document.getElementById("pro-message").innerHTML = `El módulo de <strong>Notas de Crédito</strong> está reservado para planes superiores.<br><br>Actualiza tu suscripción para desbloquearlo.`;
                 document.getElementById("pro-modal").style.display = "flex";
             }
