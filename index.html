@@ -209,7 +209,14 @@
                 <li><a href="configuracion.html" onclick="return verificarRestriccionModuloLink('configuracion', event)">⚙ Configuración</a></li>
                 <li><a href="subscription.html" style="color: #ffd700;">⭐ Subscription Pro</a></li>
                 <li><a href="#" onclick="abrirAdminModal(event)" style="color: #4ade80;">👑 Activar Plan (Admin)</a></li>
-                <li id="menuCerrarSesion" style="display:none;"><a href="#" onclick="cerrarSesion();" style="color: #ff9999;">🚪 Cerrar Sesión</a></li>
+                
+                <!-- Sección de Ayuda y Agente GPT idéntica a la competencia -->
+                <li style="margin-top: 0.8rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 0.5rem;"><a href="#" onclick="abrirAyudaModal()">❓ Ayuda</a></li>
+                <li><a href="#" onclick="abrirAyudaModal()">🛟 Asistencia</a></li>
+                <li><a href="#" onclick="abrirAyudaModal()">💡 Sugerencias</a></li>
+                <li><a href="#" onclick="toggleChatIA()" style="color: #ffd700; font-weight: bold;">✨ Agente GPT</a></li>
+
+                <li id="menuCerrarSesion" style="display:none; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 0.5rem; padding-top: 0.5rem;"><a href="#" onclick="cerrarSesion();" style="color: #ff9999;">🚪 Cerrar Sesión</a></li>
             </ul>
             <div class="sidebar-footer">
                 GesPyme © 2026
@@ -327,6 +334,34 @@
         </div>
     </div>
 
+    <!-- VENTANA FLOTANTE AGENTE GPT (ASISTENTE IA) -->
+    <div id="gespyme-chat-widget" style="position: fixed; bottom: 20px; right: 20px; z-index: 99999; font-family: system-ui, sans-serif;">
+        <!-- Botón flotante -->
+        <button id="chat-toggle-btn" onclick="toggleChatIA()" style="background: #1a73e8; color: white; border: none; border-radius: 50px; padding: 12px 20px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.2); display: flex; align-items: center; gap: 8px;">
+            🤖 Asistente GPT
+        </button>
+
+        <!-- Caja de Chat -->
+        <div id="chat-box-container" style="display: none; width: 320px; height: 420px; background: white; border-radius: 12px; box-shadow: 0 6px 24px rgba(0,0,0,0.25); flex-direction: column; overflow: hidden; border: 1px solid #e0e0e0; position: absolute; bottom: 60px; right: 0;">
+            <!-- Cabecera del Chat -->
+            <div style="background: #1a73e8; color: white; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 0.95rem;">
+                <span>Asistente GPT - GesPyme</span>
+                <button onclick="toggleChatIA()" style="background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer;">×</button>
+            </div>
+            <!-- Cuerpo de Mensajes -->
+            <div id="chat-messages" style="flex: 1; padding: 12px; overflow-y: auto; background: #f8f9fa; display: flex; flex-direction: column; gap: 10px; font-size: 0.85rem;">
+                <div style="background: #e2e8f0; padding: 8px 12px; border-radius: 8px; align-self: flex-start; max-width: 85%; color: #333;">
+                    ¡Hola! Soy tu asistente virtual de GesPyme. ¿En qué puedo ayudarte hoy con tus facturas, cotizaciones o inventario?[span_0](start_span)[span_0](end_span)
+                </div>
+            </div>
+            <!-- Entrada de Texto -->
+            <div style="padding: 10px; background: white; border-top: 1px solid #e0e0e0; display: flex; gap: 6px;">
+                <input type="text" id="chat-input" placeholder="Escribe tu consulta..." style="flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 6px; font-size: 0.85rem;" onkeypress="if(event.key === 'Enter') enviarMensajeIA()">
+                <button onclick="enviarMensajeIA()" style="background: #1a73e8; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: bold;">Enviar</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Script de Lógica -->
     <script>
         const PLANES_LIMITES = {
@@ -343,6 +378,41 @@
         function toggleSidebar() {
             let sidebar = document.getElementById("sidebarMenu");
             sidebar.classList.toggle("open");
+        }
+
+        function toggleChatIA() {
+            const box = document.getElementById('chat-box-container');
+            box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function enviarMensajeIA() {
+            const input = document.getElementById('chat-input');
+            const texto = input.value.trim();
+            if (!texto) return;
+
+            const mensajes = document.getElementById('chat-messages');
+
+            // Mensaje del usuario
+            const msgUser = document.createElement('div');
+            msgUser.style.cssText = "background: #1a73e8; color: white; padding: 8px 12px; border-radius: 8px; align-self: flex-end; max-width: 85%;";
+            msgUser.textContent = texto;
+            mensajes.appendChild(msgUser);
+
+            input.value = "";
+            mensajes.scrollTop = mensajes.scrollHeight;
+
+            // Respuesta simulada del Agente GPT
+            setTimeout(() => {
+                const msgBot = document.createElement('div');
+                msgBot.style.cssText = "background: #e2e8f0; padding: 8px 12px; border-radius: 8px; align-self: flex-start; max-width: 85%; color: #333;";
+                msgBot.textContent = "Entendido. Para gestionar eso en GesPyme, dirígete al módulo correspondiente desde el menú lateral o utiliza el botón superior para crear un nuevo registro.";
+                mensajes.appendChild(msgBot);
+                mensajes.scrollTop = mensajes.scrollHeight;
+            }, 600);
+        }
+
+        function abrirAyudaModal() {
+            alert("Centro de Ayuda y Soporte GesPyme:\nPuedes consultar manuales de uso o activar el Agente GPT flotante en la esquina inferior derecha.");
         }
 
         function intentarActivarModoDev() {
