@@ -3,9 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GesPyme - Nuevo Reembolso</title>
+    <title>GesPyme - Reembolsos y Devoluciones</title>
     <style>
-        :root { --primary-color: #1a73e8; --sidebar-bg: #2b3856; --text-color: #333; --bg-color: #f4f6f9; }
+        :root {
+            --primary-color: #1a73e8;
+            --sidebar-bg: #2b3856;
+            --text-color: #333;
+            --bg-color: #f4f6f9;
+        }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-color); display: flex; height: 100vh; overflow: hidden; }
         
@@ -21,18 +26,43 @@
         header { background: white; padding: 0.8rem 2rem; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: flex-end; align-items: center; }
         .user-profile { font-size: 0.9rem; color: #555; font-weight: 500; display: flex; align-items: center; gap: 8px; }
         
-        .container { padding: 2rem; max-width: 900px; width: 100%; margin: 0 auto; background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-top: 2rem; margin-bottom: 2rem; }
-        h2 { font-size: 1.4rem; color: #333; margin-bottom: 1.5rem; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; }
+        .container { padding: 2rem; max-width: 1200px; width: 100%; margin: 0 auto; }
+        .panel-section { background: white; border-radius: 8px; padding: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 2rem; }
         
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
-        .form-group { margin-bottom: 1rem; }
-        .form-group label { display: block; margin-bottom: 0.4rem; font-weight: 500; font-size: 0.85rem; color: #555; }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.6rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.9rem; }
+        .top-actions { display: flex; justify-content: flex-end; margin-bottom: 1.5rem; }
+        .btn-green { background-color: #28a745; color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 4px; cursor: pointer; font-weight: 500; text-decoration: none; display: inline-block; font-size: 0.9rem; }
+        .btn-green:hover { background-color: #218838; }
+        .btn-secondary { background-color: #6c757d; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.9rem; }
+
+        /* Filtros de búsqueda (Estilo Competencia) */
+        .filter-bar { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; margin-bottom: 1.5rem; background: #f8f9fa; padding: 1rem; border-radius: 6px; }
+        .filter-group { display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.85rem; color: #555; }
+        .filter-group input, .filter-group select { padding: 0.45rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.85rem; }
+        .btn-buscar { background-color: #6c757d; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem; align-self: flex-end; }
+
+        table { width: 100%; border-collapse: collapse; text-align: left; margin-top: 1rem; }
+        th, td { padding: 0.75rem; border-bottom: 1px solid #eee; font-size: 0.9rem; }
+        th { background-color: #f8f9fa; color: #5f6368; }
+
+        /* Modal Reembolsos y Devoluciones (Estilo Competencia) */
+        #reembolso-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6); display: none; justify-content: center; align-items: center; z-index: 10000;
+        }
+        .modal-card {
+            background: white; padding: 2rem; border-radius: 8px; width: 90%; max-width: 580px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3); position: relative;
+        }
+        .close-modal { position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 1.4rem; cursor: pointer; color: #888; }
         
-        .btn-primary { background-color: #28a745; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-weight: 500; font-size: 0.95rem; }
-        .btn-primary:hover { background-color: #218838; }
-        .btn-secondary { background-color: #6c757d; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-weight: 500; text-decoration: none; display: inline-block; }
-        .btn-secondary:hover { background-color: #5a6268; }
+        .form-group { margin-bottom: 1.2rem; }
+        .form-group label { display: block; margin-bottom: 0.4rem; font-weight: 500; font-size: 0.9rem; color: #333; }
+        .form-group select, .form-group input, .form-group textarea { width: 100%; padding: 0.6rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.9rem; }
+        
+        /* Botones de acción del modal estilo competencia */
+        .modal-actions-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 1.5rem; justify-content: space-between; align-items: center; }
+        .btn-action-option { background-color: #28a745; color: white; border: none; padding: 0.5rem 0.8rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: 500; }
+        .btn-action-option:hover { background-color: #218838; }
 
         /* Modal de Restricción de Planes */
         #pro-modal {
@@ -49,7 +79,6 @@
             background-color: #28a745; color: white; border: none; padding: 0.8rem 1.5rem;
             border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; width: 100%;
         }
-        .close-modal { position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #888; }
     </style>
 </head>
 <body>
@@ -64,19 +93,52 @@
         </div>
     </div>
 
+    <!-- MODAL REEMBOLSOS Y DEVOLUCIONES (ESTILO COMPETENCIA) -->
+    <div id="reembolso-modal">
+        <div class="modal-card">
+            <button class="close-modal" onclick="cerrarModalReembolso()">×</button>
+            <h3 style="margin-bottom: 0.5rem; color: #1a73e8;">Reembolsos y devoluciones</h3>
+            <p style="font-size: 0.85rem; color: #666; margin-bottom: 1.2rem;">Gestiona devoluciones de dinero, ajustes de factura o emisión de notas de crédito.</p>
+            
+            <form id="formReembolso" onsubmit="procesarReembolso(event)">
+                <div class="form-group">
+                    <label>Cliente:</label>
+                    <select id="reembCliente" required>
+                        <option value="">Seleccione un cliente...</option>
+                        <!-- Se llena dinámicamente -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Monto a reembolsar ($):</label>
+                    <input type="number" id="reembMonto" step="any" placeholder="0.00" required>
+                </div>
+                <div class="form-group">
+                    <label>Motivo / Referencia:</label>
+                    <textarea id="reembMotivo" placeholder="Detalle de la devolución..." rows="2" required></textarea>
+                </div>
+
+                <div class="modal-actions-grid">
+                    <button type="submit" class="btn-action-option">Registrar reembolso al cliente</button>
+                    <button type="button" class="btn-action-option" style="background-color: #17a2b8;" onclick="accionAjustarFacturas()">Ajustar facturas</button>
+                    <button type="button" class="btn-action-option" style="background-color: #ffc107; color: #333;" onclick="accionEmitirNota()">Emitir nota de crédito</button>
+                    <button type="button" class="btn-secondary" onclick="cerrarModalReembolso()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Menú Lateral -->
     <sidebar>
-        <div class="sidebar-brand"><span>⚙️</span> GesPyme</div>
+        <div class="sidebar-brand"><span>⚙</span> GesPyme</div>
         <ul class="sidebar-menu">
             <li><a href="index.html">Panel</a></li>
             <li><a href="clientes.html">Clientes</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('facturas')">Facturas</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('facturas')" class="sub-item">Nueva factura</a></li>
+            <li><a href="facturas.html" onclick="return verificarRestriccionModulo('facturas', event)">Facturas</a></li>
+            <li><a href="facturas.html" onclick="return verificarRestriccionModulo('facturas', event)" class="sub-item">Nueva factura</a></li>
             <li><a href="cotizaciones.html">Cotizaciones</a></li>
             <li><a href="nueva-cotizacion.html" class="sub-item">Nueva cotización</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('notas')">Notas de crédito</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('ordenes')">Orden de Servicio</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('ordenes')" class="sub-item">Nueva orden</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('pagos')">Pagos</a></li>
+            <li><a href="notas-credito.html" onclick="return verificarRestriccionModulo('notas', event)">Notas de crédito</a></li>
+            <li><a href="pagos.html" onclick="return verificarRestriccionModulo('pagos', event)">Pagos</a></li>
             <li class="active"><a href="reembolsos.html">Reembolsos</a></li>
             <li><a href="articulos.html">Artículos</a></li>
             <li><a href="informes.html">Informes</a></li>
@@ -87,80 +149,212 @@
         <div class="sidebar-footer">GesPyme © 2026</div>
     </sidebar>
 
+    <!-- Área Principal -->
     <div class="main-content">
         <header>
             <div class="user-profile" id="userProfileDisplay">
                 <span>👤 Mi Cuenta</span>
             </div>
         </header>
+
         <div class="container">
-            <h2>Registrar Nuevo Reembolso</h2>
-            <form onsubmit="event.preventDefault(); alert('¡Reembolso registrado con éxito!'); window.location.href='reembolsos.html';">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Cliente</label>
-                        <select required>
-                            <option value="">Seleccione un cliente...</option>
-                            <option value="1">Empresa S.A.</option>
+            <div class="panel-section">
+                
+                <div class="top-actions">
+                    <button type="button" class="btn-green" onclick="abrirModalReembolso()">+ Nuevo reembolso</button>
+                </div>
+
+                <h2 style="font-size: 1.3rem; color: #333; margin-bottom: 1rem;">Reembolsos</h2>
+
+                <!-- Barra de Filtros (Estilo Competencia) -->
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label>Período:</label>
+                        <select id="filtroPeriodo">
+                            <option value="todos">Todos</option>
+                            <option value="mes">Este mes</option>
+                            <option value="anio">Este año</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label>Fecha</label>
-                        <input type="date" id="fechaReembolso" required>
+                    <div class="filter-group">
+                        <label>Inicio:</label>
+                        <input type="date" id="filtroInicio">
                     </div>
-                    <div class="form-group">
-                        <label>Método de Reembolso</label>
-                        <select>
-                            <option>Transferencia Bancaria</option>
-                            <option>Efectivo</option>
-                            <option>Criptomoneda / USDT</option>
-                        </select>
+                    <div class="filter-group">
+                        <label>Fin:</label>
+                        <input type="date" id="filtroFin">
                     </div>
-                    <div class="form-group">
-                        <label>Importe ($)</label>
-                        <input type="number" step="any" placeholder="0.00" required>
+                    <div class="filter-group" style="flex: 1;">
+                        <label>Palabra clave:</label>
+                        <input type="text" id="filtroPalabra" placeholder="Cliente, N.º de reembolso, Art...">
                     </div>
+                    <button type="button" class="btn-buscar" onclick="filtrarReembolsos()">Buscar</button>
                 </div>
-                <div class="form-group">
-                    <label>Referencia de Reembolso</label>
-                    <input type="text" placeholder="Nº de operación o comprobante...">
-                </div>
-                <div style="margin-top: 2rem; display: flex; justify-content: flex-end; gap: 1rem;">
-                    <a href="reembolsos.html" class="btn-secondary">Cancelar</a>
-                    <button type="submit" class="btn-primary">Registrar Reembolso</button>
-                </div>
-            </form>
+
+                <table id="tablaReembolsos">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Número</th>
+                            <th>Cliente</th>
+                            <th>Método</th>
+                            <th>Referencia de reembolso</th>
+                            <th>Importe</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodyReembolsos">
+                        <!-- Se llena dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
     <script>
-        document.getElementById('fechaReembolso').valueAsDate = new Date();
+        function abrirModalReembolso() {
+            cargarClientesSelect();
+            document.getElementById('reembolso-modal').style.display = 'flex';
+        }
+
+        function cerrarModalReembolso() {
+            document.getElementById('reembolso-modal').style.display = 'none';
+            document.getElementById('formReembolso').reset();
+        }
+
+        function cargarClientesSelect() {
+            const select = document.getElementById('reembCliente');
+            select.innerHTML = '<option value="">Seleccione un cliente...</option>';
+            let clientes = JSON.parse(localStorage.getItem('gespyme_clientes')) || [];
+            clientes.forEach(cli => {
+                let opt = document.createElement('option');
+                opt.value = cli.nombre || cli.razonSocial;
+                opt.textContent = cli.nombre || cli.razonSocial;
+                select.appendChild(opt);
+            });
+        }
+
+        function obtenerReembolsos() {
+            return JSON.parse(localStorage.getItem('gespyme_reembolsos')) || [];
+        }
+
+        function procesarReembolso(event) {
+            event.preventDefault();
+            guardarYSalirReembolso("Efectivo / Transferencia");
+        }
+
+        function guardarYSalirReembolso(metodo) {
+            let cliente = document.getElementById('reembCliente').value;
+            let monto = parseFloat(document.getElementById('reembMonto').value || 0).toFixed(2);
+            let motivo = document.getElementById('reembMotivo').value;
+
+            if(!cliente || !monto) {
+                alert("Por favor complete los campos obligatorios.");
+                return;
+            }
+
+            let nuevoReemb = {
+                fecha: new Date().toISOString().split('T')[0],
+                numero: "REEM-" + Math.floor(1000 + Math.random() * 9000),
+                cliente: cliente,
+                metodo: metodo,
+                referencia: motivo,
+                importe: monto
+            };
+
+            let reembolsos = obtenerReembolsos();
+            reembolsos.push(nuevoReemb);
+            localStorage.setItem('gespyme_reembolsos', JSON.stringify(reembolsos));
+
+            alert("¡Reembolso registrado con éxito!");
+            cerrarModalReembolso();
+            renderizarReembolsos();
+        }
+
+        function accionAjustarFacturas() {
+            guardarYSalirReembolso("Ajuste de Factura");
+        }
+
+        function accionEmitirNota() {
+            guardarYSalirReembolso("Nota de Crédito");
+        }
+
+        function renderizarReembolsos(lista = null) {
+            const tbody = document.getElementById('tbodyReembolsos');
+            tbody.innerHTML = "";
+            let reembolsos = lista || obtenerReembolsos();
+
+            if (reembolsos.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: #70757a; padding: 2.5rem;">No se han encontrado reembolsos.</td></tr>`;
+                return;
+            }
+
+            reembolsos.forEach((reemb, index) => {
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${reemb.fecha}</td>
+                    <td><strong>${reemb.numero}</strong></td>
+                    <td>${reemb.cliente}</td>
+                    <td>${reemb.metodo}</td>
+                    <td>${reemb.referencia}</td>
+                    <td>$${reemb.importe}</td>
+                    <td><button type="button" class="btn-secondary" style="padding: 0.3rem 0.6rem; font-size: 0.8rem; background: #dc3545;" onclick="eliminarReembolso(${index})">Eliminar</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filtrarReembolsos() {
+            let palabra = document.getElementById('filtroPalabra').value.toLowerCase();
+            let reembolsos = obtenerReembolsos();
+            
+            if(!palabra) {
+                renderizarReembolsos(reembolsos);
+                return;
+            }
+
+            let filtrados = reembolsos.filter(r => 
+                r.cliente.toLowerCase().includes(palabra) || 
+                r.numero.toLowerCase().includes(palabra) || 
+                r.referencia.toLowerCase().includes(palabra)
+            );
+            renderizarReembolsos(filtrados);
+        }
+
+        function eliminarReembolso(index) {
+            if(confirm("¿Estás seguro de eliminar este registro?")) {
+                let reembolsos = obtenerReembolsos();
+                reembolsos.splice(index, 1);
+                localStorage.setItem('gespyme_reembolsos', JSON.stringify(reembolsos));
+                renderizarReembolsos();
+            }
+        }
 
         function obtenerPlanActual() {
             return localStorage.getItem("gespyme_plan") || "free";
         }
 
-        function verificarRestriccionModulo(modulo) {
+        function verificarRestriccionModulo(modulo, event) {
+            if (localStorage.getItem("gespyme_modo_dev") === "true") {
+                return true;
+            }
+            if (event) event.preventDefault();
             let planKey = obtenerPlanActual();
             if (planKey === 'free') {
                 let nombresModulos = {
                     'facturas': 'Facturación',
                     'notas': 'Notas de Crédito',
-                    'ordenes': 'Órdenes de Servicio',
                     'pagos': 'Gestión de Pagos'
                 };
-                document.getElementById("pro-message").innerHTML = `El módulo de <strong>${nombresModulos[modulo]}</strong> está reservado para planes superiores.<br><br>Actualiza tu suscripción para desbloquearlo.`;
+                document.getElementById("pro-message").innerHTML = `El módulo de <strong>${nombresModulos[modulo] || modulo}</strong> está reservado para planes superiores.<br><br>Actualiza tu suscripción para desbloquearlo.`;
                 document.getElementById("pro-modal").style.display = "flex";
-                return;
+                return false;
             }
-            alert(`¡Acceso concedido al módulo de ${modulo}!`);
+            return true;
         }
 
         function cerrarModalPro() {
             document.getElementById("pro-modal").style.display = "none";
-            if (obtenerPlanActual() === 'free') {
-                window.location.href = 'index.html';
-            }
         }
 
         window.onload = function() {
@@ -168,6 +362,7 @@
             if (usuario) {
                 document.getElementById("userProfileDisplay").innerHTML = `<span>👤</span> ${usuario}`;
             }
+            renderizarReembolsos();
         };
     </script>
 </body>
