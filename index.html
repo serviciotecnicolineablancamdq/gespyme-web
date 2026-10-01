@@ -359,6 +359,21 @@
                 <input type="text" id="chat-input" placeholder="Escribe tu consulta..." style="flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 6px; font-size: 0.85rem;" onkeypress="if(event.key === 'Enter') enviarMensajeIA()">
                 <button onclick="enviarMensajeIA()" style="background: #1a73e8; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: bold;">Enviar</button>
             </div>
+        </div>   
+    </div>
+    <!-- MODAL DE AYUDA Y SOPORTE PROFESIONAL -->
+    <div id="ayuda-modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); display: none; justify-content: center; align-items: center; z-index: 30000; padding: 15px;">
+        <div style="background: white; padding: 2.5rem; border-radius: 12px; width: 100%; max-width: 480px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); position: relative; border-top: 5px solid #1a73e8; text-align: left;">
+            <button onclick="cerrarAyudaModal()" style="position: absolute; top: 12px; right: 15px; background: none; border: none; font-size: 1.4rem; cursor: pointer; color: #888;">×</button>
+            <h2 id="ayuda-titulo" style="color: #1a73e8; margin-bottom: 0.8rem; font-size: 1.4rem;">Centro de Ayuda y Soporte</h2>
+            <p id="ayuda-texto" style="color: #555; font-size: 0.95rem; line-height: 1.5; margin-bottom: 1.2rem;">
+                Bienvenido al soporte oficial de GesPyme. Si necesitas asistencia directa con tu cuenta, planes o reportes, puedes comunicarte conmigo (el desarrollador) a través de los siguientes medios:
+            </p>
+            <div style="background: #f8f9fa; padding: 1rem; border-radius: 6px; font-size: 0.9rem; color: #333; margin-bottom: 1.5rem; border-left: 4px solid #1a73e8;">
+                📧 <strong>Correo de Soporte:</strong> <a href="mailto:refrit234gonza@gmail.com" style="color: #1a73e8; text-decoration: none; font-weight: bold;">refrit234gonza@gmail.com</a><br>
+                🌐 <strong>Sitio Oficial:</strong> reparacionesgonzamdq.com
+            </div>
+            <button onclick="cerrarAyudaModal()" style="width: 100%; background-color: #1a73e8; color: white; border: none; padding: 0.8rem; border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer;">Entendido</button>
         </div>
     </div>
 
