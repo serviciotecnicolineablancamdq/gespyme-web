@@ -29,6 +29,17 @@
         .container { padding: 2rem; max-width: 1000px; width: 100%; margin: 0 auto; background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-top: 2rem; margin-bottom: 2rem; }
         h2 { font-size: 1.4rem; color: #333; margin-bottom: 1.5rem; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; }
 
+        /* Estilo para la caja del logotipo */
+        .logo-upload-box {
+            width: 130px; height: 130px; border: 2px dashed #ccc; border-radius: 6px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            cursor: pointer; background: #fafafa; position: relative; overflow: hidden; text-align: center;
+            margin-bottom: 1.5rem; transition: 0.2s;
+        }
+        .logo-upload-box:hover { border-color: #1a73e8; background: #f0f4f8; }
+        .logo-upload-box img { width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0; left: 0; background: white; }
+        .logo-upload-box span { font-size: 0.8rem; color: #666; padding: 0.5rem; }
+
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
         .form-group { margin-bottom: 1rem; }
         .form-group label { display: block; margin-bottom: 0.4rem; font-weight: 500; font-size: 0.85rem; color: #555; }
@@ -99,6 +110,17 @@
         <div class="container">
             <h2>Nueva Nota de Crédito</h2>
             <form onsubmit="event.preventDefault(); alert('¡Nota de crédito emitida con éxito!'); window.location.href='index.html';">
+                
+                <!-- Bloque para Añadir Logotipo -->
+                <div class="form-group">
+                    <label>Logotipo de la Empresa</label>
+                    <div class="logo-upload-box" onclick="document.getElementById('input-logo').click()">
+                        <span id="logo-text">+ Añadir un logotipo</span>
+                        <img id="logo-preview" style="display: none;" alt="Logotipo">
+                    </div>
+                    <input type="file" id="input-logo" accept="image/*" style="display: none;" onchange="cargarLogotipo(event)">
+                </div>
+
                 <div class="form-grid">
                     <div class="form-group">
                         <label>Cliente</label>
@@ -133,6 +155,24 @@
 
     <script>
         document.getElementById('fechaNC').valueAsDate = new Date();
+
+        let logoDataUrl = "";
+
+        function cargarLogotipo(event) {
+            const archivo = event.target.files[0];
+            if (archivo) {
+                const lector = new FileReader();
+                lector.onload = function(e) {
+                    logoDataUrl = e.target.result;
+                    const preview = document.getElementById('logo-preview');
+                    const texto = document.getElementById('logo-text');
+                    preview.src = logoDataUrl;
+                    preview.style.display = 'block';
+                    texto.style.display = 'none';
+                }
+                lector.readAsDataURL(archivo);
+            }
+        }
 
         function obtenerPlanActual() {
             return localStorage.getItem("gespyme_plan") || "free";
