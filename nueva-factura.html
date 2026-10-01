@@ -34,6 +34,17 @@
         .panel-section { background: white; border-radius: 8px; padding: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 2rem; }
         .panel-section h2 { margin-bottom: 1.5rem; font-size: 1.3rem; color: #333; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; }
         
+        /* Estilo para la caja del logotipo */
+        .logo-upload-box {
+            width: 130px; height: 130px; border: 2px dashed #ccc; border-radius: 6px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            cursor: pointer; background: #fafafa; position: relative; overflow: hidden; text-align: center;
+            margin-bottom: 1.5rem; transition: 0.2s;
+        }
+        .logo-upload-box:hover { border-color: #1a73e8; background: #f0f4f8; }
+        .logo-upload-box img { width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0; left: 0; background: white; }
+        .logo-upload-box span { font-size: 0.8rem; color: #666; padding: 0.5rem; }
+
         .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 1.2rem; }
         .form-group { margin-bottom: 1.2rem; }
         .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.9rem; color: #555; }
@@ -45,8 +56,13 @@
         .invoice-items-table th { background-color: #f8f9fa; font-size: 0.85rem; color: #5f6368; }
         .invoice-items-table input { width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.9rem; }
         
+        .btn-action { background-color: #1a73e8; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: 500; margin-bottom: 1rem; }
+        .btn-action:hover { background-color: #1558b0; }
+        .btn-danger { background-color: #dc3545; color: white; border: none; padding: 0.3rem 0.6rem; border-radius: 4px; cursor: pointer; }
+        .btn-danger:hover { background-color: #c82333; }
+
         .totals-section { display: flex; justify-content: flex-end; margin-bottom: 2rem; }
-        .totals-box { width: 300px; font-size: 0.95rem; }
+        .totals-box { width: 320px; font-size: 0.95rem; }
         .totals-row { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #eee; }
         .totals-row.final { font-weight: bold; font-size: 1.1rem; border-bottom: 2px solid #333; color: var(--primary-color); }
 
@@ -75,7 +91,7 @@
 
         /* Estilo exclusivo para la impresión en PDF */
         @media print {
-            sidebar, header, .form-actions, .panel-section h2, .form-row, .invoice-items-table input, #pro-modal { display: none !important; }
+            sidebar, header, .form-actions, .panel-section h2, .form-row, .invoice-items-table input, .btn-action, .btn-danger, #pro-modal, .no-print { display: none !important; }
             body { background: white; height: auto; overflow: visible; }
             .main-content { overflow: visible; }
             .container { padding: 0; max-width: 100%; }
@@ -101,19 +117,19 @@
     <!-- Menú Lateral -->
     <sidebar>
         <div class="sidebar-brand">
-            <span>⚙️️</span> GesPyme
+            <span>⚙</span> GesPyme
         </div>
         <ul class="sidebar-menu">
             <li><a href="index.html">Panel</a></li>
             <li><a href="clientes.html">Clientes</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('facturas')">Facturas</a></li>
-            <li class="active"><a href="#" onclick="verificarRestriccionModulo('facturas')" class="sub-item">Nueva factura</a></li>
+            <li><a href="facturas.html" onclick="return verificarRestriccionModulo('facturas', event)">Facturas</a></li>
+            <li><a href="facturas.html" onclick="return verificarRestriccionModulo('facturas', event)" class="sub-item">Nueva factura</a></li>
             <li><a href="cotizaciones.html">Cotizaciones</a></li>
             <li><a href="nueva-cotizacion.html" class="sub-item">Nueva cotización</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('notas')">Notas de crédito</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('ordenes')">Orden de Servicio</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('ordenes')" class="sub-item">Nueva orden</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('pagos')">Pagos</a></li>
+            <li><a href="notas-credito.html" onclick="return verificarRestriccionModulo('notas', event)">Notas de crédito</a></li>
+            <li><a href="orden-servicio.html" onclick="return verificarRestriccionModulo('ordenes', event)">Orden de Servicio</a></li>
+            <li><a href="nueva-orden-servicio.html" onclick="return verificarRestriccionModulo('ordenes', event)" class="sub-item">Nueva orden</a></li>
+            <li><a href="pagos.html" onclick="return verificarRestriccionModulo('pagos', event)">Pagos</a></li>
             <li><a href="reembolsos.html">Reembolsos</a></li>
             <li><a href="articulos.html">Artículos</a></li>
             <li><a href="informes.html">Informes</a></li>
@@ -139,6 +155,16 @@
                 <h2>Nueva Factura</h2>
                 <form id="facturaForm" onsubmit="generarPDF(event)">
                     
+                    <!-- Bloque para Añadir Logotipo -->
+                    <div class="form-group no-print">
+                        <label>Logotipo de la Empresa</label>
+                        <div class="logo-upload-box" onclick="document.getElementById('input-logo').click()">
+                            <span id="logo-text">+ Añadir un logotipo</span>
+                            <img id="logo-preview" style="display: none;" alt="Logotipo">
+                        </div>
+                        <input type="file" id="input-logo" accept="image/*" style="display: none;" onchange="cargarLogotipo(event)">
+                    </div>
+
                     <div class="form-row">
                         <div class="form-group">
                             <label>Cliente</label>
@@ -166,24 +192,27 @@
                     </div>
 
                     <!-- Detalle de Ítems -->
-                    <table class="invoice-items-table">
+                    <table class="invoice-items-table" id="tabla-items-factura">
                         <thead>
                             <tr>
                                 <th style="width: 45%;">Descripción del Artículo / Servicio</th>
                                 <th style="width: 15%;">Cantidad</th>
                                 <th style="width: 20%;">Precio Unitario</th>
-                                <th style="width: 20%;">Total</th>
+                                <th style="width: 15%;">Total</th>
+                                <th style="width: 5%;" class="no-print">Acción</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td><input type="text" id="descripcionItem" placeholder="Concepto o descripción..." required></td>
-                                <td><input type="number" id="cantidad" value="1" min="1" oninput="calcularTotal()" required></td>
-                                <td><input type="number" id="precio" placeholder="0.00" step="any" oninput="calcularTotal()" required></td>
-                                <td><input type="text" id="totalItem" value="0.00" readonly style="background-color: #f8f9fa;"></td>
+                                <td><input type="text" class="desc-item" placeholder="Concepto o descripción..." required></td>
+                                <td><input type="number" class="cant-item" value="1" min="1" oninput="calcularTotales()" required></td>
+                                <td><input type="number" class="precio-item" placeholder="0.00" step="any" oninput="calcularTotales()" required></td>
+                                <td class="item-total">$0.00</td>
+                                <td class="no-print"><button type="button" class="btn-danger" onclick="eliminarFila(this)">X</button></td>
                             </tr>
                         </tbody>
                     </table>
+                    <button type="button" class="btn-action no-print" onclick="agregarFila()">+ Agregar Ítem</button>
 
                     <!-- Totales -->
                     <div class="totals-section">
@@ -193,8 +222,8 @@
                                 <span id="subtotalText">$0.00</span>
                             </div>
                             <div class="totals-row">
-                                <span>Impuestos / IVA:</span>
-                                <span>$0.00</span>
+                                <span>Impuestos / IVA (21%):</span>
+                                <span id="ivaText">$0.00</span>
                             </div>
                             <div class="totals-row final">
                                 <span>Total a Pagar:</span>
@@ -205,14 +234,21 @@
 
                     <!-- Plantilla oculta que se convierte en PDF al imprimir -->
                     <div id="pdf-preview" style="background: white; padding: 20px; font-family: sans-serif;">
-                        <h1 style="color: #1a73e8; margin-bottom: 5px;">FACTURA</h1>
-                        <p><strong>Nº Factura:</strong> <span id="lblNum">FAC-0001</span></p>
-                        <p><strong>Fecha de Emisión:</strong> <span id="lblEmision"></span></p>
-                        <p><strong>Fecha de Vencimiento:</strong> <span id="lblVencimiento"></span></p>
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
+                            <div>
+                                <h1 style="color: #1a73e8; margin-bottom: 5px;">FACTURA</h1>
+                                <p><strong>Nº Factura:</strong> <span id="lblNum">FAC-0001</span></p>
+                                <p><strong>Fecha de Emisión:</strong> <span id="lblEmision"></span></p>
+                                <p><strong>Fecha de Vencimiento:</strong> <span id="lblVencimiento"></span></p>
+                            </div>
+                            <div>
+                                <img id="pdf-logo-img" style="max-height: 80px; max-width: 150px; display: none;" alt="Logo Empresa">
+                            </div>
+                        </div>
                         <hr style="margin: 15px 0; border: 0; border-top: 1px solid #ccc;">
                         <p><strong>Cliente:</strong> <span id="lblCliente"></span></p>
                         <br>
-                        <table style="width: 100%; border-collapse: collapse;">
+                        <table style="width: 100%; border-collapse: collapse;" id="pdf-tabla-items">
                             <thead>
                                 <tr style="background: #f8f9fa; border-bottom: 2px solid #ddd;">
                                     <th style="text-align: left; padding: 8px;">Descripción</th>
@@ -221,18 +257,15 @@
                                     <th style="text-align: right; padding: 8px;">Total</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr style="border-bottom: 1px solid #eee;">
-                                    <td id="lblDesc" style="padding: 8px;"></td>
-                                    <td id="lblCant" style="text-align: center; padding: 8px;"></td>
-                                    <td id="lblPrecioUnit" style="text-align: right; padding: 8px;"></td>
-                                    <td id="lblTotalItem" style="text-align: right; padding: 8px;"></td>
-                                </tr>
+                            <tbody id="pdf-tbody">
+                                <!-- Se rellena dinámicamente -->
                             </tbody>
                         </table>
                         <br>
-                        <div style="text-align: right; font-size: 1.1rem;">
-                            <p><strong>Total a Pagar: <span id="lblTotalFinal" style="color: #1a73e8;">$0.00</span></strong></p>
+                        <div style="text-align: right; font-size: 1rem; line-height: 1.5;">
+                            <p>Subtotal: <span id="pdfSubtotal">$0.00</span></p>
+                            <p>IVA (21%): <span id="pdfIva">$0.00</span></p>
+                            <p style="font-size: 1.2rem; margin-top: 5px;"><strong>Total a Pagar: <span id="lblTotalFinal" style="color: #1a73e8;">$0.00</span></strong></p>
                         </div>
                     </div>
 
@@ -249,21 +282,79 @@
         // Poner fecha de hoy por defecto
         document.getElementById('fechaEmision').valueAsDate = new Date();
 
-        function calcularTotal() {
-            let cantidad = parseFloat(document.getElementById('cantidad').value) || 0;
-            let precio = parseFloat(document.getElementById('precio').value) || 0;
-            let total = cantidad * precio;
+        let logoDataUrl = "";
 
-            document.getElementById('totalItem').value = total.toFixed(2);
-            document.getElementById('subtotalText').innerText = '$' + total.toFixed(2);
-            document.getElementById('totalFinalText').innerText = '$' + total.toFixed(2);
+        function cargarLogotipo(event) {
+            const archivo = event.target.files[0];
+            if (archivo) {
+                const lector = new FileReader();
+                lector.onload = function(e) {
+                    logoDataUrl = e.target.result;
+                    const preview = document.getElementById('logo-preview');
+                    const texto = document.getElementById('logo-text');
+                    preview.src = logoDataUrl;
+                    preview.style.display = 'block';
+                    texto.style.display = 'none';
+                }
+                lector.readAsDataURL(archivo);
+            }
+        }
+
+        function agregarFila() {
+            const tbody = document.querySelector('#tabla-items-factura tbody');
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><input type="text" class="desc-item" placeholder="Concepto o descripción..." required></td>
+                <td><input type="number" class="cant-item" value="1" min="1" oninput="calcularTotales()" required></td>
+                <td><input type="number" class="precio-item" placeholder="0.00" step="any" oninput="calcularTotales()" required></td>
+                <td class="item-total">$0.00</td>
+                <td class="no-print"><button type="button" class="btn-danger" onclick="eliminarFila(this)">X</button></td>
+            `;
+            tbody.appendChild(tr);
+            calcularTotales();
+        }
+
+        function eliminarFila(btn) {
+            const filas = document.querySelectorAll('#tabla-items-factura tbody tr');
+            if (filas.length > 1) {
+                btn.closest('tr').remove();
+                calcularTotales();
+            } else {
+                alert("La factura debe contener al menos un ítem.");
+            }
+        }
+
+        function calcularTotales() {
+            const filas = document.querySelectorAll('#tabla-items-factura tbody tr');
+            let subtotalGeneral = 0;
+
+            filas.forEach(fila => {
+                const cantidad = parseFloat(fila.querySelector('.cant-item').value) || 0;
+                const precio = parseFloat(fila.querySelector('.precio-item').value) || 0;
+                const totalItem = cantidad * precio;
+                subtotalGeneral += totalItem;
+                fila.querySelector('.item-total').innerText = '$' + totalItem.toFixed(2);
+            });
+
+            let iva = subtotalGeneral * 0.21;
+            let totalGeneral = subtotalGeneral + iva;
+
+            document.getElementById('subtotalText').innerText = '$' + subtotalGeneral.toFixed(2);
+            document.getElementById('ivaText').innerText = '$' + iva.toFixed(2);
+            document.getElementById('totalFinalText').innerText = '$' + totalGeneral.toFixed(2);
         }
 
         function obtenerPlanActual() {
             return localStorage.getItem("gespyme_plan") || "free";
         }
 
-        function verificarRestriccionModulo(modulo) {
+        function verificarRestriccionModulo(modulo, event) {
+            if (localStorage.getItem("gespyme_modo_dev") === "true") {
+                return true;
+            }
+
+            if (event) event.preventDefault();
+
             let planKey = obtenerPlanActual();
             if (planKey === 'free') {
                 let nombresModulos = {
@@ -272,18 +363,15 @@
                     'ordenes': 'Órdenes de Servicio',
                     'pagos': 'Gestión de Pagos'
                 };
-                document.getElementById("pro-message").innerHTML = `El módulo de <strong>${nombresModulos[modulo]}</strong> está reservado para planes superiores.<br><br>Actualiza tu suscripción para desbloquearlo.`;
+                document.getElementById("pro-message").innerHTML = `El módulo de <strong>${nombresModulos[modulo] || modulo}</strong> está reservado para planes superiores.<br><br>Actualiza tu suscripción para desbloquearlo.`;
                 document.getElementById("pro-modal").style.display = "flex";
-                return;
+                return false;
             }
-            alert(`¡Acceso concedido al módulo de ${modulo}!`);
+            return true;
         }
 
         function cerrarModalPro() {
             document.getElementById("pro-modal").style.display = "none";
-            if (obtenerPlanActual() === 'free') {
-                window.location.href = 'index.html';
-            }
         }
 
         window.onload = function() {
@@ -292,8 +380,8 @@
                 document.getElementById("userProfileDisplay").innerHTML = `<span>👤</span> ${usuario}`;
             }
 
-            // Validar acceso general al módulo de Facturación
-            if (obtenerPlanActual() === 'free') {
+            // Validar acceso general al módulo de Facturación si no está en modo desarrollador
+            if (localStorage.getItem("gespyme_modo_dev") !== "true" && obtenerPlanActual() === 'free') {
                 document.getElementById("pro-message").innerHTML = `El módulo de <strong>Facturación</strong> está reservado para planes superiores.<br><br>Actualiza tu suscripción para desbloquearlo.`;
                 document.getElementById("pro-modal").style.display = "flex";
             }
@@ -302,21 +390,52 @@
         function generarPDF(event) {
             event.preventDefault();
 
-            if (obtenerPlanActual() === 'free') {
+            if (localStorage.getItem("gespyme_modo_dev") !== "true" && obtenerPlanActual() === 'free') {
                 verificarRestriccionModulo('facturas');
                 return;
             }
 
-            // Rellenar la plantilla oculta con los datos del formulario
+            // Rellenar cabecera de la plantilla oculta
             document.getElementById('lblNum').innerText = document.getElementById('numFactura').value;
             document.getElementById('lblEmision').innerText = document.getElementById('fechaEmision').value;
             document.getElementById('lblVencimiento').innerText = document.getElementById('fechaVencimiento').value;
             document.getElementById('lblCliente').innerText = document.getElementById('clienteSelect').value;
-            document.getElementById('lblDesc').innerText = document.getElementById('descripcionItem').value;
-            document.getElementById('lblCant').innerText = document.getElementById('cantidad').value;
-            document.getElementById('lblPrecioUnit').innerText = '$' + parseFloat(document.getElementById('precio').value || 0).toFixed(2);
-            document.getElementById('lblTotalItem').innerText = '$' + document.getElementById('totalItem').value;
-            document.getElementById('lblTotalFinal').innerText = '$' + document.getElementById('totalItem').value;
+
+            // Rellenar tabla de ítems para el PDF impreso
+            const pdfTbody = document.getElementById('pdf-tbody');
+            pdfTbody.innerHTML = "";
+            const filas = document.querySelectorAll('#tabla-items-factura tbody tr');
+            
+            filas.forEach(fila => {
+                let desc = fila.querySelector('.desc-item').value;
+                let cant = fila.querySelector('.cant-item').value;
+                let precio = parseFloat(fila.querySelector('.precio-item').value || 0).toFixed(2);
+                let total = (parseFloat(cant) * parseFloat(precio)).toFixed(2);
+
+                let tr = document.createElement('tr');
+                tr.style.borderBottom = "1px solid #eee";
+                tr.innerHTML = `
+                    <td style="padding: 8px;">${desc}</td>
+                    <td style="text-align: center; padding: 8px;">${cant}</td>
+                    <td style="text-align: right; padding: 8px;">$${precio}</td>
+                    <td style="text-align: right; padding: 8px;">$${total}</td>
+                `;
+                pdfTbody.appendChild(tr);
+            });
+
+            // Rellenar totales en la vista PDF
+            document.getElementById('pdfSubtotal').innerText = document.getElementById('subtotalText').innerText;
+            document.getElementById('pdfIva').innerText = document.getElementById('ivaText').innerText;
+            document.getElementById('lblTotalFinal').innerText = document.getElementById('totalFinalText').innerText;
+
+            // Manejar la visualización del logotipo en el PDF impreso
+            const pdfLogoImg = document.getElementById('pdf-logo-img');
+            if (logoDataUrl) {
+                pdfLogoImg.src = logoDataUrl;
+                pdfLogoImg.style.display = 'block';
+            } else {
+                pdfLogoImg.style.display = 'none';
+            }
 
             // Abrir el diálogo de impresión del navegador configurado como "Guardar como PDF"
             window.print();
