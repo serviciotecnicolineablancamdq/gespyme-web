@@ -36,6 +36,17 @@
         
         .section-heading { font-size: 0.95rem; font-weight: bold; color: #333; background: #f8f9fa; padding: 0.5rem 0.8rem; border-left: 3px solid #1a73e8; margin: 1.5rem 0 1rem 0; text-transform: uppercase; }
 
+        /* Estilo para la caja del logotipo */
+        .logo-upload-box {
+            width: 130px; height: 130px; border: 2px dashed #ccc; border-radius: 6px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            cursor: pointer; background: #fafafa; position: relative; overflow: hidden; text-align: center;
+            margin-bottom: 1.5rem; transition: 0.2s;
+        }
+        .logo-upload-box:hover { border-color: #1a73e8; background: #f0f4f8; }
+        .logo-upload-box img { width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0; left: 0; background: white; }
+        .logo-upload-box span { font-size: 0.8rem; color: #666; padding: 0.5rem; }
+
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
         .form-group { display: flex; flex-direction: column; gap: 0.3rem; margin-bottom: 0.8rem; }
         .form-group.full { grid-column: span 2; }
@@ -138,6 +149,16 @@
                 <div class="form-title">
                     <span>Nueva Orden de Servicio Técnico / Diagnóstico</span>
                     <span style="font-size: 0.85rem; color: #666;" class="no-print">Nº 0004-00018944</span>
+                </div>
+
+                <!-- Bloque para Añadir Logotipo -->
+                <div class="form-group no-print">
+                    <label>Logotipo de la Empresa</label>
+                    <div class="logo-upload-box" onclick="document.getElementById('input-logo').click()">
+                        <span id="logo-text">+ Añadir un logotipo</span>
+                        <img id="logo-preview" style="display: none;" alt="Logotipo">
+                    </div>
+                    <input type="file" id="input-logo" accept="image/*" style="display: none;" onchange="cargarLogotipo(event)">
                 </div>
 
                 <!-- Información del Servicio y Locación -->
@@ -254,6 +275,24 @@ Constatación de la Falla: Al realizar las pruebas de continuidad y aislamiento 
     </div>
 
     <script>
+        let logoDataUrl = "";
+
+        function cargarLogotipo(event) {
+            const archivo = event.target.files[0];
+            if (archivo) {
+                const lector = new FileReader();
+                lector.onload = function(e) {
+                    logoDataUrl = e.target.result;
+                    const preview = document.getElementById('logo-preview');
+                    const texto = document.getElementById('logo-text');
+                    preview.src = logoDataUrl;
+                    preview.style.display = 'block';
+                    texto.style.display = 'none';
+                }
+                lector.readAsDataURL(archivo);
+            }
+        }
+
         function agregarFila() {
             const tbody = document.querySelector('#tabla-items tbody');
             const tr = document.createElement('tr');
@@ -297,7 +336,6 @@ Constatación de la Falla: Al realizar las pruebas de continuidad y aislamiento 
         }
 
         function verificarRestriccionModulo(modulo, event) {
-            // Si el modo desarrollador está activo, permite el acceso libre inmediatamente
             if (localStorage.getItem("gespyme_modo_dev") === "true") {
                 return true;
             }
@@ -342,7 +380,6 @@ Constatación de la Falla: Al realizar las pruebas de continuidad y aislamiento 
                 document.getElementById("userProfileDisplay").innerHTML = `<span>👤</span> ${usuario}`;
             }
 
-            // Validar acceso general al módulo SOLO si NO está activo el modo desarrollador
             if (localStorage.getItem("gespyme_modo_dev") !== "true" && obtenerPlanActual() === 'free') {
                 document.getElementById("pro-message").innerHTML = `El módulo de <strong>Órdenes de Servicio</strong> está reservado para planes superiores.<br><br>Actualiza tu suscripción para desbloquearlo.`;
                 document.getElementById("pro-modal").style.display = "flex";
