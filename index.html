@@ -334,8 +334,8 @@
         </div>
     </div>
 
-    <!-- VENTANA FLOTANTE AGENTE GPT (ASISTENTE IA) -->
-    <div id="gespyme-chat-widget" style="position: fixed; bottom: 20px; right: 20px; z-index: 99999; font-family: system-ui, sans-serif;">
+    <!-- VENTANA FLOTANTE AGENTE GPT (ASISTENTE IA) - Ajustado con bottom: 80px para no solapar -->
+    <div id="gespyme-chat-widget" style="position: fixed; bottom: 80px; right: 20px; z-index: 99999; font-family: system-ui, sans-serif;">
         <!-- Botón flotante -->
         <button id="chat-toggle-btn" onclick="toggleChatIA()" style="background: #1a73e8; color: white; border: none; border-radius: 50px; padding: 12px 20px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.2); display: flex; align-items: center; gap: 8px;">
             🤖 Asistente GPT
@@ -351,7 +351,7 @@
             <!-- Cuerpo de Mensajes -->
             <div id="chat-messages" style="flex: 1; padding: 12px; overflow-y: auto; background: #f8f9fa; display: flex; flex-direction: column; gap: 10px; font-size: 0.85rem;">
                 <div style="background: #e2e8f0; padding: 8px 12px; border-radius: 8px; align-self: flex-start; max-width: 85%; color: #333;">
-                    ¡Hola! Soy tu asistente virtual de GesPyme. ¿En qué puedo ayudarte hoy con tus facturas, cotizaciones o inventario?[span_0](start_span)[span_0](end_span)
+                    ¡Hola! Soy tu asistente virtual de GesPyme. ¿En qué puedo ayudarte hoy con tus facturas, cotizaciones o inventario?
                 </div>
             </div>
             <!-- Entrada de Texto -->
@@ -361,6 +361,7 @@
             </div>
         </div>   
     </div>
+
     <!-- MODAL DE AYUDA Y SOPORTE PROFESIONAL -->
     <div id="ayuda-modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); display: none; justify-content: center; align-items: center; z-index: 30000; padding: 15px;">
         <div style="background: white; padding: 2.5rem; border-radius: 12px; width: 100%; max-width: 480px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); position: relative; border-top: 5px solid #1a73e8; text-align: left;">
@@ -426,8 +427,20 @@
             }, 600);
         }
 
-        function abrirAyudaModal() {
-            alert("Centro de Ayuda y Soporte GesPyme:\nPuedes consultar manuales de uso o activar el Agente GPT flotante en la esquina inferior derecha.");
+        /* Función actualizada para abrir el modal de ayuda elegante en lugar del alert */
+        function abrirAyudaModal(event) {
+            if (event) event.preventDefault();
+            let modal = document.getElementById('ayuda-modal');
+            if (modal) {
+                modal.style.display = 'flex';
+            }
+        }
+
+        function cerrarAyudaModal() {
+            let modal = document.getElementById('ayuda-modal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
         }
 
         function intentarActivarModoDev() {
