@@ -334,12 +334,49 @@
         </div>
     </div>
 
-    <!-- VENTANA FLOTANTE AGENTE GPT (ASISTENTE IA) - Ajustado con bottom: 80px para no solapar -->
-    <div id="gespyme-chat-widget" style="position: fixed; bottom: 80px; right: 20px; z-index: 99999; font-family: system-ui, sans-serif;">
-        <!-- Botón flotante -->
-        <button id="chat-toggle-btn" onclick="toggleChatIA()" style="background: #1a73e8; color: white; border: none; border-radius: 50px; padding: 12px 20px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.2); display: flex; align-items: center; gap: 8px;">
-            🤖 Asistente GPT
-        </button>
+    function enviarMensajeIA() {
+    const input = document.getElementById('chat-input');
+    const texto = input.value.trim();
+    if (!texto) return;
+
+    const mensajes = document.getElementById('chat-messages');
+
+    // Mensaje del usuario
+    const msgUser = document.createElement('div');
+    msgUser.style.cssText = "background: #1a73e8; color: white; padding: 8px 12px; border-radius: 8px; align-self: flex-end; max-width: 85%;";
+    msgUser.textContent = texto;
+    mensajes.appendChild(msgUser);
+
+    input.value = "";
+    mensajes.scrollTop = mensajes.scrollHeight;
+
+    // Lógica inteligente basada en lo que escribe el usuario
+    setTimeout(() => {
+        let respuestaBot = "Entendido. Para gestionar eso en GesPyme, dirígete al módulo correspondiente desde el menú lateral.";
+        let textoMinus = texto.toLowerCase();
+
+        if (textoMinus.includes('cuenta') || textoMinus.includes('registro') || textoMinus.includes('creé') || textoMinus.includes('corte')) {
+            let usuario = localStorage.getItem("gespyme_usuario");
+            let plan = obtenerPlanActual();
+            if (usuario) {
+                respuestaBot = `¡Perfecto! Veo que tu cuenta (${usuario}) está activa con el ${PLANES_LIMITES[plan].nombre}. ¿En qué te ayudo a gestionar tus documentos hoy?`;
+            } else {
+                respuestaBot = "Veo que mencionas tu cuenta. Recuerda usar el botón de 'Crear cuenta' en el banner inferior si aún no te has registrado.";
+            }
+        } else if (textoMinus.includes('factura') || textoMinus.includes('cotiza')) {
+            respuestaBot = "Para crear facturas o cotizaciones, recuerda que puedes usar los accesos rápidos superiores o el menú lateral (según los límites de tu plan actual).";
+        } else if (textoMinus.includes('ayuda') || textoMinus.includes('soporte')) {
+            respuestaBot = "Puedes abrir el Centro de Ayuda completo desde las opciones inferiores del menú lateral para ver los canales oficiales de soporte.";
+        }
+
+        const msgBot = document.createElement('div');
+        msgBot.style.cssText = "background: #e2e8f0; padding: 8px 12px; border-radius: 8px; align-self: flex-start; max-width: 85%; color: #333;";
+        msgBot.textContent = respuestaBot;
+        mensajes.appendChild(msgBot);
+        mensajes.scrollTop = mensajes.scrollHeight;
+    }, 600);
+}
+
 
         <!-- Caja de Chat -->
         <div id="chat-box-container" style="display: none; width: 320px; height: 420px; background: white; border-radius: 12px; box-shadow: 0 6px 24px rgba(0,0,0,0.25); flex-direction: column; overflow: hidden; border: 1px solid #e0e0e0; position: absolute; bottom: 60px; right: 0;">
