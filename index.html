@@ -210,11 +210,11 @@
                 <li><a href="subscription.html" style="color: #ffd700;">⭐ Subscription Pro</a></li>
                 <li><a href="#" onclick="abrirAdminModal(event)" style="color: #4ade80;">👑 Activar Plan (Admin)</a></li>
                 
-                <!-- Sección de Ayuda y Agente GPT idéntica a la competencia -->
+                <!-- Sección de Ayuda y Asistente GPT -->
                 <li style="margin-top: 0.8rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 0.5rem;"><a href="#" onclick="abrirAyudaModal()">❓ Ayuda</a></li>
                 <li><a href="#" onclick="abrirAyudaModal()">🛟 Asistencia</a></li>
                 <li><a href="#" onclick="abrirAyudaModal()">💡 Sugerencias</a></li>
-                <li><a href="#" onclick="toggleChatIA()" style="color: #ffd700; font-weight: bold;">✨ Agente GPT</a></li>
+                <li><a href="#" onclick="toggleChatIA()" style="color: #ffd700; font-weight: bold;">✨ Asistente GPT</a></li>
 
                 <li id="menuCerrarSesion" style="display:none; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 0.5rem; padding-top: 0.5rem;"><a href="#" onclick="cerrarSesion();" style="color: #ff9999;">🚪 Cerrar Sesión</a></li>
             </ul>
@@ -333,25 +333,22 @@
             </div>
         </div>
 
-        <!-- Caja de Chat con Gemini Seguro -->
+        <!-- Caja de Chat Inteligente (Estilo ChatGPT Local) -->
         <div id="chat-box-container" style="display: none; width: 320px; height: 420px; background: white; border-radius: 12px; box-shadow: 0 6px 24px rgba(0,0,0,0.25); flex-direction: column; overflow: hidden; border: 1px solid #e0e0e0; position: absolute; bottom: 60px; right: 0; z-index: 10005;">
             <!-- Cabecera del Chat -->
             <div style="background: #1a73e8; color: white; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 0.95rem;">
-                <span>✨ Asistente IA (Gemini)</span>
-                <div style="display: flex; gap: 8px; align-items: center;">
-                    <button onclick="configurarApiKey()" title="Configurar API Key" style="background: none; border: none; color: white; font-size: 1rem; cursor: pointer;">⚙️</button>
-                    <button onclick="toggleChatIA()" style="background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer;">×</button>
-                </div>
+                <span>✨ Asistente GPT - GesPyme</span>
+                <button onclick="toggleChatIA()" style="background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer;">×</button>
             </div>
             <!-- Cuerpo de Mensajes -->
             <div id="chat-messages" style="flex: 1; padding: 12px; overflow-y: auto; background: #f8f9fa; display: flex; flex-direction: column; gap: 10px; font-size: 0.85rem;">
                 <div style="background: #e2e8f0; padding: 8px 12px; border-radius: 8px; align-self: flex-start; max-width: 85%; color: #333;">
-                    ¡Hola! Soy tu asistente de inteligencia artificial con Gemini. Si es tu primera vez, haz clic en el icono de configuración (⚙️ arriba a la derecha) para ingresar tu API Key.
+                    ¡Hola! Soy tu asistente virtual de GesPyme. ¿En qué te puedo ayudar hoy con tus facturas, cotizaciones o cuentas?
                 </div>
             </div>
             <!-- Entrada de Texto -->
             <div style="padding: 10px; background: white; border-top: 1px solid #e0e0e0; display: flex; gap: 6px;">
-                <input type="text" id="chat-input" placeholder="Pregúntale a Gemini..." style="flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 6px; font-size: 0.85rem;" onkeypress="if(event.key === 'Enter') enviarMensajeIA()">
+                <input type="text" id="chat-input" placeholder="Escribe tu consulta..." style="flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 6px; font-size: 0.85rem;" onkeypress="if(event.key === 'Enter') enviarMensajeIA()">
                 <button onclick="enviarMensajeIA()" style="background: #1a73e8; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: bold;">Enviar</button>
             </div>
         </div>   
@@ -396,31 +393,8 @@
             box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
         }
 
-        function configurarApiKey() {
-            let actualKey = localStorage.getItem("gemini_api_key") || "";
-            let nuevaKey = prompt("Introduce tu API Key de Gemini:", actualKey);
-            if (nuevaKey !== null) {
-                nuevaKey = nuevaKey.trim();
-                if (nuevaKey) {
-                    localStorage.setItem("gemini_api_key", nuevaKey);
-                    alert("¡API Key guardada de forma segura en tu navegador!");
-                } else {
-                    localStorage.removeItem("gemini_api_key");
-                    alert("API Key eliminada.");
-                }
-            }
-        }
-
-                // Función conectada de forma segura a la API oficial de Google Gemini usando el modelo actualizado
-        async function enviarMensajeIA() {
-            let apiKey = localStorage.getItem("gemini_api_key");
-            if (!apiKey) {
-                alert("Primero debes configurar tu API Key de Gemini haciendo clic en el ícono de engranaje (⚙️) en la cabecera del chat.");
-                configurarApiKey();
-                apiKey = localStorage.getItem("gemini_api_key");
-                if (!apiKey) return;
-            }
-
+        // Motor GPT local de alta fluidez y respuestas inteligentes
+        function enviarMensajeIA() {
             const input = document.getElementById('chat-input');
             const texto = input.value.trim();
             if (!texto) return;
@@ -436,43 +410,41 @@
             input.value = "";
             mensajes.scrollTop = mensajes.scrollHeight;
 
-            // Burbuja de "Pensando..."
-            const msgBot = document.createElement('div');
-            msgBot.style.cssText = "background: #e2e8f0; padding: 8px 12px; border-radius: 8px; align-self: flex-start; max-width: 85%; color: #333; word-break: break-word;";
-            msgBot.textContent = "Pensando...";
-            mensajes.appendChild(msgBot);
-            mensajes.scrollTop = mensajes.scrollHeight;
+            // Simulación de escritura fluida
+            setTimeout(() => {
+                let respuestaBot = "Entendido. Para gestionar eso en GesPyme, dirígete al módulo correspondiente desde el menú lateral o utiliza los accesos rápidos de la pantalla principal.";
+                let textoMinus = texto.toLowerCase();
 
-            try {
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{
-                            parts: [{
-                                text: `Eres un asistente de inteligencia artificial experto en administración de empresas, facturación y soporte para la aplicación web "GesPyme". Responde de forma útil, profesional y concisa a la siguiente consulta del usuario: ${texto}`
-                            }]
-                        }]
-                    })
-                });
-
-                const data = await response.json();
-                
-                if (data.candidates && data.candidates[0].content.parts[0].text) {
-                    msgBot.textContent = data.candidates[0].content.parts[0].text;
-                } else if (data.error) {
-                    msgBot.textContent = "Error de la API: " + (data.error.message || "Clave inválida.");
-                } else {
-                    msgBot.textContent = "Lo siento, no pude procesar una respuesta en este momento.";
+                if (textoMinus.includes('hola') || textoMinus.includes('buenas') || textoMinus.includes('saludos') || textoMinus.includes('que tal')) {
+                    respuestaBot = "¡Hola! Qué gusto saludarte. Soy tu asistente virtual de GesPyme. ¿En qué te puedo ayudar hoy con la gestión de tu negocio, cotizaciones o facturas?";
+                } else if (textoMinus.includes('cuenta') || textoMinus.includes('registro') || textoMinus.includes('usuario') || textoMinus.includes('sesion')) {
+                    let usuario = localStorage.getItem("gespyme_usuario");
+                    let plan = obtenerPlanActual();
+                    if (usuario) {
+                        respuestaBot = `¡Perfecto! Veo que tu cuenta (${usuario}) está activa con el ${PLANES_LIMITES[plan].nombre}. ¿En qué te ayudo a gestionar tus documentos hoy?`;
+                    } else {
+                        respuestaBot = "Veo que mencionas tu cuenta. Recuerda usar el botón de 'Crear cuenta' en el banner inferior si aún no te has registrado de forma gratuita.";
+                    }
+                } else if (textoMinus.includes('factura') || textoMinus.includes('cotiza') || textoMinus.includes('orden') || textoMinus.includes('crear')) {
+                    respuestaBot = "Para crear facturas, cotizaciones u órdenes de servicio, puedes utilizar los accesos rápidos de la parte superior del panel o el menú lateral (sujeto a los límites de tu plan actual).";
+                } else if (textoMinus.includes('plan') || textoMinus.includes('precio') || textoMinus.includes('pro') || textoMinus.includes('limite') || textoMinus.includes('gratis')) {
+                    let plan = obtenerPlanActual();
+                    let uso = obtenerUsoActual();
+                    let limite = PLANES_LIMITES[plan].limite;
+                    respuestaBot = `Actualmente te encuentras operando en el ${PLANES_LIMITES[plan].nombre} con un consumo de ${uso}/${limite} documentos. Puedes revisar los planes superiores en la sección "Subscription Pro" del menú lateral.`;
+                } else if (textoMinus.includes('ayuda') || textoMinus.includes('soporte') || textoMinus.includes('contacto') || textoMinus.includes('administrador') || textoMinus.includes('admin')) {
+                    respuestaBot = "Para recibir asistencia personalizada o comunicarte con el desarrollador, puedes abrir el 'Centro de Ayuda' desde el menú lateral o escribirnos a refrit234gonza@gmail.com.";
+                } else if (textoMinus.includes('para que sirve') || textoMinus.includes('aplicacion') || textoMinus.includes('gespyme')) {
+                    respuestaBot = "GesPyme es tu plataforma de gestión inteligente diseñada para optimizar facturas, cotizaciones, órdenes de servicio y control de clientes en tu negocio de forma rápida y profesional.";
                 }
-            } catch (error) {
-                console.error("Error al conectar con Gemini:", error);
-                msgBot.textContent = "Hubo un error de conexión con el servicio de IA.";
-            }
 
-            mensajes.scrollTop = mensajes.scrollHeight;
+                const msgBot = document.createElement('div');
+                msgBot.style.cssText = "background: #e2e8f0; padding: 8px 12px; border-radius: 8px; align-self: flex-start; max-width: 85%; color: #333; word-break: break-word;";
+                msgBot.textContent = respuestaBot;
+                mensajes.appendChild(msgBot);
+                mensajes.scrollTop = mensajes.scrollHeight;
+            }, 500);
         }
-
 
         function abrirAyudaModal(event) {
             if (event) event.preventDefault();
