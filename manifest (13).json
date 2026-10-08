@@ -1,0 +1,16 @@
+{
+  "background_color": "#2b3856",
+  "dir": "auto",
+  "display": "standalone",
+  "name": "GesPyme",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "GesPyme",
+  "start_url": "/",
+  "theme_color": "#2b3857",
+  "description": "Plataforma de gestion inteligente para pymes",
+  "lang": "es",
+  "categories": [
+    "business"
+  ]
+}
