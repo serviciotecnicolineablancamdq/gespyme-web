@@ -18,6 +18,11 @@
             "src": "https://serviciotecnolineablancamdq.github.io/gespyme-web/192.png",
             "sizes": "192x192",
             "type": "image/png"
+        },
+        {
+            "src": "https://serviciotecnolineablancamdq.github.io/gespyme-web/512.png",
+            "sizes": "512x512",
+            "type": "image/png"
         }
     ]
 }
