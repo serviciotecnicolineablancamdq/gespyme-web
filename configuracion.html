@@ -12,525 +12,77 @@
             --bg-color: #f4f6f9;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-color); display: flex; height: 100vh; overflow: hidden; }
         
-        /* Menú lateral principal */
-        sidebar { width: 240px; background-color: var(--sidebar-bg); color: white; display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; }
+        /* Scroll vertical fluido optimizado para Android */
+        html, body { 
+            background-color: var(--bg-color); 
+            color: var(--text-color); 
+            display: flex; 
+            min-height: 100vh; 
+            overflow-x: hidden; 
+            overflow-y: auto !important; 
+            width: 100%; 
+            flex-direction: row; 
+            -webkit-overflow-scrolling: touch;
+            height: 100%;
+        }
+        
+        /* Menú lateral forzado a estar oculto por defecto en subpáginas móviles */
+        sidebar { 
+            width: 260px; background-color: var(--sidebar-bg); color: white; display: flex; flex-direction: column; 
+            position: fixed; height: 100vh; top: 0; left: 0; z-index: 1000; 
+            transform: translateX(-100%) !important; 
+            transition: transform 0.3s ease;
+        }
+        sidebar.open { 
+            transform: translateX(0) !important; 
+        }
         .sidebar-brand { padding: 1.2rem; font-size: 1.1rem; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
-        .sidebar-menu { list-style: none; padding: 0.5rem 0; flex: 1; }
+        .sidebar-menu { list-style: none; padding: 0.5rem 0; overflow-y: auto; flex: 1; max-height: calc(100vh - 160px); }
         .sidebar-menu li a { display: block; padding: 0.6rem 1.2rem; color: #b0c4de; text-decoration: none; font-size: 0.9rem; transition: 0.2s; }
         .sidebar-menu li.active > a, .sidebar-menu li a:hover { background-color: rgba(255,255,255,0.1); color: white; }
         .sidebar-menu .sub-item { padding-left: 2.2rem; font-size: 0.85rem; }
-        .sidebar-footer { padding: 1rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.8rem; color: #a0a0a0; text-align: center; }
+        
+        /* Botón de ocultar menú en zona baja */
+        .sidebar-hide-section {
+            padding: 0.8rem 1.2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.15);
+        }
+        .btn-hide-sidebar {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            color: #b0c4de;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: 0.2s;
+        }
+        .btn-hide-sidebar:hover { background: rgba(255, 255, 255, 0.2); color: white; }
+        .sidebar-footer { padding: 0.6rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.8rem; color: #a0a0a0; text-align: center; }
 
-        /* Contenido principal */
-        .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
-        header { background: white; padding: 0.8rem 2rem; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: flex-end; align-items: center; flex-shrink: 0; }
+        /* Botón hamburguesa superior */
+        .menu-toggle {
+            background: var(--sidebar-bg); color: white; border: none;
+            padding: 0.5rem 0.8rem; border-radius: 4px; font-size: 1.2rem; cursor: pointer; z-index: 1001;
+        }
+
+        /* Contenido principal ocupando todo el ancho */
+        .main-content { 
+            flex: 1; display: flex; flex-direction: column; width: 100%; margin-left: 0 !important; min-height: 100vh; 
+        }
+
+        header { background: white; padding: 0.8rem 1.5rem; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
         .user-profile { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: #555; font-weight: 500; }
         
         .container { padding: 2rem; max-width: 1200px; width: 100%; margin: 0 auto; display: grid; grid-template-columns: 280px 1fr; gap: 2rem; align-items: start; }
         @media(max-width: 900px) { .container { grid-template-columns: 1fr; } }
 
         /* Menú interno de configuración (izquierdo) */
-        .config-nav { background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden; }
-        .config-nav-title { padding: 1rem 1.2rem; font-size: 1rem; font-weight: bold; color: #333; border-bottom: 1px solid #eee; }
-        .config-nav-list { list-style: none; }
-        .config-nav-item a { display: block; padding: 0.75rem 1.2rem; color: #555; text-decoration: none; font-size: 0.9rem; border-bottom: 1px solid #f8f9fa; transition: 0.2s; }
-        .config-nav-item.active a, .config-nav-item a:hover { background-color: #f1f3f4; color: var(--primary-color); font-weight: 500; }
-
-        /* Paneles de configuración (derecho) */
-        .config-panel { background: white; border-radius: 8px; padding: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        .config-panel h2 { margin-bottom: 1.5rem; font-size: 1.3rem; color: #333; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; }
-        
-        .tab-section { display: none; }
-        .tab-section.active { display: block; }
-
-        .form-group { margin-bottom: 1.2rem; }
-        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.9rem; color: #555; }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95rem; }
-        .form-group textarea { resize: vertical; height: 80px; }
-
-        .btn-primary { background-color: #28a745; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-weight: 500; font-size: 0.95rem; margin-top: 1rem; }
-        .btn-primary:hover { background-color: #218838; }
-
-        table { width: 100%; border-collapse: collapse; text-align: left; margin-top: 1rem; }
-        th, td { padding: 0.75rem; border-bottom: 1px solid #eee; font-size: 0.9rem; }
-        th { background-color: #f8f9fa; color: #5f6368; }
-
-        /* Estilos para el selector visual de plantillas (Estilo Competencia) */
-        .templates-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1.2rem; margin-top: 1rem; margin-bottom: 1.5rem; }
-        .template-card { border: 2px solid #ddd; border-radius: 6px; padding: 0.8rem; background: #fff; cursor: pointer; transition: 0.2s; position: relative; display: flex; flex-direction: column; align-items: center; }
-        .template-card:hover { border-color: #1a73e8; }
-        .template-card.selected { border-color: #1a73e8; box-shadow: 0 0 8px rgba(26,115,232,0.3); background-color: #f4f8fb; }
-        .template-banner { background: #1a73e8; color: white; font-size: 0.7rem; font-weight: bold; padding: 2px 6px; position: absolute; top: 0; left: 0; right: 0; text-align: center; display: none; border-top-left-radius: 4px; border-top-right-radius: 4px; }
-        .template-card.selected .template-banner { display: block; }
-        .template-thumbnail { width: 100%; height: 130px; background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 4px; display: flex; flex-direction: column; padding: 8px; margin-top: 12px; }
-        .thumb-header { height: 12px; width: 40%; background: #ccc; margin-bottom: 6px; border-radius: 2px; }
-        .thumb-body { flex: 1; border: 1px dashed #bbb; border-radius: 2px; background: white; }
-        .t-default .thumb-header { background: #1a73e8; }
-        .t-alerta .thumb-header { background: #00bcd4; }
-        .t-adornos .thumb-header { background: #333; height: 16px; }
-        .t-terciopelo .thumb-header { background: #3f51b5; border-bottom: 2px solid #ff9800; }
-        .template-name { font-weight: 500; font-size: 0.85rem; margin: 0.6rem 0 0.2rem 0; color: #333; text-align: center; }
-        .btn-preview { background-color: #28a745; color: white; border: none; padding: 0.3rem 0.6rem; border-radius: 4px; cursor: pointer; font-size: 0.75rem; margin-top: 0.4rem; display: block; width: 100%; text-align: center; }
-        .btn-preview:hover { background-color: #218838; }
-
-        /* Modal de Restricción de Planes */
-        #pro-modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.6); display: none; justify-content: center; align-items: center; z-index: 10000;
-        }
-        .pro-card {
-            background: white; padding: 2.5rem; border-radius: 12px; width: 90%; max-width: 420px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.3); text-align: center; position: relative; border-top: 5px solid #ff9800;
-        }
-        .pro-card h2 { color: #d97706; margin-bottom: 0.5rem; font-size: 1.4rem; border: none; padding: 0; }
-        .pro-card p { color: #555; font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.4; }
-        .pro-btn {
-            background-color: #28a745; color: white; border: none; padding: 0.8rem 1.5rem;
-            border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; width: 100%;
-        }
-        .close-modal { position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #888; }
-    </style>
-</head>
-<body>
-
-    <!-- MODAL DE RESTRICCIÓN DE PLANES -->
-    <div id="pro-modal">
-        <div class="pro-card">
-            <button class="close-modal" onclick="cerrarModalPro()">×</button>
-            <h2>⭐ Función Exclusiva</h2>
-            <p id="pro-message">Este módulo está reservado para planes superiores.</p>
-            <a href="subscription.html" class="pro-btn">Ver Planes y Actualizar</a>
-        </div>
-    </div>
-
-    <!-- Menú Lateral Principal -->
-    <sidebar>
-        <div class="sidebar-brand">
-            <span>⚙️</span> GesPyme
-        </div>
-        <ul class="sidebar-menu">
-            <li><a href="index.html">Panel</a></li>
-            <li><a href="clientes.html">Clientes</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('facturas')">Facturas</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('facturas')" class="sub-item">Nueva factura</a></li>
-            <li><a href="cotizaciones.html">Cotizaciones</a></li>
-            <li><a href="nueva-cotizacion.html" class="sub-item">Nueva cotización</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('notas')">Notas de crédito</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('ordenes')">Orden de Servicio</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('ordenes')" class="sub-item">Nueva orden</a></li>
-            <li><a href="#" onclick="verificarRestriccionModulo('pagos')">Pagos</a></li>
-            <li><a href="reembolsos.html">Reembolsos</a></li>
-            <li><a href="articulos.html">Artículos</a></li>
-            <li><a href="informes.html">Informes</a></li>
-            <li><a href="herramientas.html">Herramientas</a></li>
-            <li class="active"><a href="configuracion.html">Configuración</a></li>
-            <li><a href="subscription.html" style="color: #ffd700;">Subscription Pro</a></li>
-        </ul>
-        <div class="sidebar-footer">
-            GesPyme © 2026
-        </div>
-    </sidebar>
-
-    <!-- Área Principal -->
-    <div class="main-content">
-        <header>
-            <div class="user-profile" id="userProfileDisplay">
-                <span>👤 Mi Cuenta</span>
-            </div>
-        </header>
-
-        <div class="container">
-            
-            <!-- Menú Izquierdo de Configuración -->
-            <div class="config-nav">
-                <div class="config-nav-title">&lt; Configuración</div>
-                <ul class="config-nav-list">
-                    <li class="config-nav-item active" onclick="mostrarSeccion(event, 'sec-empresa')"><a href="#">Configuración de la empresa</a></li>
-                    <li class="config-nav-item" onclick="mostrarSeccion(event, 'sec-regional')"><a href="#">Configuración regional</a></li>
-                    <li class="config-nav-item" onclick="mostrarSeccion(event, 'sec-impuestos')"><a href="#">Configuración de impuestos</a></li>
-                    <li class="config-nav-item" onclick="mostrarSeccion(event, 'sec-facturas')"><a href="#">Configuración de facturas</a></li>
-                    <li class="config-nav-item" onclick="mostrarSeccion(event, 'sec-cotizaciones')"><a href="#">Configuración de cotizaciones</a></li>
-                    <li class="config-nav-item" onclick="mostrarSeccion(event, 'sec-notas')"><a href="#">Configuración de notas de crédito</a></li>
-                    <li class="config-nav-item" onclick="mostrarSeccion(event, 'sec-pago')"><a href="#">Configuración de pago</a></li>
-                    <li class="config-nav-item" onclick="mostrarSeccion(event, 'sec-inventario')"><a href="#">Configuración de inventario</a></li>
-                    <li class="config-nav-item" onclick="mostrarSeccion(event, 'sec-cuenta')"><a href="#">Configuración del estado de cuenta</a></li>
-                    <li class="config-nav-item" onclick="mostrarSeccion(event, 'sec-diseno')"><a href="#">Diseño de página</a></li>
-                    <li class="config-nav-item" onclick="mostrarSeccion(event, 'sec-plantillas')"><a href="#">Plantillas de facturas</a></li>
-                    <li class="config-nav-item" onclick="mostrarSeccion(event, 'sec-vendedor')"><a href="#">Configuración del vendedor</a></li>
-                    <li class="config-nav-item" onclick="mostrarSeccion(event, 'sec-usuario')"><a href="#">Configuración del usuario</a></li>
-                    <li class="config-nav-item" onclick="mostrarSeccion(event, 'sec-suscripciones')"><a href="#">Suscripciones</a></li>
-                </ul>
-            </div>
-
-            <!-- Paneles Dinámicos (Derecha) -->
-            <div class="config-panel">
-                
-                <!-- 1. Configuración de la empresa -->
-                <div id="sec-empresa" class="tab-section active">
-                    <h2>Configuración de la empresa</h2>
-                    <form onsubmit="event.preventDefault(); alert('Guardado con éxito');">
-                        <div class="form-group">
-                            <label>Nombre de la empresa</label>
-                            <input type="text" placeholder="Ingrese el nombre de su empresa">
-                        </div>
-                        <div class="form-group">
-                            <label>Número de registro / CUIT</label>
-                            <input type="text" placeholder="CUIT: e.g. 30-71234567-4">
-                        </div>
-                        <div class="form-group">
-                            <label>Dirección</label>
-                            <textarea placeholder="Introduzca la dirección"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label>Teléfono</label>
-                            <input type="text" placeholder="Ingrese su número de teléfono">
-                        </div>
-                        <div class="form-group">
-                            <label>Sitio web</label>
-                            <input type="text" placeholder="Ingrese al sitio web">
-                        </div>
-                        <div class="form-group">
-                            <label>Logo</label>
-                            <input type="file">
-                        </div>
-                        <button type="submit" class="btn-primary">Guardar configuración</button>
-                    </form>
-                </div>
-
-                <!-- 2. Configuración regional -->
-                <div id="sec-regional" class="tab-section">
-                    <h2>Configuración regional</h2>
-                    <form onsubmit="event.preventDefault(); alert('Guardado con éxito');">
-                        <div class="form-group">
-                            <label>Moneda</label>
-                            <select><option>ARS ($) - Peso Argentino</option><option>USD ($) - Dólar Estadounidense</option></select>
-                        </div>
-                        <div class="form-group">
-                            <label>Formato de fecha</label>
-                            <select><option>DD/MM/AAAA</option><option>MM/DD/AAAA</option></select>
-                        </div>
-                        <button type="submit" class="btn-primary">Guardar configuración</button>
-                    </form>
-                </div>
-
-                <!-- 3. Configuración de impuestos -->
-                <div id="sec-impuestos" class="tab-section">
-                    <h2>Configuración de impuestos</h2>
-                    <form onsubmit="event.preventDefault(); alert('Guardado con éxito');">
-                        <div class="form-group">
-                            <label>Nombre del Impuesto</label>
-                            <input type="text" value="IVA">
-                        </div>
-                        <div class="form-group">
-                            <label>Tasa predeterminada (%)</label>
-                            <input type="number" value="21">
-                        </div>
-                        <button type="submit" class="btn-primary">Guardar configuración</button>
-                    </form>
-                </div>
-
-                <!-- 4. Configuración de facturas -->
-                <div id="sec-facturas" class="tab-section">
-                    <h2>Configuración de facturas</h2>
-                    <form onsubmit="event.preventDefault(); alert('Guardado con éxito');">
-                        <div class="form-group">
-                            <label>Prefijo de numeración</label>
-                            <input type="text" value="FAC-">
-                        </div>
-                        <div class="form-group">
-                            <label>Términos y condiciones predeterminados</label>
-                            <textarea placeholder="Condiciones de pago, CBU, etc..."></textarea>
-                        </div>
-                        <button type="submit" class="btn-primary">Guardar configuración</button>
-                    </form>
-                </div>
-
-                <!-- 5. Configuración de cotizaciones -->
-                <div id="sec-cotizaciones" class="tab-section">
-                    <h2>Configuración de cotizaciones</h2>
-                    <form onsubmit="event.preventDefault(); alert('Guardado con éxito');">
-                        <div class="form-group">
-                            <label>Prefijo de cotización</label>
-                            <input type="text" value="COT-">
-                        </div>
-                        <div class="form-group">
-                            <label>Validez predeterminada (días)</label>
-                            <input type="number" value="15">
-                        </div>
-                        <button type="submit" class="btn-primary">Guardar configuración</button>
-                    </form>
-                </div>
-
-                <!-- 6. Notas de crédito -->
-                <div id="sec-notas" class="tab-section">
-                    <h2>Configuración de notas de crédito</h2>
-                    <form onsubmit="event.preventDefault(); alert('Guardado con éxito');">
-                        <div class="form-group">
-                            <label>Prefijo</label>
-                            <input type="text" value="NC-">
-                        </div>
-                        <button type="submit" class="btn-primary">Guardar configuración</button>
-                    </form>
-                </div>
-
-                <!-- 7. Configuración de pago -->
-                <div id="sec-pago" class="tab-section">
-                    <h2>Configuración de pago</h2>
-                    <p style="color: #666; font-size: 0.9rem; margin-bottom: 1.2rem;">Configura tus propios medios de cobro (CBU/Alias, Binance/USDT o Links de pago) para que aparezcan en tus facturas.</p>
-                    <form onsubmit="guardarDatosPago(event)">
-                        <div class="form-group">
-                            <label>CBU / Alias Bancario (Transferencia)</label>
-                            <input type="text" id="pag_cbu" placeholder="Ej: mi.alias.mp o CBU bancario">
-                        </div>
-                        <div class="form-group">
-                            <label>Binance Pay ID / USDT (Cripto)</label>
-                            <input type="text" id="pag_crypto" placeholder="Correo, ID de Binance Pay o Red TRC20">
-                        </div>
-                        <div class="form-group">
-                            <label>Link de Pago / Botón Online</label>
-                            <input type="text" id="pag_link" placeholder="https://link.mercadopago.com.ar/...">
-                        </div>
-                        <button type="submit" class="btn-primary">Guardar Datos de Cobro</button>
-                    </form>
-                </div>
-
-                <!-- 8. Inventario -->
-                <div id="sec-inventario" class="tab-section">
-                    <h2>Configuración de inventario</h2>
-                    <form onsubmit="event.preventDefault(); alert('Guardado con éxito');">
-                        <div class="form-group">
-                            <label><input type="checkbox" checked> Controlar stock de artículos automáticamente</label>
-                        </div>
-                        <button type="submit" class="btn-primary">Guardar configuración</button>
-                    </form>
-                </div>
-
-                <!-- 9. Estado de cuenta -->
-                <div id="sec-cuenta" class="tab-section">
-                    <h2>Configuración del estado de cuenta</h2>
-                    <form onsubmit="event.preventDefault(); alert('Guardado con éxito');">
-                        <div class="form-group">
-                            <label>Incluir saldos vencidos</label>
-                            <select><option>Sí</option><option>No</option></select>
-                        </div>
-                        <button type="submit" class="btn-primary">Guardar configuración</button>
-                    </form>
-                </div>
-
-                <!-- 10. Diseño de página -->
-                <div id="sec-diseno" class="tab-section">
-                    <h2>Diseño de página</h2>
-                    <form onsubmit="event.preventDefault(); alert('Guardado con éxito');">
-                        <div class="form-group">
-                            <label>Color principal del sistema</label>
-                            <input type="color" value="#1a73e8">
-                        </div>
-                        <button type="submit" class="btn-primary">Guardar configuración</button>
-                    </form>
-                </div>
-
-                <!-- 11. Plantillas de facturas -->
-                <div id="sec-plantillas" class="tab-section">
-                    <h2>Plantillas de facturas</h2>
-                    <p style="color: #666; font-size: 0.9rem; margin-bottom: 1rem;">Seleccione la plantilla que desea utilizar para sus comprobantes y facturas.</p>
-                    
-                    <div style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
-                        <button type="button" class="btn-primary" style="margin-top: 0; padding: 0.5rem 1rem;" onclick="guardarPlantillaSeleccionada()">Guardar plantilla</button>
-                    </div>
-
-                    <div class="templates-grid">
-                        <!-- Predeterminado -->
-                        <div class="template-card selected" id="card-default" onclick="seleccionarPlantilla('default')">
-                            <div class="template-banner">Seleccionado</div>
-                            <div class="template-thumbnail t-default">
-                                <div class="thumb-header"></div>
-                                <div class="thumb-body"></div>
-                            </div>
-                            <div class="template-name">Predeterminado</div>
-                            <button type="button" class="btn-preview" onclick="event.stopPropagation(); alert('Vista previa: Plantilla Predeterminada limpia y profesional.');">Vista previa</button>
-                        </div>
-
-                        <!-- Alerta azul -->
-                        <div class="template-card" id="card-alerta" onclick="seleccionarPlantilla('alerta')">
-                            <div class="template-banner">Seleccionado</div>
-                            <div class="template-thumbnail t-alerta">
-                                <div class="thumb-header"></div>
-                                <div class="thumb-body"></div>
-                            </div>
-                            <div class="template-name">Alerta azul</div>
-                            <button type="button" class="btn-preview" onclick="event.stopPropagation(); alert('Vista previa: Plantilla Alerta azul con énfasis moderno.');">Vista previa</button>
-                        </div>
-
-                        <!-- Adornos azules -->
-                        <div class="template-card" id="card-adornos" onclick="seleccionarPlantilla('adornos')">
-                            <div class="template-banner">Seleccionado</div>
-                            <div class="template-thumbnail t-adornos">
-                                <div class="thumb-header"></div>
-                                <div class="thumb-body"></div>
-                            </div>
-                            <div class="template-name">Adornos azules</div>
-                            <button type="button" class="btn-preview" onclick="event.stopPropagation(); alert('Vista previa: Plantilla Adornos azules corporativa.');">Vista previa</button>
-                        </div>
-
-                        <!-- Terciopelo azul -->
-                        <div class="template-card" id="card-terciopelo" onclick="seleccionarPlantilla('terciopelo')">
-                            <div class="template-banner">Seleccionado</div>
-                            <div class="template-thumbnail t-terciopelo">
-                                <div class="thumb-header"></div>
-                                <div class="thumb-body"></div>
-                            </div>
-                            <div class="template-name">Terciopelo azul</div>
-                            <button type="button" class="btn-preview" onclick="event.stopPropagation(); alert('Vista previa: Plantilla Terciopelo azul elegante.');">Vista previa</button>
-                        </div>
-                    </div>
-
-                    <button type="button" class="btn-primary" onclick="guardarPlantillaSeleccionada()">Guardar configuración</button>
-                </div>
-
-                <!-- 12. Vendedor -->
-                <div id="sec-vendedor" class="tab-section">
-                    <h2>Configuración del vendedor</h2>
-                    <table>
-                        <tr><th>Nombre</th><th>Acción</th></tr>
-                        <tr><td>Predeterminado</td><td><button style="padding: 4px 8px;">Editar</button></td></tr>
-                    </table>
-                </div>
-
-                <!-- 13. Usuario (Con cambio de Gmail y Contraseña) -->
-                <div id="sec-usuario" class="tab-section">
-                    <h2>Configuración del usuario</h2>
-                    <p style="color: #666; font-size: 0.9rem; margin-bottom: 1.5rem;">Actualiza tus credenciales de acceso, correo electrónico o contraseña de tu cuenta en GesPyme.</p>
-                    
-                    <form onsubmit="actualizarCredencialesUsuario(event)">
-                        <div class="form-group">
-                            <label>Nombre de Usuario / Perfil</label>
-                            <input type="text" id="usrNombre" placeholder="Tu nombre o identificador">
-                        </div>
-                        <div class="form-group">
-                            <label>Correo Electrónico (Gmail)</label>
-                            <input type="email" id="usrEmail" placeholder="tucorreo@gmail.com" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Nueva Contraseña (Opcional)</label>
-                            <input type="password" id="usrPassword" placeholder="Dejar en blanco para mantener la actual">
-                        </div>
-                        <button type="submit" class="btn-primary">Actualizar Credenciales</button>
-                    </form>
-                </div>
-
-                <!-- 14. Suscripciones -->
-                <div id="sec-suscripciones" class="tab-section">
-                    <h2>Suscripciones</h2>
-                    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 6px; border: 1px solid #e0e0e0;">
-                        <h3>Plan Gratuito</h3>
-                        <p style="color: #666; font-size: 0.9rem; margin: 0.5rem 0 1rem 0;">Actualmente estás disfrutando de GesPyme en su versión libre y gratuita.</p>
-                        <button class="btn-primary" style="margin-top: 0;" onclick="window.location.href='subscription.html'">Actualizar Plan</button>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <script>
-        let plantillaActual = localStorage.getItem('gespyme_plantilla_activa') || 'default';
-
-        function seleccionarPlantilla(nombre) {
-            plantillaActual = nombre;
-            document.querySelectorAll('.template-card').forEach(card => {
-                card.classList.remove('selected');
-            });
-            let cardElem = document.getElementById('card-' + nombre);
-            if(cardElem) cardElem.classList.add('selected');
-        }
-
-        function guardarPlantillaSeleccionada() {
-            localStorage.setItem('gespyme_plantilla_activa', plantillaActual);
-            alert('¡Plantilla de factura guardada y aplicada con éxito!');
-        }
-
-        function actualizarCredencialesUsuario(event) {
-            event.preventDefault();
-            let nuevoNombre = document.getElementById('usrNombre').value;
-            let nuevoEmail = document.getElementById('usrEmail').value;
-            let nuevaPass = document.getElementById('usrPassword').value;
-
-            if (nuevoNombre) {
-                localStorage.setItem('gespyme_usuario', nuevoNombre);
-                document.getElementById("userProfileDisplay").innerHTML = `👤 ${nuevoNombre}`;
-            }
-            if (nuevoEmail) {
-                localStorage.setItem('gespyme_email', nuevoEmail);
-            }
-            if (nuevaPass) {
-                localStorage.setItem('gespyme_password', nuevaPass);
-                alert('¡Contraseña y credenciales actualizadas con éxito!');
-            } else {
-                alert('¡Datos de usuario guardados con éxito!');
-            }
-        }
-
-        function obtenerPlanActual() {
-            return localStorage.getItem("gespyme_plan") || "free";
-        }
-
-        function verificarRestriccionModulo(modulo) {
-            let planKey = obtenerPlanActual();
-            if (planKey === 'free') {
-                let nombresModulos = {
-                    'facturas': 'Facturación',
-                    'notas': 'Notas de Crédito',
-                    'ordenes': 'Órdenes de Servicio',
-                    'pagos': 'Gestión de Pagos'
-                };
-                document.getElementById("pro-message").innerHTML = `El módulo de <strong>${nombresModulos[modulo]}</strong> está reservado para planes superiores.<br><br>Actualiza tu suscripción para desbloquearlo.`;
-                document.getElementById("pro-modal").style.display = "flex";
-                return;
-            }
-            alert(`¡Acceso concedido al módulo de ${modulo}!`);
-        }
-
-        function cerrarModalPro() {
-            document.getElementById("pro-modal").style.display = "none";
-        }
-
-        function mostrarSeccion(event, seccionId) {
-            event.preventDefault();
-            document.querySelectorAll('.tab-section').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.config-nav-item').forEach(el => el.classList.remove('active'));
-
-            document.getElementById(seccionId).classList.add('active');
-            event.currentTarget.classList.add('active');
-        }
-
-        function guardarDatosPago(event) {
-            event.preventDefault();
-            localStorage.setItem('gespyme_cbu', document.getElementById('pag_cbu').value);
-            localStorage.setItem('gespyme_crypto', document.getElementById('pag_crypto').value);
-            localStorage.setItem('gespyme_link', document.getElementById('pag_link').value);
-            alert('¡Datos de cobro guardados correctamente en este dispositivo!');
-        }
-
-        window.onload = function() {
-            let usuario = localStorage.getItem("gespyme_usuario");
-            let email = localStorage.getItem("gespyme_email");
-            
-            if (usuario) {
-                document.getElementById("userProfileDisplay").innerHTML = `<span>👤</span> ${usuario}`;
-                document.getElementById("usrNombre").value = usuario;
-            }
-            if (email) {
-                document.getElementById("usrEmail").value = email;
-            }
-
-            if(localStorage.getItem('gespyme_cbu')) document.getElementById('pag_cbu').value = localStorage.getItem('gespyme_cbu');
-            if(localStorage.getItem('gespyme_crypto')) document.getElementById('pag_crypto').value = localStorage.getItem('gespyme_crypto');
-            if(localStorage.getItem('gespyme_link')) document.getElementById('pag_link').value = localStorage.getItem('gespyme_link');
-
-            seleccionarPlantilla(plantillaActual);
-        };
-    </script>
-</body>
-</html>
+        .config-nav { background: white; border-radius: 8px
