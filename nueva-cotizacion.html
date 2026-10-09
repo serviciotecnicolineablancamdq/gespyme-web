@@ -13,29 +13,28 @@
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
         
-        html { height: 100%; }
-        body { 
+        html, body { 
             background-color: var(--bg-color); 
             color: var(--text-color); 
             display: flex; 
             min-height: 100vh; 
-            height: 100%;
-            margin: 0;
-            overflow-x: hidden;
+            overflow-x: hidden; 
+            overflow-y: auto; 
+            width: 100%; 
+            flex-direction: row; 
         }
         
-        /* Uso de aside en lugar de sidebar personalizado para evitar bloqueos en blanco */
-        aside.sidebar { 
+        sidebar { 
             width: 260px; background-color: var(--sidebar-bg); color: white; display: flex; flex-direction: column; 
-            position: fixed; height: 100%; top: 0; left: 0; z-index: 1000; 
+            position: fixed; height: 100vh; top: 0; left: 0; z-index: 1000; 
             transform: translateX(-100%); 
             transition: transform 0.3s ease;
         }
-        aside.sidebar.open { 
+        sidebar.open { 
             transform: translateX(0); 
         }
         .sidebar-brand { padding: 1.2rem; font-size: 1.1rem; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
-        .sidebar-menu { list-style: none; padding: 0.5rem 0; overflow-y: auto; flex: 1; }
+        .sidebar-menu { list-style: none; padding: 0.5rem 0; overflow-y: auto; flex: 1; max-height: calc(100vh - 160px); }
         .sidebar-menu li a { display: block; padding: 0.6rem 1.2rem; color: #b0c4de; text-decoration: none; font-size: 0.9rem; transition: 0.2s; }
         .sidebar-menu li.active a, .sidebar-menu li a:hover { background-color: rgba(255,255,255,0.1); color: white; }
         .sidebar-menu .sub-item { padding-left: 2.2rem; font-size: 0.85rem; }
@@ -46,10 +45,20 @@
             background: rgba(0,0,0,0.15);
         }
         .btn-hide-sidebar {
-            width: 100%; background: rgba(255, 255, 255, 0.1); color: #b0c4de;
-            border: 1px solid rgba(255, 255, 255, 0.2); padding: 0.5rem; border-radius: 4px;
-            cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 6px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            color: #b0c4de;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
+        .btn-hide-sidebar:hover { background: rgba(255, 255, 255, 0.2); color: white; }
         .sidebar-footer { padding: 0.6rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.8rem; color: #a0a0a0; text-align: center; }
 
         .menu-toggle {
@@ -58,69 +67,122 @@
         }
 
         .main-content { 
-            flex: 1; display: flex; flex-direction: column; width: 100%; min-height: 100vh; overflow-y: auto; 
+            flex: 1; display: flex; flex-direction: column; width: 100%; margin-left: 0; min-height: 100vh; 
         }
 
-        header { background: white; padding: 0.8rem 1.5rem; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+        header { background: white; padding: 0.8rem 1.5rem; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; }
         .user-profile { font-size: 0.9rem; color: #555; font-weight: 500; display: flex; align-items: center; gap: 8px; }
         
-        .container { padding: 2rem; max-width: 900px; width: 100%; margin: 0 auto; flex: 1; }
-        .form-card { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); margin-bottom: 2rem; }
-        .form-title { font-size: 1.2rem; font-weight: bold; color: #1a73e8; border-bottom: 2px solid #1a73e8; padding-bottom: 0.5rem; margin-bottom: 1.5rem; }
+        .container { padding: 2rem; max-width: 800px; width: 100%; margin: 0 auto; }
+        .panel-section { background: white; border-radius: 8px; padding: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .panel-section h2 { margin-bottom: 1.5rem; font-size: 1.3rem; color: #333; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
         
-        .form-group { display: flex; flex-direction: column; gap: 0.3rem; margin-bottom: 0.8rem; }
-        label { font-size: 0.85rem; font-weight: 600; color: #555; }
-        input, select, textarea { padding: 0.6rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.9rem; width: 100%; }
+        /* Estilo para la caja del logotipo */
+        .logo-upload-box {
+            width: 120px; height: 120px; border: 2px dashed #ccc; border-radius: 6px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            cursor: pointer; background: #fafafa; position: relative; overflow: hidden; text-align: center;
+            margin-bottom: 1.2rem; transition: 0.2s;
+        }
+        .logo-upload-box:hover { border-color: #1a73e8; background: #f0f4f8; }
+        .logo-upload-box img { width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0; left: 0; background: white; }
+        .logo-upload-box span { font-size: 0.75rem; color: #666; padding: 0.4rem; }
+
+        .form-group { margin-bottom: 1.2rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.9rem; color: #555; }
+        .form-group input, .form-group textarea { width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95rem; }
+        .form-group textarea { resize: vertical; height: 90px; }
+        
+        .form-actions { display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap; }
+        .btn-primary { background-color: #28a745; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-weight: 500; font-size: 0.95rem; }
+        .btn-primary:hover { background-color: #218838; }
+        .btn-secondary { background-color: #6c757d; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-weight: 500; text-decoration: none; display: inline-block; font-size: 0.95rem; }
+
+        @media print {
+            sidebar, header, .form-actions, .no-print { display: none !important; }
+            body { background: white; height: auto; overflow: visible; }
+            .main-content { overflow: visible; display: block !important; }
+            .container { padding: 0 !important; max-width: 100% !important; margin: 0 !important; }
+            .panel-section { box-shadow: none !important; padding: 0 !important; }
+            input, textarea { border: none !important; background: transparent !important; padding: 0 !important; }
+        }
     </style>
 </head>
 <body>
 
-    <aside class="sidebar" id="sidebarMenu">
-        <div class="sidebar-brand"><span>⚙️</span> GesPyme</div>
+    <!-- Menú Lateral -->
+    <sidebar id="sidebarMenu">
+        <div class="sidebar-brand">
+            <span>⚙️</span> GesPyme
+        </div>
         <ul class="sidebar-menu">
             <li><a href="index.html">Panel</a></li>
             <li><a href="clientes.html">Clientes</a></li>
             <li><a href="facturas.html">Facturas</a></li>
-            <li><a href="cotizaciones.html">Cotizaciones</a></li>
-            <li class="active"><a href="nueva-cotizacion.html" class="sub-item">Nueva cotización</a></li>
+            <li><a href="cotizaciones.html" class="active">Cotizaciones</a></li>
+            <li><a href="nueva-cotizacion.html" class="sub-item">Nueva cotización</a></li>
             <li><a href="articulos.html">Artículos</a></li>
+            <li><a href="informes.html">Informes</a></li>
+            <li><a href="herramientas.html">Herramientas</a></li>
             <li><a href="configuracion.html">Configuración</a></li>
             <li><a href="subscription.html" style="color: #ffd700;">Subscription Pro</a></li>
         </ul>
         <div class="sidebar-hide-section">
-            <button class="btn-hide-sidebar" onclick="toggleSidebar()"><span>◀</span> Ocultar Menú</button>
+            <button class="btn-hide-sidebar" onclick="toggleSidebar()">
+                <span>◀</span> Ocultar Menú
+            </button>
         </div>
-        <div class="sidebar-footer">GesPyme © 2026</div>
-    </aside>
+        <div class="sidebar-footer">
+            GesPyme © 2026
+        </div>
+    </sidebar>
 
+    <!-- Área Principal -->
     <div class="main-content">
         <header>
             <div style="display: flex; align-items: center; gap: 12px;">
                 <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
                 <span style="font-weight: bold; font-size: 1rem; color: #1a73e8;">Nueva Cotización</span>
             </div>
-            <div class="user-profile" id="userProfileDisplay"><span>👤 Mi Cuenta</span></div>
+            <div class="user-profile" id="userProfileDisplay">
+                <span>👤 Mi Cuenta</span>
+            </div>
         </header>
 
         <div class="container">
-            <div class="form-card">
-                <div class="form-title">Crear Nueva Cotización / Presupuesto</div>
-                <form onsubmit="event.preventDefault(); alert('Cotización guardada con éxito');">
+            <div class="panel-section">
+                <h2>
+                    <span>Crear Nueva Cotización / Presupuesto</span>
+                    <span style="font-size: 0.85rem; color: #666;" class="no-print">Nº COT-0001-00000045</span>
+                </h2>
+
+                <!-- Bloque para Añadir Logotipo -->
+                <div class="form-group no-print">
+                    <label>Logotipo de la Empresa</label>
+                    <div class="logo-upload-box" onclick="document.getElementById('input-logo').click()">
+                        <span id="logo-text">+ Añadir un logotipo</span>
+                        <img id="logo-preview" style="display: none;" alt="Logotipo">
+                    </div>
+                    <input type="file" id="input-logo" accept="image/*" style="display: none;" onchange="cargarLogotipo(event)">
+                </div>
+
+                <form onsubmit="event.preventDefault(); alert('Cotización guardada con éxito'); window.location.href='cotizaciones.html';">
                     <div class="form-group">
-                        <label>Cliente / Razón Social:</label>
+                        <label>Cliente / Razón Social</label>
                         <input type="text" placeholder="Nombre del cliente" required>
                     </div>
                     <div class="form-group">
-                        <label>Detalle o Descripción:</label>
-                        <textarea placeholder="Descripción del servicio o productos cotizados..." rows="4" required></textarea>
+                        <label>Detalle o Descripción</label>
+                        <textarea placeholder="Descripción del servicio o productos cotizados..." required></textarea>
                     </div>
                     <div class="form-group">
-                        <label>Monto Total ($):</label>
+                        <label>Monto Total ($)</label>
                         <input type="number" step="any" placeholder="0.00" required>
                     </div>
-                    <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
-                        <button type="submit" style="background-color: #28a745; color: white; border: none; padding: 0.7rem 1.5rem; border-radius: 4px; cursor: pointer; font-weight: 500;">Guardar Cotización</button>
-                        <a href="cotizaciones.html" style="background-color: #6c757d; color: white; border: none; padding: 0.7rem 1.5rem; border-radius: 4px; text-decoration: none; display: inline-block;">Cancelar</a>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">Guardar Cotización</button>
+                        <button type="button" class="btn-primary" onclick="window.print()" style="background-color: #1a73e8;">🖨️ Imprimir / PDF</button>
+                        <a href="cotizaciones.html" class="btn-secondary">Cancelar</a>
                     </div>
                 </form>
             </div>
@@ -130,11 +192,31 @@
     <script>
         function toggleSidebar() {
             let sidebar = document.getElementById("sidebarMenu");
-            if (sidebar) sidebar.classList.toggle("open");
+            if (sidebar) {
+                sidebar.classList.toggle("open");
+            }
         }
+
+        function cargarLogotipo(event) {
+            const archivo = event.target.files[0];
+            if (archivo) {
+                const lector = new FileReader();
+                lector.onload = function(e) {
+                    const preview = document.getElementById('logo-preview');
+                    const texto = document.getElementById('logo-text');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    texto.style.display = 'none';
+                }
+                lector.readAsDataURL(archivo);
+            }
+        }
+
         window.onload = function() {
             let usuario = localStorage.getItem("gespyme_usuario");
-            if (usuario) document.getElementById("userProfileDisplay").innerHTML = `<span>👤</span> ${usuario}`;
+            if (usuario) {
+                document.getElementById("userProfileDisplay").innerHTML = `<span>👤</span> ${usuario}`;
+            }
         };
     </script>
 </body>
