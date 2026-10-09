@@ -13,29 +13,25 @@
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
         
-        /* Scroll vertical fluido optimizado para Android */
         html, body { 
             background-color: var(--bg-color); 
             color: var(--text-color); 
             display: flex; 
             min-height: 100vh; 
             overflow-x: hidden; 
-            overflow-y: auto !important; 
+            overflow-y: auto; 
             width: 100%; 
             flex-direction: row; 
-            -webkit-overflow-scrolling: touch;
-            height: 100%;
         }
         
-        /* Menú lateral forzado a estar oculto por defecto en subpáginas móviles */
         sidebar { 
             width: 260px; background-color: var(--sidebar-bg); color: white; display: flex; flex-direction: column; 
             position: fixed; height: 100vh; top: 0; left: 0; z-index: 1000; 
-            transform: translateX(-100%) !important; 
+            transform: translateX(-100%); 
             transition: transform 0.3s ease;
         }
         sidebar.open { 
-            transform: translateX(0) !important; 
+            transform: translateX(0); 
         }
         .sidebar-brand { padding: 1.2rem; font-size: 1.1rem; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
         .sidebar-menu { list-style: none; padding: 0.5rem 0; overflow-y: auto; flex: 1; max-height: calc(100vh - 160px); }
@@ -43,7 +39,6 @@
         .sidebar-menu li.active a, .sidebar-menu li a:hover { background-color: rgba(255,255,255,0.1); color: white; }
         .sidebar-menu .sub-item { padding-left: 2.2rem; font-size: 0.85rem; }
         
-        /* Botón de ocultar menú en zona baja */
         .sidebar-hide-section {
             padding: 0.8rem 1.2rem;
             border-top: 1px solid rgba(255,255,255,0.1);
@@ -62,20 +57,17 @@
             align-items: center;
             justify-content: center;
             gap: 6px;
-            transition: 0.2s;
         }
         .btn-hide-sidebar:hover { background: rgba(255, 255, 255, 0.2); color: white; }
         .sidebar-footer { padding: 0.6rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.8rem; color: #a0a0a0; text-align: center; }
 
-        /* Botón hamburguesa superior */
         .menu-toggle {
             background: var(--sidebar-bg); color: white; border: none;
             padding: 0.5rem 0.8rem; border-radius: 4px; font-size: 1.2rem; cursor: pointer; z-index: 1001;
         }
 
-        /* Contenido principal ocupando todo el ancho */
         .main-content { 
-            flex: 1; display: flex; flex-direction: column; width: 100%; margin-left: 0 !important; min-height: 100vh; 
+            flex: 1; display: flex; flex-direction: column; width: 100%; margin-left: 0; min-height: 100vh; 
         }
 
         header { background: white; padding: 0.8rem 1.5rem; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; }
@@ -83,20 +75,166 @@
         
         .container { padding: 2rem; max-width: 1200px; width: 100%; margin: 0 auto; }
         .panel-section { background: white; border-radius: 8px; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 2rem; }
-        .panel-section h2 { margin-bottom: 1rem; font-size: 1.3rem; color: #333; }
+        .panel-section h2 { margin-bottom: 1rem; font-size: 1.1rem; color: #333; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
         
         .filters-bar { display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; align-items: center; justify-content: space-between; }
-        .filters-left { display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; flex: 1; }
         .filters-bar select, .filters-bar input { padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.9rem; width: 100%; max-width: 250px; }
         
-        .btn-primary { background-color: #28a745; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-weight: 500; text-decoration: none; display: inline-block; font-size: 0.9rem; }
+        .btn-primary { background-color: #28a745; color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 4px; cursor: pointer; font-weight: 500; text-decoration: none; display: inline-block; font-size: 0.9rem; }
         .btn-primary:hover { background-color: #218838; }
         
         table { width: 100%; border-collapse: collapse; text-align: left; margin-top: 1rem; }
         th, td { padding: 0.75rem; border-bottom: 1px solid #eee; font-size: 0.9rem; }
         th { background-color: #f8f9fa; color: #5f6368; }
 
-        /* Estilo para el modal / formulario de registrar pago */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000; padding: 15px; overflow-y: auto; }
-        .modal-box { background: white; padding: 2rem; border-radius: 8px; width: 100%; max-width: 500px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); max-height: 90vh; overflow-y: auto; position: relative; }
-        .modal-box h3 { margin-bottom: 1rem; font-size: 1.2rem; border-bottom: 1px solid #eee; padding-bottom: 0.5rem
+        #pro-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6); display: none; justify-content: center; align-items: center; z-index: 10000; padding: 15px;
+        }
+        .pro-card {
+            background: white; padding: 2.5rem; border-radius: 12px; width: 90%; max-width: 420px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3); text-align: center; position: relative; border-top: 5px solid #ff9800;
+        }
+        .pro-card h2 { color: #d97706; margin-bottom: 0.5rem; font-size: 1.4rem; border: none; padding: 0; }
+        .pro-card p { color: #555; font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.4; }
+        .pro-btn {
+            background-color: #28a745; color: white; border: none; padding: 0.8rem 1.5rem;
+            border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; width: 100%;
+        }
+        .close-modal { position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #888; }
+    </style>
+</head>
+<body>
+
+    <div id="pro-modal">
+        <div class="pro-card">
+            <button class="close-modal" onclick="cerrarModalPro()">×</button>
+            <h2>⭐ Función Exclusiva</h2>
+            <p id="pro-message">Este módulo está reservado para planes superiores.</p>
+            <a href="subscription.html" class="pro-btn">Ver Planes y Actualizar</a>
+        </div>
+    </div>
+
+    <!-- Menú Lateral -->
+    <sidebar id="sidebarMenu">
+        <div class="sidebar-brand"><span>⚙️</span> GesPyme</div>
+        <ul class="sidebar-menu">
+            <li><a href="index.html">Panel</a></li>
+            <li><a href="clientes.html">Clientes</a></li>
+            <li><a href="facturas.html" onclick="return verificarRestriccionModulo('facturas', event)">Facturas</a></li>
+            <li><a href="facturas.html" onclick="return verificarRestriccionModulo('facturas', event)" class="sub-item">Nueva factura</a></li>
+            <li><a href="cotizaciones.html">Cotizaciones</a></li>
+            <li><a href="nueva-cotizacion.html" class="sub-item">Nueva cotización</a></li>
+            <li><a href="notas-credito.html" onclick="return verificarRestriccionModulo('notas', event)">Notas de crédito</a></li>
+            <li><a href="orden-servicio.html" onclick="return verificarRestriccionModulo('ordenes', event)">Orden de Servicio</a></li>
+            <li><a href="nueva-orden-servicio.html" onclick="return verificarRestriccionModulo('ordenes', event)" class="sub-item">Nueva orden</a></li>
+            <li class="active"><a href="pagos.html" onclick="return verificarRestriccionModulo('pagos', event)">Pagos</a></li>
+            <li><a href="reembolsos.html">Reembolsos</a></li>
+            <li><a href="articulos.html">Artículos</a></li>
+            <li><a href="informes.html">Informes</a></li>
+            <li><a href="herramientas.html">Herramientas</a></li>
+            <li><a href="configuracion.html">Configuración</a></li>
+            <li><a href="subscription.html" style="color: #ffd700;">Subscription Pro</a></li>
+        </ul>
+        <div class="sidebar-hide-section">
+            <button class="btn-hide-sidebar" onclick="toggleSidebar()"><span>◀</span> Ocultar Menú</button>
+        </div>
+        <div class="sidebar-footer">GesPyme © 2026</div>
+    </sidebar>
+
+    <!-- Área Principal -->
+    <div class="main-content">
+        <header>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+                <span style="font-weight: bold; font-size: 1rem; color: #1a73e8;">Gestión de Pagos</span>
+            </div>
+            <div class="user-profile" id="userProfileDisplay">
+                <span>👤 Mi Cuenta</span>
+            </div>
+        </header>
+
+        <div class="container">
+            <div class="panel-section">
+                <h2>
+                    <span>Historial de Pagos y Cobros</span>
+                    <a href="#" class="btn-primary" onclick="return verificarRestriccionModulo('pagos', event)">+ Registrar Pago</a>
+                </h2>
+                
+                <div class="filters-bar">
+                    <select><option>Período: Todos</option></select>
+                    <input type="text" placeholder="Buscar por cliente, referencia...">
+                </div>
+
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Nº Recibo</th>
+                                <th>Cliente</th>
+                                <th>Método</th>
+                                <th>Referencia</th>
+                                <th>Importe</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="7" style="text-align: center; color: #70757a; padding: 2rem;">No se han encontrado pagos registrados.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            let sidebar = document.getElementById("sidebarMenu");
+            if (sidebar) sidebar.classList.toggle("open");
+        }
+
+        function obtenerPlanActual() {
+            return localStorage.getItem("gespyme_plan") || "free";
+        }
+
+        function verificarRestriccionModulo(modulo, event) {
+            if (localStorage.getItem("gespyme_modo_dev") === "true") return true;
+            if (event) event.preventDefault();
+            let planKey = obtenerPlanActual();
+            if (planKey === 'free') {
+                let nombresModulos = {
+                    'facturas': 'Facturación',
+                    'notas': 'Notas de Crédito',
+                    'ordenes': 'Órdenes de Servicio',
+                    'pagos': 'Gestión de Pagos'
+                };
+                document.getElementById("pro-message").innerHTML = `El módulo de <strong>${nombresModulos[modulo] || modulo}</strong> está reservado para planes superiores.<br><br>Actualiza tu suscripción para desbloquearlo.`;
+                document.getElementById("pro-modal").style.display = "flex";
+                return false;
+            }
+            alert(`¡Acceso concedido al módulo de ${modulo}!`);
+            return true;
+        }
+
+        function cerrarModalPro() {
+            document.getElementById("pro-modal").style.display = "none";
+            if (obtenerPlanActual() === 'free' && localStorage.getItem("gespyme_modo_dev") !== "true") {
+                window.location.href = 'index.html';
+            }
+        }
+
+        window.onload = function() {
+            let usuario = localStorage.getItem("gespyme_usuario");
+            if (usuario) document.getElementById("userProfileDisplay").innerHTML = `<span>👤</span> ${usuario}`;
+
+            if (localStorage.getItem("gespyme_modo_dev") !== "true" && obtenerPlanActual() === 'free') {
+                document.getElementById("pro-message").innerHTML = `El módulo de <strong>Gestión de Pagos</strong> está reservado para planes superiores.<br><br>Actualiza tu suscripción para desbloquearlo.`;
+                document.getElementById("pro-modal").style.display = "flex";
+            }
+        };
+    </script>
+</body>
+</html>
