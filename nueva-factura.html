@@ -27,14 +27,15 @@
             height: 100%;
         }
         
-        /* Menú lateral adaptado para móviles (oculto por defecto en celular) */
+        /* Menú lateral forzado a estar oculto por defecto en subpáginas móviles */
         sidebar { 
             width: 260px; background-color: var(--sidebar-bg); color: white; display: flex; flex-direction: column; 
-            position: fixed; height: 100vh; top: 0; left: 0; z-index: 1000; transition: transform 0.3s ease;
-            transform: translateX(-100%); /* Oculto por defecto en móvil para no tapar la pantalla */
+            position: fixed; height: 100vh; top: 0; left: 0; z-index: 1000; 
+            transform: translateX(-100%) !important; /* Forzamos que siempre inicie cerrado */
+            transition: transform 0.3s ease;
         }
         sidebar.open { 
-            transform: translateX(0); /* Se muestra cuando se abre */
+            transform: translateX(0) !important; /* Se abre únicamente al pulsar el botón */
         }
         .sidebar-brand { padding: 1.2rem; font-size: 1.1rem; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
         .sidebar-menu { list-style: none; padding: 0.5rem 0; overflow-y: auto; flex: 1; max-height: calc(100vh - 160px); }
@@ -72,11 +73,9 @@
             padding: 0.5rem 0.8rem; border-radius: 4px; font-size: 1.2rem; cursor: pointer; z-index: 1001;
         }
 
-        /* Contenido principal */
-        .main-content { flex: 1; display: flex; flex-direction: column; width: 100%; margin-left: 0; min-height: 100vh; }
-        @media (min-width: 768px) {
-            .main-content { margin-left: 260px; }
-            sidebar { transform: translateX(0); } /* Visible por defecto en escritorio */
+        /* Contenido principal ocupando todo el ancho libre */
+        .main-content { 
+            flex: 1; display: flex; flex-direction: column; width: 100%; margin-left: 0 !important; min-height: 100vh; 
         }
 
         header { background: white; padding: 0.8rem 1.5rem; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; }
@@ -167,7 +166,7 @@
         </div>
     </div>
 
-    <!-- Menú Lateral Oculto por defecto en Celular -->
+    <!-- Menú Lateral Forzado a Iniciar Cerrado -->
     <sidebar id="sidebarMenu">
         <div class="sidebar-brand">
             <span>⚙</span> GesPyme
