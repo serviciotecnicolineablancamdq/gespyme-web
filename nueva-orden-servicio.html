@@ -12,380 +12,45 @@
             --bg-color: #f4f6f9;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-color); display: flex; height: 100vh; overflow: hidden; }
         
-        /* Menú lateral */
-        sidebar { width: 250px; background-color: var(--sidebar-bg); color: white; display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; }
+        /* Scroll vertical fluido optimizado para Android */
+        html, body { 
+            background-color: var(--bg-color); 
+            color: var(--text-color); 
+            display: flex; 
+            min-height: 100vh; 
+            overflow-x: hidden; 
+            overflow-y: auto !important; 
+            width: 100%; 
+            flex-direction: row; 
+            -webkit-overflow-scrolling: touch;
+            height: 100%;
+        }
+        
+        /* Menú lateral forzado a estar oculto por defecto en subpáginas móviles */
+        sidebar { 
+            width: 260px; background-color: var(--sidebar-bg); color: white; display: flex; flex-direction: column; 
+            position: fixed; height: 100vh; top: 0; left: 0; z-index: 1000; 
+            transform: translateX(-100%) !important; 
+            transition: transform 0.3s ease;
+        }
+        sidebar.open { 
+            transform: translateX(0) !important; 
+        }
         .sidebar-brand { padding: 1.2rem; font-size: 1.1rem; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
-        .sidebar-menu { list-style: none; padding: 0.5rem 0; flex: 1; }
+        .sidebar-menu { list-style: none; padding: 0.5rem 0; overflow-y: auto; flex: 1; max-height: calc(100vh - 160px); }
         .sidebar-menu li a { display: block; padding: 0.6rem 1.2rem; color: #b0c4de; text-decoration: none; font-size: 0.9rem; transition: 0.2s; }
         .sidebar-menu li.active a, .sidebar-menu li a:hover { background-color: rgba(255,255,255,0.1); color: white; }
         .sidebar-menu .sub-item { padding-left: 2.2rem; font-size: 0.85rem; }
-        .sidebar-footer { padding: 1rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.8rem; color: #a0a0a0; text-align: center; }
-
-        /* Contenido principal */
-        .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
-        header { background: white; padding: 0.8rem 2rem; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: flex-end; align-items: center; }
-        .user-profile { font-size: 0.9rem; color: #555; font-weight: 500; display: flex; align-items: center; gap: 8px; }
         
-        .container { padding: 2rem; max-width: 900px; width: 100%; margin: 0 auto; }
-        
-        /* Formulario y Tarjetas */
-        .form-card { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); margin-bottom: 2rem; }
-        .form-title { font-size: 1.2rem; font-weight: bold; color: #1a73e8; border-bottom: 2px solid #1a73e8; padding-bottom: 0.5rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
-        
-        .section-heading { font-size: 0.95rem; font-weight: bold; color: #333; background: #f8f9fa; padding: 0.5rem 0.8rem; border-left: 3px solid #1a73e8; margin: 1.5rem 0 1rem 0; text-transform: uppercase; }
-
-        /* Estilo para la caja del logotipo */
-        .logo-upload-box {
-            width: 130px; height: 130px; border: 2px dashed #ccc; border-radius: 6px;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            cursor: pointer; background: #fafafa; position: relative; overflow: hidden; text-align: center;
-            margin-bottom: 1.5rem; transition: 0.2s;
+        /* Botón de ocultar menú en zona baja */
+        .sidebar-hide-section {
+            padding: 0.8rem 1.2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.15);
         }
-        .logo-upload-box:hover { border-color: #1a73e8; background: #f0f4f8; }
-        .logo-upload-box img { width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0; left: 0; background: white; }
-        .logo-upload-box span { font-size: 0.8rem; color: #666; padding: 0.5rem; }
-
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
-        .form-group { display: flex; flex-direction: column; gap: 0.3rem; margin-bottom: 0.8rem; }
-        .form-group.full { grid-column: span 2; }
-        label { font-size: 0.85rem; font-weight: 600; color: #555; }
-        input, select, textarea { padding: 0.6rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.9rem; width: 100%; }
-        textarea { resize: vertical; min-height: 80px; }
-
-        /* Tabla de ítems */
-        table.items-table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; margin-bottom: 1rem; font-size: 0.88rem; }
-        table.items-table th, table.items-table td { padding: 0.6rem; border-bottom: 1px solid #ddd; text-align: left; }
-        table.items-table th { background-color: #1a73e8; color: white; font-weight: 500; }
-        
-        .btn-action { background-color: #1a73e8; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: 500; }
-        .btn-action:hover { background-color: #1558b0; }
-        .btn-danger { background-color: #dc3545; color: white; border: none; padding: 0.3rem 0.6rem; border-radius: 4px; cursor: pointer; }
-        .btn-danger:hover { background-color: #c82333; }
-
-        .totals-section { display: flex; flex-direction: column; align-items: flex-end; margin-top: 1rem; font-size: 0.95rem; gap: 0.4rem; }
-        .total-row { display: flex; justify-content: space-between; width: 280px; }
-        .total-row.final { font-weight: bold; font-size: 1.1rem; border-top: 2px solid #1a73e8; padding-top: 0.4rem; color: #1a73e8; }
-
-        .actions-bar { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem; }
-        .btn-secondary { background-color: #6c757d; color: white; border: none; padding: 0.7rem 1.5rem; border-radius: 4px; cursor: pointer; text-decoration: none; font-weight: 500; }
-        .btn-secondary:hover { background-color: #5a6268; }
-
-        /* Modal de Restricción de Planes */
-        #pro-modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.6); display: none; justify-content: center; align-items: center; z-index: 10000;
-        }
-        .pro-card {
-            background: white; padding: 2.5rem; border-radius: 12px; width: 90%; max-width: 420px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.3); text-align: center; position: relative; border-top: 5px solid #ff9800;
-        }
-        .pro-card h2 { color: #d97706; margin-bottom: 0.5rem; font-size: 1.4rem; border: none; padding: 0; }
-        .pro-card p { color: #555; font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.4; }
-        .pro-btn {
-            background-color: #28a745; color: white; border: none; padding: 0.8rem 1.5rem;
-            border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; width: 100%;
-        }
-        .close-modal { position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #888; }
-
-        /* Estilos de Impresión PDF limpios */
-        @media print {
-            sidebar, header, .actions-bar, .btn-action, .btn-danger, .no-print, #pro-modal { display: none !important; }
-            body { background: white; height: auto; overflow: visible; margin: 0; padding: 0; }
-            .main-content { overflow: visible; display: block !important; position: static !important; }
-            .container { padding: 0 !important; max-width: 100% !important; margin: 0 !important; width: 100% !important; }
-            .form-card { box-shadow: none !important; padding: 0 !important; margin: 0 !important; }
-            input, select, textarea { border: none !important; background: transparent !important; padding: 0 !important; font-size: 0.9rem !important; }
-        }
-    </style>
-</head>
-<body>
-
-    <!-- MODAL DE RESTRICCIÓN DE PLANES -->
-    <div id="pro-modal">
-        <div class="pro-card">
-            <button class="close-modal" onclick="cerrarModalPro()">×</button>
-            <h2>⭐ Función Exclusiva</h2>
-            <p id="pro-message">Este módulo está reservado para planes superiores.</p>
-            <a href="subscription.html" class="pro-btn">Ver Planes y Actualizar</a>
-        </div>
-    </div>
-
-    <!-- Menú Lateral -->
-    <sidebar>
-        <div class="sidebar-brand"><span>⚙️</span> GesPyme</div>
-        <ul class="sidebar-menu">
-            <li><a href="index.html">Panel</a></li>
-            <li><a href="clientes.html">Clientes</a></li>
-            <li><a href="facturas.html" onclick="return verificarRestriccionModulo('facturas', event)">Facturas</a></li>
-            <li><a href="facturas.html" onclick="return verificarRestriccionModulo('facturas', event)" class="sub-item">Nueva factura</a></li>
-            <li><a href="cotizaciones.html">Cotizaciones</a></li>
-            <li><a href="nueva-cotizacion.html" class="sub-item">Nueva cotización</a></li>
-            <li><a href="notas-credito.html" onclick="return verificarRestriccionModulo('notas', event)">Notas de crédito</a></li>
-            <li><a href="orden-servicio.html" onclick="return verificarRestriccionModulo('ordenes', event)">Orden de Servicio</a></li>
-            <li class="active"><a href="nueva-orden-servicio.html" onclick="return verificarRestriccionModulo('ordenes', event)" class="sub-item">Nueva orden</a></li>
-            <li><a href="pagos.html" onclick="return verificarRestriccionModulo('pagos', event)">Pagos</a></li>
-            <li><a href="reembolsos.html">Reembolsos</a></li>
-            <li><a href="articulos.html">Artículos</a></li>
-            <li><a href="informes.html">Informes</a></li>
-            <li><a href="herramientas.html">Herramientas</a></li>
-            <li><a href="configuracion.html">Configuración</a></li>
-            <li><a href="subscription.html" style="color: #ffd700;">Subscription Pro</a></li>
-        </ul>
-        <div class="sidebar-footer">GesPyme © 2026</div>
-    </sidebar>
-
-    <!-- Área Principal -->
-    <div class="main-content">
-        <header>
-            <div class="user-profile" id="userProfileDisplay">
-                <span>👤 Mi Cuenta</span>
-            </div>
-        </header>
-
-        <div class="container">
-            <div class="form-card">
-                
-                <div class="form-title">
-                    <span>Nueva Orden de Servicio Técnico / Diagnóstico</span>
-                    <span style="font-size: 0.85rem; color: #666;" class="no-print">Nº 0004-00018944</span>
-                </div>
-
-                <!-- Bloque para Añadir Logotipo -->
-                <div class="form-group no-print">
-                    <label>Logotipo de la Empresa</label>
-                    <div class="logo-upload-box" onclick="document.getElementById('input-logo').click()">
-                        <span id="logo-text">+ Añadir un logotipo</span>
-                        <img id="logo-preview" style="display: none;" alt="Logotipo">
-                    </div>
-                    <input type="file" id="input-logo" accept="image/*" style="display: none;" onchange="cargarLogotipo(event)">
-                </div>
-
-                <!-- Información del Servicio y Locación -->
-                <div class="section-heading">Información del Servicio y Locación</div>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Solicitante / Inquilino:</label>
-                        <input type="text" id="solicitante" value="BINETTI ANTI">
-                    </div>
-                    <div class="form-group">
-                        <label>Destinatario (Propietario / Administración):</label>
-                        <input type="text" id="destinatario" placeholder="Nombre del Dueño / Administración">
-                    </div>
-                    <div class="form-group">
-                        <label>Domicilio del Servicio:</label>
-                        <input type="text" id="domicilio" value="LAS HERAS 2237">
-                    </div>
-                    <div class="form-group">
-                        <label>Localidad:</label>
-                        <input type="text" id="localidad" value="Mar del Plata (Partido de General Pueyrredón)">
-                    </div>
-                </div>
-
-                <!-- Identificación del Equipo -->
-                <div class="section-heading">Identificación del Equipo (Propiedad del Inmueble)</div>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Artefacto:</label>
-                        <input type="text" id="artefacto" value="Termotanque Eléctrico de Acumulación">
-                    </div>
-                    <div class="form-group">
-                        <label>Marca:</label>
-                        <input type="text" id="marca" value="Escorial">
-                    </div>
-                    <div class="form-group">
-                        <label>Modelo:</label>
-                        <input type="text" id="modelo" value="EL-55">
-                    </div>
-                    <div class="form-group">
-                        <label>Especificaciones Técnicas:</label>
-                        <input type="text" id="especificaciones" value="Tensión 230V / Potencia 1500W">
-                    </div>
-                </div>
-
-                <!-- Dictamen Técnico e Informe de la Falla -->
-                <div class="section-heading">Dictamen Técnico e Informe de la Falla</div>
-                <div class="form-group full">
-                    <label>Informe de Concurrencia y Constatación:</label>
-                    <textarea id="informe-falla">A solicitud del inquilino/ocupante de la propiedad, se concurrió al domicilio referenciado para constatar la interrupción total de suministro de agua caliente y proceder a realizar la revisión estructural del termotanque eléctrico.
-
-Constatación de la Falla: Al realizar las pruebas de continuidad y aislamiento con multímetro digital sobre el bloque de potencia, se verificó una apertura completa (ruptura física y quemado) del filamento de la resistencia eléctrica blindada de 1500W, registrando ausencia total de conductividad y derivación a masa del termostato secundario.</textarea>
-                </div>
-                <div class="form-group full">
-                    <label>Causa del Deterioro (Desgaste Estructural / Garantía):</label>
-                    <textarea id="causa-deterioro">Se constató que el componente de calefacción llegó al final de su vida útil operativa debido a una severa degradación electroquímica. El ánodo de magnesio se encuentra completamente sacrificado y desgastado en un 100%. La falta prolongada de este elemento de protección propició la calcificación directa y la corrosión galvánica sobre el blindaje de cobre de la resistencia, derivando en su fisura, ingreso de agua al filamento y posterior destrucción irreversible.</textarea>
-                </div>
-                <div class="form-group full">
-                    <label>Acción Prescripta:</label>
-                    <textarea id="accion-prescripta">Para reestablecer las condiciones de habitabilidad y disponibilidad de agua caliente en la vivienda, se requiere el vaciado completo del tanque, apertura de la brida inferior, remoción de los residuos calcáreos internos y el reemplazo del kit de resistencia blindada junto con un nuevo ánodo de magnesio para asegurar la estanqueidad y preservación del tanque interior.</textarea>
-                </div>
-
-                <!-- Detalle de Materiales, Repuestos y Reparación -->
-                <div class="section-heading">Detalle de Materiales, Repuestos y Reparación</div>
-                <table class="items-table" id="tabla-items">
-                    <thead>
-                        <tr>
-                            <th style="width: 10%;">Cant.</th>
-                            <th style="width: 55%;">Descripción del Ítem / Servicio Requerido</th>
-                            <th style="width: 15%;">Unitario ($)</th>
-                            <th style="width: 15%;">Total ($)</th>
-                            <th style="width: 5%;" class="no-print">Acción</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><input type="number" value="1" style="text-align:center;" oninput="calcularTotales()"></td>
-                            <td><input type="text" value="Mano de Obra Especializada: Desconexión eléctrica y sanitaria segura, vaciado integral del tanque, desmontaje de brida inferior y pruebas de estanqueidad."></td>
-                            <td><input type="number" value="80000" oninput="calcularTotales()"></td>
-                            <td class="item-total">$80.000,00</td>
-                            <td class="no-print"><button type="button" class="btn-danger" onclick="eliminarFila(this)">X</button></td>
-                        </tr>
-                        <tr>
-                            <td><input type="number" value="1" style="text-align:center;" oninput="calcularTotales()"></td>
-                            <td><input type="text" value="Lote de Repuestos Obligatorios: Resistencia eléctrica blindada de 1500W original y ánodo de magnesio de alta capacidad."></td>
-                            <td><input type="number" value="80000" oninput="calcularTotales()"></td>
-                            <td class="item-total">$80.000,00</td>
-                            <td class="no-print"><button type="button" class="btn-danger" onclick="eliminarFila(this)">X</button></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <button type="button" class="btn-action no-print" onclick="agregarFila()">+ Agregar Ítem</button>
-
-                <!-- Totales -->
-                <div class="totals-section">
-                    <div class="total-row"><span>Subtotal Mano de Obra:</span><span id="subtotal-mo">$80.000,00</span></div>
-                    <div class="total-row"><span>Subtotal Repuestos:</span><span id="subtotal-rep">$80.000,00</span></div>
-                    <div class="total-row final"><span>Monto Total Presupuestado:</span><span id="monto-total">$160.000,00</span></div>
-                </div>
-
-                <!-- Nota Estructural / Garantía -->
-                <div class="form-group full" style="margin-top: 1.5rem;">
-                    <label>Nota de Carácter Estructural (Gasto de Conservación):</label>
-                    <textarea id="nota-legal" style="font-size: 0.8rem; min-height: 50px;">Se deja constancia de que los daños descritos pertenecen a los componentes de desgaste interno del artefacto empotrado y fijo de la propiedad. La rotura de la resistencia y el consumo total del ánodo responden al uso habitual y la acción química del agua a lo largo del tiempo, constituyendo una reparación de carácter estructural indispensable para mantener al valor venal del inmueble y garantizar los servicios básicos del locatario.</textarea>
-                </div>
-
-                <!-- Botones de Acción -->
-                <div class="actions-bar">
-                    <a href="orden-servicio.html" class="btn-secondary">Volver</a>
-                    <button type="button" class="btn-action" onclick="imprimirOrden()" style="background-color: #28a745; font-size: 1rem; padding: 0.7rem 2rem;">🖨️ Generar e Imprimir Orden PDF</button>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <script>
-        let logoDataUrl = "";
-
-        function cargarLogotipo(event) {
-            const archivo = event.target.files[0];
-            if (archivo) {
-                const lector = new FileReader();
-                lector.onload = function(e) {
-                    logoDataUrl = e.target.result;
-                    const preview = document.getElementById('logo-preview');
-                    const texto = document.getElementById('logo-text');
-                    preview.src = logoDataUrl;
-                    preview.style.display = 'block';
-                    texto.style.display = 'none';
-                }
-                lector.readAsDataURL(archivo);
-            }
-        }
-
-        function agregarFila() {
-            const tbody = document.querySelector('#tabla-items tbody');
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td><input type="number" value="1" style="text-align:center;" oninput="calcularTotales()"></td>
-                <td><input type="text" placeholder="Descripción del servicio o repuesto"></td>
-                <td><input type="number" value="0" oninput="calcularTotales()"></td>
-                <td class="item-total">$0,00</td>
-                <td class="no-print"><button type="button" class="btn-danger" onclick="eliminarFila(this)">X</button></td>
-            `;
-            tbody.appendChild(tr);
-            calcularTotales();
-        }
-
-        function eliminarFila(btn) {
-            const row = btn.closest('tr');
-            row.remove();
-            calcularTotales();
-        }
-
-        function calcularTotales() {
-            const filas = document.querySelectorAll('#tabla-items tbody tr');
-            let totalGeneral = 0;
-
-            filas.forEach(fila => {
-                const inputs = fila.querySelectorAll('input');
-                const cantidad = parseFloat(inputs[0].value) || 0;
-                const unitario = parseFloat(inputs[2].value) || 0;
-                const subtotal = cantidad * unitario;
-                totalGeneral += subtotal;
-                fila.querySelector('.item-total').textContent = '$' + subtotal.toLocaleString('es-AR', {minimumFractionDigits: 2});
-            });
-
-            document.getElementById('monto-total').textContent = '$' + totalGeneral.toLocaleString('es-AR', {minimumFractionDigits: 2});
-            document.getElementById('subtotal-mo').textContent = '$' + (totalGeneral / 2).toLocaleString('es-AR', {minimumFractionDigits: 2});
-            document.getElementById('subtotal-rep').textContent = '$' + (totalGeneral / 2).toLocaleString('es-AR', {minimumFractionDigits: 2});
-        }
-
-        function obtenerPlanActual() {
-            return localStorage.getItem("gespyme_plan") || "free";
-        }
-
-        function verificarRestriccionModulo(modulo, event) {
-            if (localStorage.getItem("gespyme_modo_dev") === "true") {
-                return true;
-            }
-
-            if (event) event.preventDefault();
-
-            let planKey = obtenerPlanActual();
-            if (planKey === 'free') {
-                let nombresModulos = {
-                    'facturas': 'Facturación',
-                    'notas': 'Notas de Crédito',
-                    'ordenes': 'Órdenes de Servicio',
-                    'pagos': 'Gestión de Pagos'
-                };
-                document.getElementById("pro-message").innerHTML = `El módulo de <strong>${nombresModulos[modulo] || modulo}</strong> está reservado para planes superiores.<br><br>Actualiza tu suscripción para desbloquearlo.`;
-                document.getElementById("pro-modal").style.display = "flex";
-                return false;
-            }
-            return true;
-        }
-
-        function cerrarModalPro() {
-            document.getElementById("pro-modal").style.display = "none";
-        }
-
-        function imprimirOrden() {
-            if (localStorage.getItem("gespyme_modo_dev") === "true") {
-                window.print();
-                return;
-            }
-
-            if (obtenerPlanActual() === 'free') {
-                verificarRestriccionModulo('ordenes');
-                return;
-            }
-            window.print();
-        }
-
-        window.onload = function() {
-            let usuario = localStorage.getItem("gespyme_usuario");
-            if (usuario) {
-                document.getElementById("userProfileDisplay").innerHTML = `<span>👤</span> ${usuario}`;
-            }
-
-            if (localStorage.getItem("gespyme_modo_dev") !== "true" && obtenerPlanActual() === 'free') {
-                document.getElementById("pro-message").innerHTML = `El módulo de <strong>Órdenes de Servicio</strong> está reservado para planes superiores.<br><br>Actualiza tu suscripción para desbloquearlo.`;
-                document.getElementById("pro-modal").style.display = "flex";
-            }
-        };
-    </script>
-</body>
-</html>
+        .btn-hide-sidebar {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            color: #b0c4de;
+            border: 1px solid rgba(255,
