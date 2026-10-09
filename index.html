@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GesPyme - Gestión Inteligente</title>
-    <!-- Enlace al manifiesto de la PWA -->
+    <!-- ENLACE CORREGIDO AL MANIFIESTO DE LA PWA -->
+    <!-- Usamos ./ para asegurar la ruta relativa correcta desde la subcarpeta -->
     <link rel="manifest" href="./manifest.json">
     <!-- SDK de EmailJS -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="text/javascript">
         (function() {
+            // Reemplaza con tu Public Key de EmailJS
             emailjs.init("QmQpltvvFAOghrfot");
         })();
     </script>
@@ -33,7 +35,7 @@
             .menu-toggle { display: inline-block; }
         }
 
-        /* Banner inferior flotante adaptado para no pisar el menú lateral en escritorio */
+        /* Banner inferior flotante */
         #welcome-banner {
             position: fixed;
             bottom: 0;
@@ -84,10 +86,10 @@
         }
         .close-modal { position: absolute; top: 12px; right: 15px; background: none; border: none; font-size: 1.4rem; cursor: pointer; color: #888; }
 
-        /* Contenedor principal de la app */
+        /* Contenedor principal */
         .app-wrapper { display: flex; width: 100%; flex: 1; position: relative; }
 
-        /* Menú Lateral Responsivo */
+        /* Menú Lateral */
         sidebar { 
             width: 260px; background-color: var(--sidebar-bg); color: white; display: flex; flex-direction: column; 
             position: fixed; height: 100vh; top: 0; left: 0; z-index: 1000; transition: transform 0.3s ease;
@@ -155,7 +157,7 @@
         </div>
     </div>
 
-    <!-- PANEL ADMIN MANUAL DE PLANES -->
+    <!-- PANEL ADMIN MANUAL -->
     <div id="admin-modal">
         <div class="admin-card" style="border-top: 5px solid #28a745;">
             <button class="close-modal" onclick="cerrarModalAdmin()">×</button>
@@ -177,7 +179,7 @@
         </div>
     </div>
 
-    <!-- MODAL DE RESTRICCIÓN DE PLANES -->
+    <!-- MODAL DE RESTRICCIÓN -->
     <div id="pro-modal">
         <div class="pro-card" style="border-top: 5px solid #ff9800;">
             <button class="close-modal" onclick="cerrarModalPro()">×</button>
@@ -212,7 +214,6 @@
                 <li><a href="subscription.html" style="color: #ffd700;">⭐ Subscription Pro</a></li>
                 <li><a href="#" onclick="abrirAdminModal(event)" style="color: #4ade80;">👑 Activar Plan (Admin)</a></li>
                 
-                <!-- Sección de Ayuda y Asistente GPT -->
                 <li style="margin-top: 0.8rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 0.5rem;"><a href="#" onclick="abrirAyudaModal()">❓ Ayuda</a></li>
                 <li><a href="#" onclick="abrirAyudaModal()">🛟 Asistencia</a></li>
                 <li><a href="#" onclick="abrirAyudaModal()">💡 Sugerencias</a></li>
@@ -239,7 +240,6 @@
 
             <div class="container">
                 
-                <!-- Crear -->
                 <div class="panel-section">
                     <h2>Crear</h2>
                     <div class="quick-actions">
@@ -270,7 +270,6 @@
                     </div>
                 </div>
 
-                <!-- Cotizaciones recientes -->
                 <div class="panel-section">
                     <h2>Cotizaciones Recientes</h2>
                     <div class="filters-bar">
@@ -300,7 +299,6 @@
                     </div>
                 </div>
 
-                <!-- Sección Inferior -->
                 <div class="bottom-grid">
                     <div class="panel-section" style="margin-bottom: 0;">
                         <h2>Límites de tu Plan Actual</h2>
@@ -320,7 +318,6 @@
 
             </div>
 
-            <!-- BANNER INFERIOR FLOTANTE -->
             <div id="welcome-banner">
                 <div class="banner-info">
                     <span>🚀</span>
@@ -335,20 +332,16 @@
             </div>
         </div>
 
-        <!-- Caja de Chat Inteligente (Estilo ChatGPT Local) -->
         <div id="chat-box-container" style="display: none; width: 320px; height: 420px; background: white; border-radius: 12px; box-shadow: 0 6px 24px rgba(0,0,0,0.25); flex-direction: column; overflow: hidden; border: 1px solid #e0e0e0; position: absolute; bottom: 60px; right: 0; z-index: 10005;">
-            <!-- Cabecera del Chat -->
             <div style="background: #1a73e8; color: white; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 0.95rem;">
                 <span>✨ Asistente GPT - GesPyme</span>
                 <button onclick="toggleChatIA()" style="background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer;">×</button>
             </div>
-            <!-- Cuerpo de Mensajes -->
             <div id="chat-messages" style="flex: 1; padding: 12px; overflow-y: auto; background: #f8f9fa; display: flex; flex-direction: column; gap: 10px; font-size: 0.85rem;">
                 <div style="background: #e2e8f0; padding: 8px 12px; border-radius: 8px; align-self: flex-start; max-width: 85%; color: #333;">
                     ¡Hola! Soy tu asistente virtual de GesPyme. ¿En qué te puedo ayudar hoy con tus facturas, cotizaciones o cuentas?
                 </div>
             </div>
-            <!-- Entrada de Texto -->
             <div style="padding: 10px; background: white; border-top: 1px solid #e0e0e0; display: flex; gap: 6px;">
                 <input type="text" id="chat-input" placeholder="Escribe tu consulta..." style="flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 6px; font-size: 0.85rem;" onkeypress="if(event.key === 'Enter') enviarMensajeIA()">
                 <button onclick="enviarMensajeIA()" style="background: #1a73e8; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: bold;">Enviar</button>
@@ -356,7 +349,6 @@
         </div>   
     </div>
 
-    <!-- MODAL DE AYUDA Y SOPORTE PROFESIONAL -->
     <div id="ayuda-modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); display: none; justify-content: center; align-items: center; z-index: 30000; padding: 15px;">
         <div style="background: white; padding: 2.5rem; border-radius: 12px; width: 100%; max-width: 480px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); position: relative; border-top: 5px solid #1a73e8; text-align: left;">
             <button onclick="cerrarAyudaModal()" style="position: absolute; top: 12px; right: 15px; background: none; border: none; font-size: 1.4rem; cursor: pointer; color: #888;">×</button>
@@ -372,7 +364,6 @@
         </div>
     </div>
 
-    <!-- Script de Lógica -->
     <script>
         const PLANES_LIMITES = {
             'free': { limite: 5, nombre: 'Plan Gratuito' },
@@ -395,15 +386,12 @@
             box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
         }
 
-        // Motor GPT local de alta fluidez y respuestas inteligentes
         function enviarMensajeIA() {
             const input = document.getElementById('chat-input');
             const texto = input.value.trim();
             if (!texto) return;
 
             const mensajes = document.getElementById('chat-messages');
-
-            // Mensaje del usuario
             const msgUser = document.createElement('div');
             msgUser.style.cssText = "background: #1a73e8; color: white; padding: 8px 12px; border-radius: 8px; align-self: flex-end; max-width: 85%; word-break: break-word;";
             msgUser.textContent = texto;
@@ -412,7 +400,6 @@
             input.value = "";
             mensajes.scrollTop = mensajes.scrollHeight;
 
-            // Simulación de escritura fluida
             setTimeout(() => {
                 let respuestaBot = "Entendido. Para gestionar eso en GesPyme, dirígete al módulo correspondiente desde el menú lateral o utiliza los accesos rápidos de la pantalla principal.";
                 let textoMinus = texto.toLowerCase();
@@ -431,236 +418,3 @@
                     respuestaBot = "Para crear facturas, cotizaciones u órdenes de servicio, puedes utilizar los accesos rápidos de la parte superior del panel o el menú lateral (sujeto a los límites de tu plan actual).";
                 } else if (textoMinus.includes('plan') || textoMinus.includes('precio') || textoMinus.includes('pro') || textoMinus.includes('limite') || textoMinus.includes('gratis')) {
                     let plan = obtenerPlanActual();
-                    let uso = obtenerUsoActual();
-                    let limite = PLANES_LIMITES[plan].limite;
-                    respuestaBot = `Actualmente te encuentras operando en el ${PLANES_LIMITES[plan].nombre} con un consumo de ${uso}/${limite} documentos. Puedes revisar los planes superiores en la sección "Subscription Pro" del menú lateral.`;
-                } else if (textoMinus.includes('ayuda') || textoMinus.includes('soporte') || textoMinus.includes('contacto') || textoMinus.includes('administrador') || textoMinus.includes('admin')) {
-                    respuestaBot = "Para recibir asistencia personalizada o comunicarte con el desarrollador, puedes abrir el 'Centro de Ayuda' desde el menú lateral o escribirnos a refrit234gonza@gmail.com.";
-                } else if (textoMinus.includes('para que sirve') || textoMinus.includes('aplicacion') || textoMinus.includes('gespyme')) {
-                    respuestaBot = "GesPyme es tu plataforma de gestión inteligente diseñada para optimizar facturas, cotizaciones, órdenes de servicio y control de clientes en tu negocio de forma rápida y profesional.";
-                }
-
-                const msgBot = document.createElement('div');
-                msgBot.style.cssText = "background: #e2e8f0; padding: 8px 12px; border-radius: 8px; align-self: flex-start; max-width: 85%; color: #333; word-break: break-word;";
-                msgBot.textContent = respuestaBot;
-                mensajes.appendChild(msgBot);
-                mensajes.scrollTop = mensajes.scrollHeight;
-            }, 500);
-        }
-
-        function abrirAyudaModal(event) {
-            if (event) event.preventDefault();
-            let modal = document.getElementById('ayuda-modal');
-            if (modal) {
-                modal.style.display = 'flex';
-            }
-        }
-
-        function cerrarAyudaModal() {
-            let modal = document.getElementById('ayuda-modal');
-            if (modal) {
-                modal.style.display = 'none';
-            }
-        }
-
-        function intentarActivarModoDev() {
-            let ahora = new Date().getTime();
-            if (ahora - tiempoUltimoClic > 1000) {
-                clicsDev = 1;
-            } else {
-                clicsDev++;
-            }
-            tiempoUltimoClic = ahora;
-
-            if (clicsDev >= 3) {
-                let modoActual = localStorage.getItem("gespyme_modo_dev") === "true";
-                localStorage.setItem("gespyme_modo_dev", !modoActual);
-                clicsDev = 0;
-                actualizarIndicadorModoDev();
-                
-                let nuevoEstado = !modoActual ? "ACTIVADO 🚀" : "DESACTIVADO";
-                alert(`Modo Desarrollador ${nuevoEstado}`);
-            }
-        }
-
-        function actualizarIndicadorModoDev() {
-            let esDev = localStorage.getItem("gespyme_modo_dev") === "true";
-            let marcaSide = document.getElementById("lblBrandTextSide");
-            let marcaBottom = document.getElementById("lblBrandTextBottom");
-            
-            let textoHtml = esDev ? "GesPyme <span style='color: #4ade80; font-size: 0.75rem;'>[DEV]</span>" : "GesPyme";
-            
-            if(marcaSide) marcaSide.innerHTML = textoHtml;
-            if(marcaBottom) marcaBottom.innerHTML = "⚙ " + textoHtml;
-        }
-
-        function obtenerPlanActual() {
-            return localStorage.getItem("gespyme_plan") || "free";
-        }
-
-        function obtenerUsoActual() {
-            let uso = localStorage.getItem("gespyme_uso_documentos");
-            return uso ? parseInt(uso) : 0;
-        }
-
-        function verificarRestriccionModuloLink(modulo, event) {
-            if (localStorage.getItem("gespyme_modo_dev") === "true") {
-                return true; 
-            }
-
-            if (event) event.preventDefault();
-
-            let planKey = obtenerPlanActual();
-            let usoActual = obtenerUsoActual();
-            
-            if (planKey === 'free' && (modulo === 'facturas' || modulo === 'notas' || modulo === 'ordenes' || modulo === 'pagos' || modulo === 'clientes' || modulo === 'reembolsos' || modulo === 'articulos' || modulo === 'informes' || modulo === 'herramientas' || modulo === 'configuracion')) {
-                let nombresModulos = {
-                    'facturas': 'Facturación',
-                    'notas': 'Notas de Crédito',
-                    'ordenes': 'Órdenes de Servicio',
-                    'pagos': 'Gestión de Pagos',
-                    'clientes': 'Clientes',
-                    'reembolsos': 'Reembolsos',
-                    'articulos': 'Artículos',
-                    'informes': 'Informes',
-                    'herramientas': 'Herramientas',
-                    'configuracion': 'Configuración'
-                };
-                document.getElementById("pro-message").innerHTML = `El módulo de <strong>${nombresModulos[modulo] || modulo}</strong> está reservado para planes superiores.<br><br>Actualiza tu suscripción para desbloquearlo.`;
-                document.getElementById("pro-modal").style.display = "flex";
-                return false;
-            }
-
-            let planInfo = PLANES_LIMITES[planKey] || PLANES_LIMITES['free'];
-            if (usoActual >= planInfo.limite) {
-                document.getElementById("pro-message").innerHTML = `Has alcanzado el límite de <strong>${planInfo.limite} documentos</strong> de tu <strong>${planInfo.nombre}</strong>.<br><br>Actualiza tu plan para continuar operando.`;
-                document.getElementById("pro-modal").style.display = "flex";
-                return false;
-            }
-
-            return true;
-        }
-
-        function abrirAdminModal(event) {
-            if (event) event.preventDefault();
-            let passwordAdmin = prompt("Introduce tu clave de Administrador:");
-            if (passwordAdmin === "admin123") {
-                let usuarioActual = localStorage.getItem("gespyme_usuario");
-                if(usuarioActual) {
-                    document.getElementById("adminClientEmail").value = usuarioActual;
-                }
-                document.getElementById("admin-modal").style.display = "flex";
-            } else if (passwordAdmin !== null) {
-                alert("Contraseña incorrecta.");
-            }
-        }
-
-        function cerrarModalAdmin() {
-            document.getElementById("admin-modal").style.display = "none";
-        }
-
-        function aplicarPlanManual() {
-            let clienteEmail = document.getElementById("adminClientEmail").value.trim();
-            let nuevoPlan = document.getElementById("selectNuevoPlan").value;
-
-            if(clienteEmail === "") {
-                alert("Por favor ingresa el correo del cliente.");
-                return;
-            }
-
-            let usuarioActual = localStorage.getItem("gespyme_usuario");
-            if(usuarioActual === clienteEmail || !usuarioActual) {
-                localStorage.setItem("gespyme_plan", nuevoPlan);
-            }
-
-            let templateParams = {
-                nombre: clienteEmail,
-                email: clienteEmail,
-                mensaje: `¡Pago confirmado!\nSe ha activado el plan: ${PLANES_LIMITES[nuevoPlan].nombre} para el cliente: ${clienteEmail}\nFecha: ${new Date().toLocaleString()}`,
-                title: "Confirmación de Pago y Activación de Plan - GesPyme"
-            };
-
-            emailjs.send('service_dz3lb36', 'template_khlwu4x', templateParams)
-                .then(function(response) {
-                    alert(`¡Plan actualizado a "${PLANES_LIMITES[nuevoPlan].nombre}" y correo enviado con éxito!`);
-                    cerrarModalAdmin();
-                    location.reload();
-                }, function(error) {
-                    alert(`El plan se actualizó, pero hubo un error al enviar el correo: ${JSON.stringify(error)}`);
-                    cerrarModalAdmin();
-                    location.reload();
-                });
-        }
-
-        function abrirModalRegistro() {
-            document.getElementById("auth-modal").style.display = "flex";
-        }
-
-        function cerrarModalRegistro() {
-            document.getElementById("auth-modal").style.display = "none";
-        }
-
-        function cerrarModalPro() {
-            document.getElementById("pro-modal").style.display = "none";
-        }
-
-        function registrarYAcceder() {
-            let email = document.getElementById("regEmail").value.trim();
-            let password = document.getElementById("regPassword").value.trim();
-
-            if (email === "" || password === "") {
-                alert("Por favor completa tu correo y contraseña.");
-                return;
-            }
-
-            localStorage.setItem("gespyme_usuario", email);
-            localStorage.setItem("gespyme_plan", "free");
-            if(!localStorage.getItem("gespyme_uso_documentos")) {
-                localStorage.setItem("gespyme_uso_documentos", "0");
-            }
-            
-            document.getElementById("welcome-banner").style.display = "none";
-            document.getElementById("auth-modal").style.display = "none";
-            
-            actualizarInterfazUsuario(email);
-            alert("¡Cuenta creada con éxito! Ya puedes operar con tu Plan Gratuito.");
-
-            let templateParams = {
-                nombre: email,
-                email: email,
-                mensaje: "Se ha registrado un nuevo usuario: " + email + "\nFecha: " + new Date().toLocaleString(),
-                title: "Nuevo Registro en GesPyme"
-            };
-            emailjs.send('service_dz3lb36', 'template_khlwu4x', templateParams);
-        }
-
-        function actualizarInterfazUsuario(email) {
-            let planKey = obtenerPlanActual();
-            let planInfo = PLANES_LIMITES[planKey];
-            let usoActual = obtenerUsoActual();
-
-            document.getElementById("lblUsuario").innerText = email;
-            document.getElementById("lblPlanBadge").innerText = `${planInfo.nombre} (${usoActual}/${planInfo.limite} usados)`;
-            document.getElementById("menuCerrarSesion").style.display = "block";
-        }
-
-        function cerrarSesion() {
-            if (confirm("¿Estás seguro de que deseas cerrar sesión?")) {
-                localStorage.removeItem("gespyme_usuario");
-                localStorage.removeItem("gespyme_plan");
-                localStorage.removeItem("gespyme_uso_documentos");
-                location.reload();
-            }
-        }
-
-        window.onload = function() {
-            actualizarIndicadorModoDev();
-            let usuarioGuardado = localStorage.getItem("gespyme_usuario");
-            if (usuarioGuardado) {
-                document.getElementById("welcome-banner").style.display = "none";
-                actualizarInterfazUsuario(usuarioGuardado);
-            }
-        };
-    </script>
-</body>
-</html>
