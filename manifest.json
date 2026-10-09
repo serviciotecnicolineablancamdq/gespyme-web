@@ -4,9 +4,9 @@
     "display": "standalone",
     "name": "GesPyme",
     "orientation": "any",
-    "scope": "/",
+    "scope": "/gespyme-web/",
     "short_name": "GesPyme",
-    "start_url": "/gespyme-web/",
+    "start_url": "/gespyme-web/index.html",
     "theme_color": "#2b3856",
     "description": "Plataforma de gestion inteligente para pymes",
     "lang": "es",
@@ -15,7 +15,7 @@
     ],
     "icons": [
         {
-            "src": "./192.png",
+            "src": "https://serviciotecnolineablancamdq.github.io/gespyme-web/192.png",
             "sizes": "192x192",
             "type": "image/png"
         }
