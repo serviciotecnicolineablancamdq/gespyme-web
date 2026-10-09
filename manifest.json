@@ -6,7 +6,7 @@
     "orientation": "any",
     "scope": "/",
     "short_name": "GesPyme",
-    "start_url": "/",
+    "start_url": "/gespyme-web/",
     "theme_color": "#2b3856",
     "description": "Plataforma de gestion inteligente para pymes",
     "lang": "es",
