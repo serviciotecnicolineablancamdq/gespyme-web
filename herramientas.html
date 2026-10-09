@@ -85,9 +85,35 @@
         .btn-action:hover { background-color: #1557b0; }
         .btn-danger { background-color: #dc3545; }
         .btn-danger:hover { background-color: #bd2130; }
+
+        /* Modal Pro */
+        #pro-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6); display: none; justify-content: center; align-items: center; z-index: 10000; padding: 15px;
+        }
+        .pro-card {
+            background: white; padding: 2.5rem; border-radius: 12px; width: 90%; max-width: 420px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3); text-align: center; position: relative; border-top: 5px solid #ff9800;
+        }
+        .pro-card h2 { color: #d97706; margin-bottom: 0.5rem; font-size: 1.4rem; border: none; padding: 0; }
+        .pro-card p { color: #555; font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.4; }
+        .pro-btn {
+            background-color: #28a745; color: white; border: none; padding: 0.8rem 1.5rem;
+            border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; width: 100%;
+        }
+        .close-modal { position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #888; }
     </style>
 </head>
 <body>
+
+    <div id="pro-modal">
+        <div class="pro-card">
+            <button class="close-modal" onclick="cerrarModalPro()">×</button>
+            <h2>⭐ Función Exclusiva</h2>
+            <p id="pro-message">El módulo de <strong>Herramientas</strong> está reservado para planes superiores.<br><br>Actualiza tu suscripción para desbloquearlo.</p>
+            <a href="subscription.html" class="pro-btn">Ver Planes y Actualizar</a>
+        </div>
+    </div>
 
     <!-- Menú Lateral -->
     <sidebar id="sidebarMenu">
@@ -99,8 +125,8 @@
             <li><a href="cotizaciones.html">Cotizaciones</a></li>
             <li><a href="pagos.html">Pagos</a></li>
             <li><a href="informes.html">Informes</a></li>
-            <li><a href="herramientas.html" class="active">Herramientas</a></li>
-            <li><a href="calculadora-margenes.html" class="sub-item">Calculadora de márgenes</a></li>
+            <li><a href="herramientas.html" onclick="return verificarRestriccionModulo('herramientas', event)" class="active">Herramientas</a></li>
+            <li><a href="calculadora-margenes.html" onclick="return verificarRestriccionModulo('herramientas', event)" class="sub-item">Calculadora de márgenes</a></li>
             <li><a href="configuracion.html">Configuración</a></li>
             <li><a href="subscription.html" style="color: #ffd700;">Subscription Pro</a></li>
         </ul>
@@ -128,7 +154,6 @@
                 <p class="subtitle">Utilidades técnicas y de mantenimiento para la gestión de datos de tu PyME.</p>
 
                 <div class="tool-grid">
-                    <!-- Herramienta 1: Respaldo -->
                     <div class="tool-card">
                         <div>
                             <h3>💾 Copia de Respaldo (Backup)</h3>
@@ -137,7 +162,6 @@
                         <a href="respaldo.html" class="btn-action">Gestionar Respaldo</a>
                     </div>
 
-                    <!-- Herramienta 2: Calculadora de Márgenes -->
                     <div class="tool-card">
                         <div>
                             <h3>🧮 Calculadora de Márgenes</h3>
@@ -146,7 +170,6 @@
                         <a href="calculadora-margenes.html" class="btn-action">Abrir Calculadora</a>
                     </div>
 
-                    <!-- Herramienta 3: Modo Desarrollador -->
                     <div class="tool-card">
                         <div>
                             <h3>🛠️ Modo Desarrollador / Pruebas</h3>
@@ -155,7 +178,6 @@
                         <button class="btn-action" onclick="let dev = localStorage.getItem('gespyme_modo_dev')==='true'; localStorage.setItem('gespyme_modo_dev', !dev); alert('Modo desarrollador ' + (!dev ? 'ACTIVADO' : 'DESACTIVADO')); location.reload();">Alternar Modo Dev</button>
                     </div>
 
-                    <!-- Herramienta 4: Limpieza de Caché -->
                     <div class="tool-card">
                         <div>
                             <h3>🧹 Limpieza de Datos Locales</h3>
@@ -174,9 +196,32 @@
             if (sidebar) sidebar.classList.toggle("open");
         }
 
+        function obtenerPlanActual() {
+            return localStorage.getItem("gespyme_plan") || "free";
+        }
+
+        function verificarRestriccionModulo(modulo, event) {
+            if (localStorage.getItem("gespyme_modo_dev") === "true") return true;
+            if (event) event.preventDefault();
+            let planKey = obtenerPlanActual();
+            if (planKey === 'free') {
+                document.getElementById("pro-modal").style.display = "flex";
+                return false;
+            }
+            return true;
+        }
+
+        function cerrarModalPro() {
+            document.getElementById("pro-modal").style.display = "none";
+        }
+
         window.onload = function() {
             let usuario = localStorage.getItem("gespyme_usuario");
             if (usuario) document.getElementById("userProfileDisplay").innerHTML = `<span>👤</span> ${usuario}`;
+
+            if (localStorage.getItem("gespyme_modo_dev") !== "true" && obtenerPlanActual() === 'free') {
+                document.getElementById("pro-modal").style.display = "flex";
+            }
         };
     </script>
 </body>
