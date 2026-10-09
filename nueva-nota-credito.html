@@ -75,8 +75,19 @@
         
         .container { padding: 2rem; max-width: 800px; width: 100%; margin: 0 auto; }
         .panel-section { background: white; border-radius: 8px; padding: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        .panel-section h2 { margin-bottom: 1.5rem; font-size: 1.3rem; color: #333; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; }
+        .panel-section h2 { margin-bottom: 1.5rem; font-size: 1.3rem; color: #333; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
         
+        /* Estilo para la caja del logotipo */
+        .logo-upload-box {
+            width: 120px; height: 120px; border: 2px dashed #ccc; border-radius: 6px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            cursor: pointer; background: #fafafa; position: relative; overflow: hidden; text-align: center;
+            margin-bottom: 1.2rem; transition: 0.2s;
+        }
+        .logo-upload-box:hover { border-color: #1a73e8; background: #f0f4f8; }
+        .logo-upload-box img { width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0; left: 0; background: white; }
+        .logo-upload-box span { font-size: 0.75rem; color: #666; padding: 0.4rem; }
+
         .form-group { margin-bottom: 1.2rem; }
         .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.9rem; color: #555; }
         .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95rem; }
@@ -102,6 +113,15 @@
             border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; width: 100%;
         }
         .close-modal { position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #888; }
+
+        @media print {
+            sidebar, header, .form-actions, .no-print, #pro-modal { display: none !important; }
+            body { background: white; height: auto; overflow: visible; }
+            .main-content { overflow: visible; display: block !important; }
+            .container { padding: 0 !important; max-width: 100% !important; margin: 0 !important; }
+            .panel-section { box-shadow: none !important; padding: 0 !important; }
+            input, textarea { border: none !important; background: transparent !important; padding: 0 !important; }
+        }
     </style>
 </head>
 <body>
@@ -157,7 +177,21 @@
 
         <div class="container">
             <div class="panel-section">
-                <h2>Emitir Nueva Nota de Crédito</h2>
+                <h2>
+                    <span>Emitir Nueva Nota de Crédito</span>
+                    <span style="font-size: 0.85rem; color: #666;" class="no-print">Nº NC-0001-00000125</span>
+                </h2>
+
+                <!-- Bloque para Añadir Logotipo -->
+                <div class="form-group no-print">
+                    <label>Logotipo de la Empresa</label>
+                    <div class="logo-upload-box" onclick="document.getElementById('input-logo').click()">
+                        <span id="logo-text">+ Añadir un logotipo</span>
+                        <img id="logo-preview" style="display: none;" alt="Logotipo">
+                    </div>
+                    <input type="file" id="input-logo" accept="image/*" style="display: none;" onchange="cargarLogotipo(event)">
+                </div>
+
                 <form onsubmit="event.preventDefault(); alert('Nota de crédito guardada con éxito'); window.location.href='notas-credito.html';">
                     <div class="form-group">
                         <label>Factura de Referencia / N.º de Comprobante</label>
@@ -177,6 +211,7 @@
                     </div>
                     <div class="form-actions">
                         <button type="submit" class="btn-primary">Emitir Nota de Crédito</button>
+                        <button type="button" class="btn-primary" onclick="window.print()" style="background-color: #1a73e8;">🖨️ Imprimir / PDF</button>
                         <a href="notas-credito.html" class="btn-secondary">Cancelar</a>
                     </div>
                 </form>
@@ -189,6 +224,21 @@
             let sidebar = document.getElementById("sidebarMenu");
             if (sidebar) {
                 sidebar.classList.toggle("open");
+            }
+        }
+
+        function cargarLogotipo(event) {
+            const archivo = event.target.files[0];
+            if (archivo) {
+                const lector = new FileReader();
+                lector.onload = function(e) {
+                    const preview = document.getElementById('logo-preview');
+                    const texto = document.getElementById('logo-text');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    texto.style.display = 'none';
+                }
+                lector.readAsDataURL(archivo);
             }
         }
 
