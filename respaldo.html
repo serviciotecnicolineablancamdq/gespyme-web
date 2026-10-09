@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GesPyme - Respaldo y Restauración</title>
+    <style>
+        :root {
+            --primary-color: #1a73e8;
+            --sidebar-bg: #2b3856;
+            --text-color: #333;
+            --bg-color: #f4f6f9;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+        
+        html, body { 
+            background-color: var(--bg-color); 
+            color: var(--text-color); 
+            display: flex; 
+            min-height: 100vh; 
+            overflow-x: hidden; 
+            overflow-y: auto; 
+            width: 100%; 
+            flex-direction: row; 
+        }
+        
+        sidebar { 
+            width: 260px; background-color: var(--sidebar-bg); color: white; display: flex; flex-direction: column; 
+            position: fixed; height: 100vh; top: 0; left: 0; z-index: 1000; 
+            transform: translateX(-100%); 
+            transition: transform 0.3s ease;
+        }
+        sidebar.open { transform: translateX(0); }
+        .sidebar-brand { padding: 1.2rem; font-size: 1.1rem; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
+        .sidebar-menu { list-style: none; padding: 0.5rem 0; overflow-y: auto; flex: 1; max-height: calc(100vh - 160px); }
+        .sidebar-menu li a { display: block; padding: 0.6rem 1.2rem; color: #b0c4de; text-decoration: none; font-size: 0.9rem; transition: 0.2s; }
+        .sidebar-menu li.active a, .sidebar-menu li a:hover { background-color: rgba(255,255,255,0.1); color: white; }
+        .sidebar-menu .sub-item { padding-left: 2.2rem; font-size: 0.85rem; }
+        
+        .sidebar-hide-section {
+            padding: 0.8rem 1.2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.15);
+        }
+        .btn-hide-sidebar {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            color: #b0c4de;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .btn-hide-sidebar:hover { background: rgba(255, 255, 255, 0.2); color: white; }
+        .sidebar-footer { padding: 0.6rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.8rem; color: #a0a0a0; text-align: center; }
+
+        .menu-toggle {
+            background: var(--sidebar-bg); color: white; border: none;
+            padding: 0.5rem 0.8rem; border-radius: 4px; font-size: 1.2rem; cursor: pointer; z-index: 1001;
+        }
+
+        .main-content { 
+            flex: 1; display: flex; flex-direction: column; width: 100%; margin-left: 0; min-height: 100vh; 
+        }
+
+        header { background: white; padding: 0.8rem 1.5rem; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; }
+        .user-profile { font-size: 0.9rem; color: #555; font-weight: 500; display: flex; align-items: center; gap: 8px; }
+        
+        .container { padding: 2rem; max-width: 800px; width: 100%; margin: 0 auto; }
+        .panel-section { background: white; border-radius: 8px; padding: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .panel-section h2 { margin-bottom: 1.2rem; font-size: 1.2rem; color: #333; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; }
+        .panel-section p.subtitle { font-size: 0.9rem; color: #666; margin-bottom: 1.5rem; }
+        
+        .backup-card { background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; }
+        .backup-card h3 { font-size: 1rem; color: #1a73e8; margin-bottom: 0.5rem; }
+        .backup-card p { font-size: 0.85rem; color: #666; margin-bottom: 1rem; }
+
+        .btn-primary { background-color: #1a73e8; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-weight: 500; font-size: 0.95rem; width: 100%; }
+        .btn-primary:hover { background-color: #1557b0; }
+        .btn-secondary { background-color: #6c757d; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-weight: 500; text-decoration: none; display: inline-block; font-size: 0.95rem; text-align: center; width: 100%; margin-top: 0.8rem; }
+        .btn-success { background-color: #28a745; }
+        .btn-success:hover { background-color: #218838; }
+
+        /* Modal Pro */
+        #pro-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6); display: none; justify-content: center; align-items: center; z-index: 10000; padding: 15px;
+        }
+        .pro-card {
+            background: white; padding: 2.5rem; border-radius: 12px; width: 90%; max-width: 420px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3); text-align: center; position: relative; border-top: 5px solid #ff9800;
+        }
+        .pro-card h2 { color: #d97706; margin-bottom: 0.5rem; font-size: 1.4rem; border: none; padding: 0; }
+        .pro-card p { color: #555; font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.4; }
+        .pro-btn {
+            background-color: #28a745; color: white; border: none; padding: 0.8rem 1.5rem;
+            border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; width: 100%;
+        }
+        .close-modal { position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #888; }
+    </style>
+</head>
+<body>
+
+    <div id="pro-modal">
+        <div class="pro-card">
+            <button class="close-modal" onclick="cerrarModalPro()">×</button>
+            <h2>⭐ Función Exclusiva</h2>
+            <p id="pro-message">El módulo de <strong>Respaldo de Datos</strong> está reservado para planes superiores.<br><br>Actualiza tu suscripción para desbloquearlo.</p>
+            <a href="subscription.html" class="pro-btn">Ver Planes y Actualizar</a>
+        </div>
+    </div>
+
+    <!-- Menú Lateral -->
+    <sidebar id="sidebarMenu">
+        <div class="sidebar-brand"><span>⚙️</span> GesPyme</div>
+        <ul class="sidebar-menu">
+            <li><a href="index.html">Panel</a></li>
+            <li><a href="clientes.html">Clientes</a></li>
+            <li><a href="facturas.html">Facturas</a></li>
+            <li><a href="cotizaciones.html">Cotizaciones</a></li>
+            <li><a href="pagos.html">Pagos</a></li>
+            <li><a href="informes.html">Informes</a></li>
+            <li><a href="herramientas.html" onclick="return verificarRestriccionModulo('herramientas', event)">Herramientas</a></li>
+            <li><a href="respaldo.html" onclick="return verificarRestriccionModulo('herramientas', event)" class="sub-item active">Copia de respaldo</a></li>
+            <li><a href="configuracion.html">Configuración</a></li>
+            <li><a href="subscription.html" style="color: #ffd700;">Subscription Pro</a></li>
+        </ul>
+        <div class="sidebar-hide-section">
+            <button class="btn-hide-sidebar" onclick="toggleSidebar()"><span>◀</span> Ocultar Menú</button>
+        </div>
+        <div class="sidebar-footer">GesPyme © 2026</div>
+    </sidebar>
+
+    <!-- Área Principal -->
+    <div class="main-content">
+        <header>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+                <span style="font-weight: bold; font-size: 1rem; color: #1a73e8;">Copia de Respaldo (Backup)</span>
+            </div>
+            <div class="user-profile" id="userProfileDisplay">
+                <span>👤 Mi Cuenta</span>
+            </div>
+        </header>
+
+        <div class="container">
+            <div class="panel-section">
+                <h2>Gestión de Respaldos del Sistema</h2>
+                <p class="subtitle">Protege la información de tu PyME exportando o restaurando los datos locales.</p>
+
+                <!-- Tarjeta Exportar -->
+                <div class="backup-card">
+                    <h3>💾 Exportar Respaldo</h3>
+                    <p>Descarga un archivo con toda la información registrada en tu navegador (clientes, facturas, artículos y configuración).</p>
+                    <button class="btn-primary" onclick="exportarRespaldo()">Descargar Archivo de Respaldo</button>
+                </div>
+
+                <!-- Tarjeta Importar -->
+                <div class="backup-card">
+                    <h3>📂 Restaurar Respaldo</h3>
+                    <p>Carga un archivo de respaldo previo para restaurar los datos en este dispositivo.</p>
+                    <input type="file" id="archivoRespaldo" accept=".json" style="margin-bottom: 1rem; display: block; width: 100%; font-size: 0.9rem;" />
+                    <button class="btn-primary btn-success" onclick="restaurarRespaldo()">Restaurar Datos</button>
+                </div>
+
+                <a href="herramientas.html" class="btn-secondary">Volver a Herramientas</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            let sidebar = document.getElementById("sidebarMenu");
+            if (sidebar) sidebar.classList.toggle("open");
+        }
+
+        function obtenerPlanActual() {
+            return localStorage.getItem("gespyme_plan") || "free";
+        }
+
+        function verificarRestriccionModulo(modulo, event) {
+            if (localStorage.getItem("gespyme_modo_dev") === "true") return true;
+            if (event) event.preventDefault();
+            let planKey = obtenerPlanActual();
+            if (planKey === 'free') {
+                document.getElementById("pro-modal").style.display = "flex";
+                return false;
+            }
+            return true;
+        }
+
+        function cerrarModalPro() {
+            document.getElementById("pro-modal").style.display = "none";
+            if (obtenerPlanActual() === 'free' && localStorage.getItem("gespyme_modo_dev") !== "true") {
+                window.location.href = 'herramientas.html';
+            }
+        }
+
+        function exportarRespaldo() {
+            let datos = {};
+            for (let i = 0; i < localStorage.length; i++) {
+                let clave = localStorage.key(i);
+                datos[clave] = localStorage.getItem(clave);
+            }
+            let blob = new Blob([JSON.stringify(datos, null, 2)], { type: "application/json" });
+            let url = URL.createObjectURL(blob);
+            let a = document.createElement("a");
+            a.href = url;
+            a.download = "gespyme_respaldo_" + new Date().toISOString().slice(0, 10) + ".json";
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function restaurarRespaldo() {
+            let input = document.getElementById("archivoRespaldo");
+            if (input.files.length === 0) {
+                alert("Por favor selecciona un archivo de respaldo (.json)");
+                return;
+            }
+            let archivo = input.files[0];
+            let lector = new FileReader();
+            lector.onload = function(e) {
+                try {
+                    let datos = JSON.parse(e.target.result);
+                    if (confirm("¿Estás seguro de restaurar este respaldo? Se sobrescribirán los datos actuales.")) {
+                        for (let clave in datos) {
+                            localStorage.setItem(clave, datos[clave]);
+                        }
+                        alert("¡Respaldo restaurado con éxito! La página se recargará.");
+                        location.reload();
+                    }
+                } catch (err) {
+                    alert("El archivo seleccionado no es válido o está dañado.");
+                }
+            };
+            lector.readAsText(archivo);
+        }
+
+        window.onload = function() {
+            let usuario = localStorage.getItem("gespyme_usuario");
+            if (usuario) document.getElementById("userProfileDisplay").innerHTML = `<span>👤</span> ${usuario}`;
+
+            if (localStorage.getItem("gespyme_modo_dev") !== "true" && obtenerPlanActual() === 'free') {
+                document.getElementById("pro-modal").style.display = "flex";
+            }
+        };
+    </script>
+</body>
+</html>
