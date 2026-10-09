@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GesPyme - Calculadora de Márgenes</title>
+    <style>
+        :root {
+            --primary-color: #1a73e8;
+            --sidebar-bg: #2b3856;
+            --text-color: #333;
+            --bg-color: #f4f6f9;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+        
+        html, body { 
+            background-color: var(--bg-color); 
+            color: var(--text-color); 
+            display: flex; 
+            min-height: 100vh; 
+            overflow-x: hidden; 
+            overflow-y: auto; 
+            width: 100%; 
+            flex-direction: row; 
+        }
+        
+        sidebar { 
+            width: 260px; background-color: var(--sidebar-bg); color: white; display: flex; flex-direction: column; 
+            position: fixed; height: 100vh; top: 0; left: 0; z-index: 1000; 
+            transform: translateX(-100%); 
+            transition: transform 0.3s ease;
+        }
+        sidebar.open { transform: translateX(0); }
+        .sidebar-brand { padding: 1.2rem; font-size: 1.1rem; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
+        .sidebar-menu { list-style: none; padding: 0.5rem 0; overflow-y: auto; flex: 1; max-height: calc(100vh - 160px); }
+        .sidebar-menu li a { display: block; padding: 0.6rem 1.2rem; color: #b0c4de; text-decoration: none; font-size: 0.9rem; transition: 0.2s; }
+        .sidebar-menu li.active a, .sidebar-menu li a:hover { background-color: rgba(255,255,255,0.1); color: white; }
+        .sidebar-menu .sub-item { padding-left: 2.2rem; font-size: 0.85rem; }
+        
+        .sidebar-hide-section {
+            padding: 0.8rem 1.2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.15);
+        }
+        .btn-hide-sidebar {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            color: #b0c4de;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .btn-hide-sidebar:hover { background: rgba(255, 255, 255, 0.2); color: white; }
+        .sidebar-footer { padding: 0.6rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.8rem; color: #a0a0a0; text-align: center; }
+
+        .menu-toggle {
+            background: var(--sidebar-bg); color: white; border: none;
+            padding: 0.5rem 0.8rem; border-radius: 4px; font-size: 1.2rem; cursor: pointer; z-index: 1001;
+        }
+
+        .main-content { 
+            flex: 1; display: flex; flex-direction: column; width: 100%; margin-left: 0; min-height: 100vh; 
+        }
+
+        header { background: white; padding: 0.8rem 1.5rem; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; }
+        .user-profile { font-size: 0.9rem; color: #555; font-weight: 500; display: flex; align-items: center; gap: 8px; }
+        
+        .container { padding: 2rem; max-width: 800px; width: 100%; margin: 0 auto; }
+        .panel-section { background: white; border-radius: 8px; padding: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .panel-section h2 { margin-bottom: 1.2rem; font-size: 1.2rem; color: #333; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; }
+        
+        .form-group { margin-bottom: 1.2rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.9rem; color: #555; }
+        .form-group input { width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95rem; }
+        
+        .result-box { background: #f0f4f8; border: 1px solid #d0e1fd; border-radius: 6px; padding: 1.5rem; margin-top: 1.5rem; text-align: center; }
+        .result-box h3 { font-size: 1rem; color: #1a73e8; margin-bottom: 0.5rem; }
+        .result-value { font-size: 1.8rem; font-weight: bold; color: #28a745; }
+        .result-detail { font-size: 0.85rem; color: #666; margin-top: 0.5rem; }
+
+        .btn-primary { background-color: #28a745; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-weight: 500; font-size: 0.95rem; width: 100%; }
+        .btn-primary:hover { background-color: #218838; }
+        .btn-secondary { background-color: #6c757d; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-weight: 500; text-decoration: none; display: inline-block; font-size: 0.95rem; text-align: center; width: 100%; margin-top: 0.8rem; }
+    </style>
+</head>
+<body>
+
+    <!-- Menú Lateral -->
+    <sidebar id="sidebarMenu">
+        <div class="sidebar-brand"><span>⚙️</span> GesPyme</div>
+        <ul class="sidebar-menu">
+            <li><a href="index.html">Panel</a></li>
+            <li><a href="clientes.html">Clientes</a></li>
+            <li><a href="facturas.html">Facturas</a></li>
+            <li><a href="cotizaciones.html">Cotizaciones</a></li>
+            <li><a href="pagos.html">Pagos</a></li>
+            <li><a href="informes.html">Informes</a></li>
+            <li><a href="herramientas.html" class="active">Herramientas</a></li>
+            <li><a href="calculadora-margenes.html" class="sub-item">Calculadora de márgenes</a></li>
+            <li><a href="configuracion.html">Configuración</a></li>
+            <li><a href="subscription.html" style="color: #ffd700;">Subscription Pro</a></li>
+        </ul>
+        <div class="sidebar-hide-section">
+            <button class="btn-hide-sidebar" onclick="toggleSidebar()"><span>◀</span> Ocultar Menú</button>
+        </div>
+        <div class="sidebar-footer">GesPyme © 2026</div>
+    </sidebar>
+
+    <!-- Área Principal -->
+    <div class="main-content">
+        <header>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+                <span style="font-weight: bold; font-size: 1rem; color: #1a73e8;">Calculadora de Márgenes</span>
+            </div>
+            <div class="user-profile" id="userProfileDisplay">
+                <span>👤 Mi Cuenta</span>
+            </div>
+        </header>
+
+        <div class="container">
+            <div class="panel-section">
+                <h2>Cálculo de Precios y Ganancia</h2>
+                <form onsubmit="event.preventDefault(); calcularPrecio();">
+                    <div class="form-group">
+                        <label>Costo Base del Producto / Insumo ($)</label>
+                        <input type="number" id="costoBase" step="any" placeholder="0.00" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Margen de Ganancia Deseado (%)</label>
+                        <input type="number" id="margenDeseado" step="any" value="35" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Impuestos / IVA Estimado (%)</label>
+                        <input type="number" id="impuestoEstimado" step="any" value="21" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Calcular Precio Sugerido</button>
+                    <a href="herramientas.html" class="btn-secondary">Volver a Herramientas</a>
+                </form>
+
+                <div class="result-box" id="resultadoBox" style="display: none;">
+                    <h3>Precio de Venta Sugerido al Público</h3>
+                    <div class="result-value" id="precioFinal">$0.00</div>
+                    <div class="result-detail" id="detalleGanancia">Ganancia neta estimada: $0.00</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            let sidebar = document.getElementById("sidebarMenu");
+            if (sidebar) sidebar.classList.toggle("open");
+        }
+
+        function calcularPrecio() {
+            let costo = parseFloat(document.getElementById("costoBase").value) || 0;
+            let margen = parseFloat(document.getElementById("margenDeseado").value) || 0;
+            let impuesto = parseFloat(document.getElementById("impuestoEstimado").value) || 0;
+
+            let precioConMargen = costo * (1 + (margen / 100));
+            let precioFinal = precioConMargen * (1 + (impuesto / 100));
+            let gananciaNeta = precioConMargen - costo;
+
+            document.getElementById("precioFinal").innerText = "$" + precioFinal.toFixed(2);
+            document.getElementById("detalleGanancia").innerText = `Ganancia neta estimada: $${gananciaNeta.toFixed(2)} (Margen: ${margen}%)`;
+            document.getElementById("resultadoBox").style.display = "block";
+        }
+
+        window.onload = function() {
+            let usuario = localStorage.getItem("gespyme_usuario");
+            if (usuario) document.getElementById("userProfileDisplay").innerHTML = `<span>👤</span> ${usuario}`;
+        };
+    </script>
+</body>
+</html>
