@@ -13,29 +13,25 @@
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
         
-        /* Scroll vertical fluido optimizado para Android */
         html, body { 
             background-color: var(--bg-color); 
             color: var(--text-color); 
             display: flex; 
             min-height: 100vh; 
             overflow-x: hidden; 
-            overflow-y: auto !important; 
+            overflow-y: auto; 
             width: 100%; 
             flex-direction: row; 
-            -webkit-overflow-scrolling: touch;
-            height: 100%;
         }
         
-        /* Menú lateral forzado a estar oculto por defecto en subpáginas móviles */
         sidebar { 
             width: 260px; background-color: var(--sidebar-bg); color: white; display: flex; flex-direction: column; 
             position: fixed; height: 100vh; top: 0; left: 0; z-index: 1000; 
-            transform: translateX(-100%) !important; 
+            transform: translateX(-100%); 
             transition: transform 0.3s ease;
         }
         sidebar.open { 
-            transform: translateX(0) !important; 
+            transform: translateX(0); 
         }
         .sidebar-brand { padding: 1.2rem; font-size: 1.1rem; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
         .sidebar-menu { list-style: none; padding: 0.5rem 0; overflow-y: auto; flex: 1; max-height: calc(100vh - 160px); }
@@ -43,7 +39,6 @@
         .sidebar-menu li.active a, .sidebar-menu li a:hover { background-color: rgba(255,255,255,0.1); color: white; }
         .sidebar-menu .sub-item { padding-left: 2.2rem; font-size: 0.85rem; }
         
-        /* Botón de ocultar menú en zona baja */
         .sidebar-hide-section {
             padding: 0.8rem 1.2rem;
             border-top: 1px solid rgba(255,255,255,0.1);
@@ -62,28 +57,23 @@
             align-items: center;
             justify-content: center;
             gap: 6px;
-            transition: 0.2s;
         }
         .btn-hide-sidebar:hover { background: rgba(255, 255, 255, 0.2); color: white; }
         .sidebar-footer { padding: 0.6rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.8rem; color: #a0a0a0; text-align: center; }
 
-        /* Botón hamburguesa superior */
         .menu-toggle {
             background: var(--sidebar-bg); color: white; border: none;
             padding: 0.5rem 0.8rem; border-radius: 4px; font-size: 1.2rem; cursor: pointer; z-index: 1001;
         }
 
-        /* Contenido principal ocupando todo el ancho */
         .main-content { 
-            flex: 1; display: flex; flex-direction: column; width: 100%; margin-left: 0 !important; min-height: 100vh; 
+            flex: 1; display: flex; flex-direction: column; width: 100%; margin-left: 0; min-height: 100vh; 
         }
 
         header { background: white; padding: 0.8rem 1.5rem; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; }
-        .user-profile { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: #555; font-weight: 500; }
+        .user-profile { font-size: 0.9rem; color: #555; font-weight: 500; display: flex; align-items: center; gap: 8px; }
         
         .container { padding: 2rem; max-width: 800px; width: 100%; margin: 0 auto; }
-        
-        /* Formulario */
         .panel-section { background: white; border-radius: 8px; padding: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .panel-section h2 { margin-bottom: 1.5rem; font-size: 1.3rem; color: #333; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; }
         
@@ -95,4 +85,93 @@
         .form-actions { display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap; }
         .btn-primary { background-color: #28a745; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-weight: 500; font-size: 0.95rem; }
         .btn-primary:hover { background-color: #218838; }
-        .btn-secondary { background-color: #6c757d; color: white; border: none; padding: 0.7
+        .btn-secondary { background-color: #6c757d; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-weight: 500; text-decoration: none; display: inline-block; font-size: 0.95rem; }
+    </style>
+</head>
+<body>
+
+    <!-- Menú Lateral -->
+    <sidebar id="sidebarMenu">
+        <div class="sidebar-brand">
+            <span>⚙️</span> GesPyme
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="index.html">Panel</a></li>
+            <li><a href="clientes.html" class="active">Clientes</a></li>
+            <li><a href="nuevo-cliente.html" class="sub-item">Nuevo cliente</a></li>
+            <li><a href="facturas.html">Facturas</a></li>
+            <li><a href="cotizaciones.html">Cotizaciones</a></li>
+            <li><a href="articulos.html">Artículos</a></li>
+            <li><a href="informes.html">Informes</a></li>
+            <li><a href="herramientas.html">Herramientas</a></li>
+            <li><a href="configuracion.html">Configuración</a></li>
+            <li><a href="subscription.html" style="color: #ffd700;">Subscription Pro</a></li>
+        </ul>
+        <div class="sidebar-hide-section">
+            <button class="btn-hide-sidebar" onclick="toggleSidebar()">
+                <span>◀</span> Ocultar Menú
+            </button>
+        </div>
+        <div class="sidebar-footer">
+            GesPyme © 2026
+        </div>
+    </sidebar>
+
+    <!-- Área Principal -->
+    <div class="main-content">
+        <header>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+                <span style="font-weight: bold; font-size: 1rem; color: #1a73e8;">Nuevo Cliente</span>
+            </div>
+            <div class="user-profile" id="userProfileDisplay">
+                <span>👤 Mi Cuenta</span>
+            </div>
+        </header>
+
+        <div class="container">
+            <div class="panel-section">
+                <h2>Registrar Nuevo Cliente</h2>
+                <form onsubmit="event.preventDefault(); alert('Cliente guardado con éxito'); window.location.href='clientes.html';">
+                    <div class="form-group">
+                        <label>Nombre y Apellido / Razón Social</label>
+                        <input type="text" placeholder="Ej: Juan Pérez o Empresa SRL" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Correo Electrónico</label>
+                        <input type="email" placeholder="correo@ejemplo.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Teléfono / Celular</label>
+                        <input type="tel" placeholder="Ej: +54 9 223 ...">
+                    </div>
+                    <div class="form-group">
+                        <label>Domicilio / Dirección</label>
+                        <input type="text" placeholder="Calle, Número, Localidad">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">Guardar Cliente</button>
+                        <a href="clientes.html" class="btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            let sidebar = document.getElementById("sidebarMenu");
+            if (sidebar) {
+                sidebar.classList.toggle("open");
+            }
+        }
+
+        window.onload = function() {
+            let usuario = localStorage.getItem("gespyme_usuario");
+            if (usuario) {
+                document.getElementById("userProfileDisplay").innerHTML = `<span>👤</span> ${usuario}`;
+            }
+        };
+    </script>
+</body>
+</html>
