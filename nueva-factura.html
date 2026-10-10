@@ -418,11 +418,39 @@
         }
 
         function obtenerPlanActual() {
-            return localStorage.getItem("gespyme_plan") || "free";
+            return localStorage.getItem("gespyme_plan") || "basico";
         }
 
         function cerrarModalPro() {
             document.getElementById("pro-modal").style.display = "none";
+        }
+
+        // --- FUNCIÓN CENTRAL DE CONTROL DE LÍMITES Y EMISIONES ---
+        function verificarYRegistrarEmision() {
+            if (localStorage.getItem("gespyme_modo_dev") === "true") return true;
+
+            let plan = localStorage.getItem("gespyme_plan") || "basico";
+            if (plan === "pro") return true;
+
+            let mesActual = new Date().getMonth();
+            let mesGuardado = localStorage.getItem("gespyme_mes_actual");
+            
+            if (mesGuardado === null || parseInt(mesGuardado) !== mesActual) {
+                localStorage.setItem("gespyme_mes_actual", mesActual);
+                localStorage.setItem("gespyme_impresiones_mes", "0");
+            }
+
+            let impresionesRealizadas = parseInt(localStorage.getItem("gespyme_impresiones_mes") || "0");
+            let limiteMaximo = (plan === "medio") ? 30 : 15;
+
+            if (impresionesRealizadas >= limiteMaximo) {
+                alert(`⚠️ Has alcanzado el límite mensual de ${limiteMaximo} documentos emitidos para tu plan.\n\nActualiza tu suscripción en "Subscription Pro" para continuar.`);
+                window.location.href = "subscription.html";
+                return false;
+            }
+
+            localStorage.setItem("gespyme_impresiones_mes", impresionesRealizadas + 1);
+            return true;
         }
 
         window.onload = function() {
@@ -430,17 +458,13 @@
             if (usuario) {
                 document.getElementById("userProfileDisplay").innerHTML = `<span>👤</span> ${usuario}`;
             }
-
-            if (localStorage.getItem("gespyme_modo_dev") !== "true" && obtenerPlanActual() === 'free') {
-                document.getElementById("pro-message").innerHTML = `El módulo de <strong>Facturación</strong> está reservado para planes superiores.<br><br>Actualiza tu suscripción para desbloquearlo.`;
-                document.getElementById("pro-modal").style.display = "flex";
-            }
         };
 
         function generarPDF(event) {
             event.preventDefault();
 
-            if (localStorage.getItem("gespyme_modo_dev") !== "true" && obtenerPlanActual() === 'free') {
+            // Verificamos el límite antes de generar la factura
+            if (!verificarYRegistrarEmision()) {
                 return;
             }
 
