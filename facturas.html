@@ -149,96 +149,98 @@
             <div class="panel-section">
                 <h2>Nueva Factura</h2>
                 <form onsubmit="procesarEmision(event)">
-                    
-                    <!-- 1. Cargar Logotipo de la Empresa -->
-                    <div class="form-group">
-                        <label>Logotipo de la Empresa</label>
-                        <div class="logo-upload-box" onclick="document.getElementById('inputLogo').click()">
-                            <span id="logoText">+ Añadir logotipo</span>
-                            <img id="logoPreview" style="display: none;" alt="Logo">
-                        </div>
-                        <input type="file" id="inputLogo" accept="image/*" style="display: none;" onchange="cargarLogo(event)">
-                    </div>
+    <!-- 1. Cargar Logotipo de la Empresa -->
+    <div class="form-group">
+        <label>Logotipo de la Empresa</label>
+        <div class="logo-upload-box" onclick="document.getElementById('inputLogo').click()">
+            <span id="logoText">+ Añadir logotipo</span>
+            <img id="logoPreview" style="display: none;" alt="Logo">
+        </div>
+        <input type="file" id="inputLogo" accept="image/*" style="display: none;" onchange="cargarLogo(event)">
+    </div>
 
-                    <!-- 2. Datos Principales y Fechas -->
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Cliente / Razón Social</label>
-                            <input type="text" placeholder="Nombre del cliente" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Fecha de Emisión</label>
-                            <input type="date" id="fechaEmision" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Fecha de Vencimiento</label>
-                            <input type="date" id="fechaVencimiento" required>
-                        </div>
-                    </div>
+    <!-- 2. Datos Principales y Fechas -->
+    <div class="form-row">
+        <div class="form-group">
+            <label>Cliente / Razón Social</label>
+            <input type="text" placeholder="Nombre del cliente" required>
+        </div>
+        <div class="form-group">
+            <label>Fecha de Emisión</label>
+            <input type="date" id="fechaEmision" required>
+        </div>
+        <div class="form-group">
+            <label>Fecha de Vencimiento</label>
+            <input type="date" id="fechaVencimiento" required>
+        </div>
+    </div>
 
-                    <!-- 3. Tabla de Productos e Ítems Dinámicos -->
-                    <label style="font-weight: 500; font-size: 0.9rem; color: #555;">Detalle de Productos / Servicios</label>
-                    <table class="items-table" id="tablaItems">
-                        <thead>
-                            <tr>
-                                <th style="width: 45%;">Concepto / Producto</th>
-                                <th style="width: 15%;">Cantidad</th>
-                                <th style="width: 20%;">Precio ($)</th>
-                                <th style="width: 15%;">Subtotal</th>
-                                <th style="width: 5%;"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><input type="text" class="desc-item" placeholder="Ej. Reparación de equipo" required></td>
-                                <td><input type="number" class="cant-item" value="1" min="1" oninput="calcularTotales()" required></td>
-                                <td><input type="number" class="precio-item" placeholder="0.00" step="any" oninput="calcularTotales()" required></td>
-                                <td class="total-item">$0.00</td>
-                                <td><button type="button" class="btn-remove" onclick="eliminarFila(this)">X</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <button type="button" class="btn-add-item" onclick="agregarFila()">+ Añadir producto / servicio</button>
+    <!-- 3. Tabla de Productos e Ítems Dinámicos -->
+    <label style="font-weight: 500; font-size: 0.9rem; color: #555;">Detalle de Productos / Servicios</label>
+    <table class="items-table" id="tablaItems">
+        <thead>
+            <tr>
+                <th style="width: 45%;">Concepto / Producto</th>
+                <th style="width: 15%;">Cantidad</th>
+                <th style="width: 20%;">Precio ($)</th>
+                <th style="width: 15%;">Subtotal</th>
+                <th style="width: 5%;"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input type="text" class="desc-item" placeholder="Ej. Reparación de equipo" required></td>
+                <td><input type="number" class="cant-item" value="1" min="1" oninput="calcularTotales()" required></td>
+                <td><input type="number" class="precio-item" placeholder="0.00" step="any" oninput="calcularTotales()" required></td>
+                <td class="total-item">$0.00</td>
+                <td><button type="button" class="btn-remove" onclick="eliminarFila(this)">X</button></td>
+            </tr>
+        </tbody>
+    </table>
+    <button type="button" class="btn-add-item" onclick="agregarFila()">+ Añadir producto / servicio</button>
 
-                    <!-- 4. Totales Calculados Automáticamente -->
-                    <div class="totals-box">
-                        <div class="totals-row">
-                            <span>Subtotal:</span>
-                            <span id="txtSubtotal">$0.00</span>
-                        </div>
-                        <div class="totals-row">
-                            <span>IVA (21%):</span>
-                            <span id="txtIva">$0.00</span>
-                        </div>
-                        <div class="totals-row final">
-                            <span>Total a Pagar:</span>
-                            <span id="txtTotal">$0.00</span>
-                        </div>
-                    </div>
+    <!-- 4. Totales Calculados Automáticamente -->
+    <div class="totals-box">
+        <div class="totals-row">
+            <span>Subtotal:</span>
+            <span id="txtSubtotal">$0.00</span>
+        </div>
+        <div class="totals-row">
+            <span>IVA (21%):</span>
+            <span id="txtIva">$0.00</span>
+        </div>
+        <div class="totals-row final">
+            <span>Total a Pagar:</span>
+            <span id="txtTotal">$0.00</span>
+        </div>
+    </div>
 
-                    <!-- 5. Comentarios y Notas al Pie -->
-                    <div class="form-group" style="margin-top: 1.5rem;">
-                        <label>Notas / Comentarios al pie de la factura</label>
-                        <textarea rows="2" placeholder="Ej. Forma de pago: Transferencia bancaria CBU..."></textarea>
-                    </div>
+    <!-- 5. Comentarios y Notas al Pie -->
+    <div class="form-group" style="margin-top: 1.5rem;">
+        <label>Notas / Comentarios al pie de la factura</label>
+        <textarea rows="2" placeholder="Ej. Forma de pago: Transferencia bancaria CBU..."></textarea>
+    </div>
 
-                    <!-- 6. Campos condicionales (Configuración) -->
-                    <div id="seccionDirEnvio" class="conditional-field">
-                        <h4>📍 Dirección de Envío</h4>
-                        <input type="text" placeholder="Ingrese dirección de entrega o despacho">
-                    </div>
+    <!-- 6. Campos condicionales (Configuración) -->
+    <div id="seccionDirEnvio" class="conditional-field">
+        <h4>📍 Dirección de Envío</h4>
+        <input type="text" placeholder="Ingrese dirección de entrega o despacho">
+    </div>
 
-                    <div id="seccionDirObra" class="conditional-field">
-                        <h4>🏗️ Dirección de "Obra" / Sucursal</h4>
-                        <input type="text" placeholder="Ingrese dirección específica de la obra">
-                    </div>
+    <div id="seccionDirObra" class="conditional-field">
+        <h4>🏗️ Dirección de "Obra" / Sucursal</h4>
+        <input type="text" placeholder="Ingrese dirección específica de la obra">
+    </div>
 
-                    <div id="seccionFirma" class="conditional-field">
-                        <h4>✍️ Firma Online Autorizada</h4>
-                        <p style="font-size: 0.8rem; color: #666; margin-bottom: 0.5rem;">Este comprobante incluirá validación por firma digital configurada.</p>
-                        <input type="text" placeholder="Nombre y DNI del firmante autorizado">
-                    </div>
-                <form onsubmit="procesarEmision(event)">
+    <div id="seccionFirma" class="conditional-field">
+        <h4>✍️ Firma Online Autorizada</h4>
+        <p style="font-size: 0.8rem; color: #666; margin-bottom: 0.5rem;">Este comprobante incluirá validación por firma digital configurada.</p>
+        <input type="text" placeholder="Nombre y DNI del firmante autorizado">
+    </div>
+
+    <button type="submit" class="btn-primary">Generar y Emitir Factura</button>
+</form>
+
     <!-- ... todos tus inputs, logo, tabla de ítems y totales ... -->
     <button type="submit" class="btn-primary">Generar y Emitir Factura</button>
 </form>
