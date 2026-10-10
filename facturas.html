@@ -238,9 +238,12 @@
                         <p style="font-size: 0.8rem; color: #666; margin-bottom: 0.5rem;">Este comprobante incluirá validación por firma digital configurada.</p>
                         <input type="text" placeholder="Nombre y DNI del firmante autorizado">
                     </div>
+                <form onsubmit="procesarEmision(event)">
+    <!-- ... todos tus inputs, logo, tabla de ítems y totales ... -->
+    <button type="submit" class="btn-primary">Generar y Emitir Factura</button>
+</form>
 
-                    <button type="submit" class="btn-primary">Generar y Emitir Factura</button>
-                </form>
+                    
             </div>
         </div>
     </div>
