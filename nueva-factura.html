@@ -32,9 +32,7 @@
             transform: translateX(-100%) !important;
             transition: transform 0.3s ease;
         }
-        sidebar.open { 
-            transform: translateX(0) !important;
-        }
+        sidebar.open { transform: translateX(0) !important; }
         .sidebar-brand { padding: 1.2rem; font-size: 1.1rem; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
         .sidebar-menu { list-style: none; padding: 0.5rem 0; overflow-y: auto; flex: 1; max-height: calc(100vh - 160px); }
         .sidebar-menu li a { display: block; padding: 0.6rem 1.2rem; color: #b0c4de; text-decoration: none; font-size: 0.9rem; transition: 0.2s; }
@@ -47,7 +45,7 @@
             background: rgba(0,0,0,0.15);
         }
         .btn-hide-sidebar {
-            width: 100%; background: rgba(255, 255, 255, 0.1); color: #b0c4de; border: 1px solid rgba(255, 255, 255, 0.2); padding: 0.5rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 6px; transition: 0.2s;
+            width: 100%; background: rgba(255, 255, 255, 0.1); color: #b0c4de; border: 1px solid rgba(255, 255, 255, 0.2); padding: 0.5rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 6px;
         }
         .btn-hide-sidebar:hover { background: rgba(255, 255, 255, 0.2); color: white; }
         .sidebar-footer { padding: 0.6rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.8rem; color: #a0a0a0; text-align: center; }
@@ -56,10 +54,7 @@
             background: var(--sidebar-bg); color: white; border: none; padding: 0.5rem 0.8rem; border-radius: 4px; font-size: 1.2rem; cursor: pointer; z-index: 1001;
         }
 
-        .main-content { 
-            flex: 1; display: flex; flex-direction: column; width: 100%; margin-left: 0 !important; min-height: 100vh; 
-        }
-
+        .main-content { flex: 1; display: flex; flex-direction: column; width: 100%; margin-left: 0 !important; min-height: 100vh; }
         header { background: white; padding: 0.8rem 1.5rem; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; }
         .user-profile { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: #555; font-weight: 500; }
         
@@ -103,13 +98,14 @@
         .btn-secondary { background-color: #6c757d; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-weight: 500; text-decoration: none; display: inline-block; font-size: 0.95rem; }
         .btn-secondary:hover { background-color: #5a6268; }
 
+        /* Estilos de impresión profesionales y limpios */
         @media print {
             sidebar, header, .form-actions, .panel-section h2, .form-row, .invoice-items-table, .btn-action, .btn-danger, .no-print, form > table, form > button, .totals-section { display: none !important; }
-            body { background: white; height: auto; overflow: visible; margin: 0; padding: 0; }
-            .main-content { overflow: visible; display: block !important; position: static !important; margin: 0 !important; }
+            body { background: white !important; height: auto !important; overflow: visible !important; margin: 0 !important; padding: 0 !important; }
+            .main-content { overflow: visible !important; display: block !important; position: static !important; margin: 0 !important; }
             .container { padding: 0 !important; max-width: 100% !important; margin: 0 !important; width: 100% !important; }
             .panel-section { box-shadow: none !important; padding: 0 !important; margin: 0 !important; background: transparent !important; }
-            #pdf-preview { display: block !important; border: none !important; padding: 0 !important; position: absolute; top: 0; left: 0; width: 100%; }
+            #pdf-preview { display: block !important; border: none !important; padding: 10px !important; width: 100% !important; position: static !important; }
         }
 
         #pdf-preview { display: none; }
@@ -159,7 +155,7 @@
                 <h2>Detalles de Facturación</h2>
                 <form id="facturaForm" onsubmit="event.preventDefault();">
                     
-                    <!-- Bloque para Añadir Logotipo -->
+                    <!-- Logotipo -->
                     <div class="form-group no-print">
                         <label>Logotipo de la Empresa</label>
                         <div class="logo-upload-box" onclick="document.getElementById('input-logo').click()">
@@ -234,7 +230,7 @@
                         </div>
                     </div>
 
-                    <!-- Plantilla oculta que se convierte en PDF al imprimir -->
+                    <!-- Plantilla PDF imprimible -->
                     <div id="pdf-preview" style="background: white; padding: 20px; font-family: sans-serif;">
                         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
                             <div>
@@ -280,7 +276,6 @@
 
     <script>
         document.getElementById('fechaEmision').valueAsDate = new Date();
-
         let logoDataUrl = "";
 
         function toggleSidebar() {
@@ -382,6 +377,7 @@
                 return;
             }
 
+            // Volcar datos al bloque imprimible
             document.getElementById('lblNum').innerText = document.getElementById('numFactura').value || 'FAC-0001';
             document.getElementById('lblEmision').innerText = document.getElementById('fechaEmision').value || '';
             document.getElementById('lblVencimiento').innerText = document.getElementById('fechaVencimiento').value || '';
@@ -410,23 +406,30 @@
                 });
             }
 
-            const subText = document.getElementById('subtotalText');
-            const ivaText = document.getElementById('ivaText');
-            const totText = document.getElementById('totalFinalText');
-
-            if (subText) document.getElementById('pdfSubtotal').innerText = subText.innerText;
-            if (ivaText) document.getElementById('pdfIva').innerText = ivaText.innerText;
-            if (totText) document.getElementById('lblTotalFinal').innerText = totText.innerText;
+            document.getElementById('pdfSubtotal').innerText = document.getElementById('subtotalText').innerText;
+            document.getElementById('pdfIva').innerText = document.getElementById('ivaText').innerText;
+            document.getElementById('lblTotalFinal').innerText = document.getElementById('totalFinalText').innerText;
 
             const pdfLogoImg = document.getElementById('pdf-logo-img');
-            if (pdfLogoImg && typeof logoDataUrl !== 'undefined' && logoDataUrl) {
+            if (pdfLogoImg && logoDataUrl) {
                 pdfLogoImg.src = logoDataUrl;
                 pdfLogoImg.style.display = 'block';
+            } else {
+                pdfLogoImg.style.display = 'none';
             }
 
+            // Mostrar el preview explícitamente antes de imprimir para garantizar que Android lo capture
+            const previewBox = document.getElementById('pdf-preview');
+            previewBox.style.display = 'block';
+
+            // Llamada segura con doble temporizador para asegurar renderizado en móviles
             setTimeout(function() {
                 window.print();
-            }, 300);
+                // Ocultar de nuevo el preview tras lanzar la impresión
+                setTimeout(function() {
+                    previewBox.style.display = 'none';
+                }, 1000);
+            }, 400);
         }
 
         window.onload = function() {
