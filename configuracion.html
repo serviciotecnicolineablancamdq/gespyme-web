@@ -78,8 +78,19 @@
         .form-group { margin-bottom: 1.2rem; }
         .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.9rem; color: #555; }
         .form-group input, .form-group select { width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95rem; }
+
+        .toggle-group { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0; border-bottom: 1px solid #f0f0f0; margin-bottom: 1rem; }
+        .toggle-group label { font-size: 0.9rem; color: #444; font-weight: 500; }
         
-        .btn-primary { background-color: #1a73e8; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-weight: 500; font-size: 0.95rem; width: 100%; }
+        /* Interruptor / Switch estético */
+        .switch { position: relative; display: inline-block; width: 50px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 24px; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: #1a73e8; }
+        input:checked + .slider:before { transform: translateX(26px); }
+
+        .btn-primary { background-color: #1a73e8; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-weight: 500; font-size: 0.95rem; width: 100%; margin-top: 1rem; }
         .btn-primary:hover { background-color: #1557b0; }
     </style>
 </head>
@@ -130,6 +141,14 @@
                         <input type="email" id="emailEmpresa" placeholder="correo@pyme.com" required>
                     </div>
                     <div class="form-group">
+                        <label>Idioma de la Aplicación</label>
+                        <select id="idiomaApp">
+                            <option value="es">Español</option>
+                            <option value="en">English (Inglés)</option>
+                            <option value="pt">Português (Portugués)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label>Moneda Predeterminada</label>
                         <select id="monedaNegocio">
                             <option value="$">$ (Pesos / Dólares)</option>
@@ -137,6 +156,37 @@
                             <option value="EUR">EUR (€)</option>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label>Impuesto / IVA por defecto (%)</label>
+                        <input type="number" id="impuestoDefecto" step="any" value="21">
+                    </div>
+
+                    <h2 style="margin-top: 2rem;">Opciones Avanzadas en Documentos</h2>
+                    
+                    <div class="toggle-group">
+                        <label>Habilitar Firma Online</label>
+                        <label class="switch">
+                            <input type="checkbox" id="chkFirmaOnline">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-group">
+                        <label>Añadir Dirección de Envío</label>
+                        <label class="switch">
+                            <input type="checkbox" id="chkDirEnvio">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-group">
+                        <label>Añadir Dirección de "Obra"</label>
+                        <label class="switch">
+                            <input type="checkbox" id="chkDirObra">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
                     <button type="submit" class="btn-primary">Guardar Configuración</button>
                 </form>
             </div>
@@ -152,12 +202,22 @@
         function guardarConfiguracion() {
             let nombre = document.getElementById("nombreEmpresa").value;
             let email = document.getElementById("emailEmpresa").value;
+            let idioma = document.getElementById("idiomaApp").value;
             let moneda = document.getElementById("monedaNegocio").value;
+            let impuesto = document.getElementById("impuestoDefecto").value;
+            let firmaOnline = document.getElementById("chkFirmaOnline").checked;
+            let dirEnvio = document.getElementById("chkDirEnvio").checked;
+            let dirObra = document.getElementById("chkDirObra").checked;
 
             localStorage.setItem("gespyme_nombre_empresa", nombre);
             localStorage.setItem("gespyme_email_empresa", email);
+            localStorage.setItem("gespyme_idioma", idioma);
             localStorage.setItem("gespyme_moneda", moneda);
-            localStorage.setItem("gespyme_usuario", nombre); // Sincroniza el perfil visual superior
+            localStorage.setItem("gespyme_impuesto", impuesto);
+            localStorage.setItem("gespyme_firma_online", firmaOnline);
+            localStorage.setItem("gespyme_dir_envio", dirEnvio);
+            localStorage.setItem("gespyme_dir_obra", dirObra);
+            localStorage.setItem("gespyme_usuario", nombre);
 
             alert("¡Configuración guardada con éxito!");
             location.reload();
@@ -167,15 +227,15 @@
             let usuario = localStorage.getItem("gespyme_usuario");
             if (usuario) document.getElementById("userProfileDisplay").innerHTML = `<span>👤</span> ${usuario}`;
 
-            if (localStorage.getItem("gespyme_nombre_empresa")) {
-                document.getElementById("nombreEmpresa").value = localStorage.getItem("gespyme_nombre_empresa");
-            }
-            if (localStorage.getItem("gespyme_email_empresa")) {
-                document.getElementById("emailEmpresa").value = localStorage.getItem("gespyme_email_empresa");
-            }
-            if (localStorage.getItem("gespyme_moneda")) {
-                document.getElementById("monedaNegocio").value = localStorage.getItem("gespyme_moneda");
-            }
+            if (localStorage.getItem("gespyme_nombre_empresa")) document.getElementById("nombreEmpresa").value = localStorage.getItem("gespyme_nombre_empresa");
+            if (localStorage.getItem("gespyme_email_empresa")) document.getElementById("emailEmpresa").value = localStorage.getItem("gespyme_email_empresa");
+            if (localStorage.getItem("gespyme_idioma")) document.getElementById("idiomaApp").value = localStorage.getItem("gespyme_idioma");
+            if (localStorage.getItem("gespyme_moneda")) document.getElementById("monedaNegocio").value = localStorage.getItem("gespyme_moneda");
+            if (localStorage.getItem("gespyme_impuesto")) document.getElementById("impuestoDefecto").value = localStorage.getItem("gespyme_impuesto");
+            
+            if (localStorage.getItem("gespyme_firma_online") === "true") document.getElementById("chkFirmaOnline").checked = true;
+            if (localStorage.getItem("gespyme_dir_envio") === "true") document.getElementById("chkDirEnvio").checked = true;
+            if (localStorage.getItem("gespyme_dir_obra") === "true") document.getElementById("chkDirObra").checked = true;
         };
     </script>
 </body>
