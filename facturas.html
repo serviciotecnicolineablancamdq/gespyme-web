@@ -342,14 +342,17 @@
         }
 
         function procesarEmision(event) {
-            event.preventDefault();
-            
-            if (!verificarYRegistrarEmision()) {
-                return;
-            }
+    event.preventDefault();
+    
+    // 1. Validar límite de emisión del plan
+    if (!verificarYRegistrarEmision()) {
+        return;
+    }
 
-            alert('¡Factura emitida con éxito!');
-        }
+    // 2. Disparar directamente la ventana de impresión/PDF del sistema
+    window.print();
+}
+
 
         window.onload = function() {
             let usuario = localStorage.getItem("gespyme_usuario");
