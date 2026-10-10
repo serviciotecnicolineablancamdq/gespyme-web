@@ -74,14 +74,40 @@
         .panel-section { background: white; border-radius: 8px; padding: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 2rem; }
         .panel-section h2 { margin-bottom: 1.2rem; font-size: 1.2rem; color: #333; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; }
         
+        /* Caja del Logo */
+        .logo-upload-box {
+            width: 140px; height: 140px; border: 2px dashed #ccc; border-radius: 8px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            cursor: pointer; background: #fafafa; position: relative; overflow: hidden; text-align: center;
+            margin-bottom: 1.5rem; transition: 0.2s;
+        }
+        .logo-upload-box:hover { border-color: #1a73e8; background: #f0f4f8; }
+        .logo-upload-box img { width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0; left: 0; background: white; }
+        .logo-upload-box span { font-size: 0.85rem; color: #666; padding: 0.5rem; }
+
+        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
         .form-group { margin-bottom: 1.2rem; }
         .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.9rem; color: #555; }
-        .form-group input, .form-group select { width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95rem; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95rem; }
         
+        /* Tabla dinámica de ítems */
+        .items-table { width: 100%; border-collapse: collapse; margin-top: 1rem; margin-bottom: 1rem; }
+        .items-table th, .items-table td { padding: 0.6rem; border-bottom: 1px solid #eee; text-align: left; }
+        .items-table th { background: #f8f9fa; font-size: 0.85rem; color: #5f6368; }
+        .items-table input { width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; }
+        
+        .btn-add-item { background: #e8f0fe; color: #1a73e8; border: 1px solid #1a73e8; padding: 0.6rem 1rem; border-radius: 4px; cursor: pointer; font-weight: 500; margin-bottom: 1.5rem; }
+        .btn-add-item:hover { background: #d2e3fc; }
+        .btn-remove { background: #dc3545; color: white; border: none; padding: 0.4rem 0.6rem; border-radius: 4px; cursor: pointer; }
+
+        .totals-box { margin-left: auto; width: 300px; font-size: 0.95rem; }
+        .totals-row { display: flex; justify-content: space-between; padding: 0.4rem 0; border-bottom: 1px solid #eee; }
+        .totals-row.final { font-weight: bold; font-size: 1.15rem; color: #1a73e8; border-bottom: 2px solid #1a73e8; }
+
         .conditional-field { background: #f8f9fa; border: 1px dashed #cbd5e1; border-radius: 6px; padding: 1rem; margin-top: 1rem; display: none; }
         .conditional-field h4 { font-size: 0.9rem; color: #1a73e8; margin-bottom: 0.5rem; }
 
-        .btn-primary { background-color: #1a73e8; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-weight: 500; font-size: 0.95rem; width: 100%; margin-top: 1rem; }
+        .btn-primary { background-color: #1a73e8; color: white; border: none; padding: 0.85rem 1.5rem; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 1rem; width: 100%; margin-top: 1.5rem; }
         .btn-primary:hover { background-color: #1557b0; }
     </style>
 </head>
@@ -122,21 +148,81 @@
         <div class="container">
             <div class="panel-section">
                 <h2>Nueva Factura</h2>
-                <form onsubmit="event.preventDefault(); alert('¡Factura emitida con éxito!');">
+                <form onsubmit="procesarEmision(event)">
+                    
+                    <!-- 1. Cargar Logotipo de la Empresa -->
                     <div class="form-group">
-                        <label>Cliente / Razón Social</label>
-                        <input type="text" placeholder="Nombre del cliente" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Concepto o Detalle del Servicio</label>
-                        <input type="text" placeholder="Ej. Reparación y mantenimiento" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Monto Total</label>
-                        <input type="number" id="montoFactura" placeholder="0.00" required>
+                        <label>Logotipo de la Empresa</label>
+                        <div class="logo-upload-box" onclick="document.getElementById('inputLogo').click()">
+                            <span id="logoText">+ Añadir logotipo</span>
+                            <img id="logoPreview" style="display: none;" alt="Logo">
+                        </div>
+                        <input type="file" id="inputLogo" accept="image/*" style="display: none;" onchange="cargarLogo(event)">
                     </div>
 
-                    <!-- Campos condicionales que se activan automáticamente según la Configuración -->
+                    <!-- 2. Datos Principales y Fechas -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Cliente / Razón Social</label>
+                            <input type="text" placeholder="Nombre del cliente" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Fecha de Emisión</label>
+                            <input type="date" id="fechaEmision" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Fecha de Vencimiento</label>
+                            <input type="date" id="fechaVencimiento" required>
+                        </div>
+                    </div>
+
+                    <!-- 3. Tabla de Productos e Ítems Dinámicos -->
+                    <label style="font-weight: 500; font-size: 0.9rem; color: #555;">Detalle de Productos / Servicios</label>
+                    <table class="items-table" id="tablaItems">
+                        <thead>
+                            <tr>
+                                <th style="width: 45%;">Concepto / Producto</th>
+                                <th style="width: 15%;">Cantidad</th>
+                                <th style="width: 20%;">Precio ($)</th>
+                                <th style="width: 15%;">Subtotal</th>
+                                <th style="width: 5%;"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="text" class="desc-item" placeholder="Ej. Reparación de equipo" required></td>
+                                <td><input type="number" class="cant-item" value="1" min="1" oninput="calcularTotales()" required></td>
+                                <td><input type="number" class="precio-item" placeholder="0.00" step="any" oninput="calcularTotales()" required></td>
+                                <td class="total-item">$0.00</td>
+                                <td><button type="button" class="btn-remove" onclick="eliminarFila(this)">X</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button type="button" class="btn-add-item" onclick="agregarFila()">+ Añadir producto / servicio</button>
+
+                    <!-- 4. Totales Calculados Automáticamente -->
+                    <div class="totals-box">
+                        <div class="totals-row">
+                            <span>Subtotal:</span>
+                            <span id="txtSubtotal">$0.00</span>
+                        </div>
+                        <div class="totals-row">
+                            <span>IVA (21%):</span>
+                            <span id="txtIva">$0.00</span>
+                        </div>
+                        <div class="totals-row final">
+                            <span>Total a Pagar:</span>
+                            <span id="txtTotal">$0.00</span>
+                        </div>
+                    </div>
+
+                    <!-- 5. Comentarios y Notas al Pie -->
+                    <div class="form-group" style="margin-top: 1.5rem;">
+                        <label>Notas / Comentarios al pie de la factura</label>
+                        <textarea rows="2" placeholder="Ej. Forma de pago: Transferencia bancaria CBU..."></textarea>
+                    </div>
+
+                    <!-- 6. Campos condicionales (Configuración) -->
                     <div id="seccionDirEnvio" class="conditional-field">
                         <h4>📍 Dirección de Envío</h4>
                         <input type="text" placeholder="Ingrese dirección de entrega o despacho">
@@ -160,30 +246,122 @@
     </div>
 
     <script>
+        // Establecer fecha actual por defecto
+        document.getElementById('fechaEmision').valueAsDate = new Date();
+
         function toggleSidebar() {
             let sidebar = document.getElementById("sidebarMenu");
             if (sidebar) sidebar.classList.toggle("open");
         }
 
+        // Cargar vista previa del Logo
+        function cargarLogo(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.getElementById('logoPreview');
+                    img.src = e.target.result;
+                    img.style.display = 'block';
+                    document.getElementById('logoText').style.display = 'none';
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Agregar fila de producto/servicio
+        function agregarFila() {
+            const tbody = document.querySelector('#tablaItems tbody');
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><input type="text" class="desc-item" placeholder="Concepto / Producto" required></td>
+                <td><input type="number" class="cant-item" value="1" min="1" oninput="calcularTotales()" required></td>
+                <td><input type="number" class="precio-item" placeholder="0.00" step="any" oninput="calcularTotales()" required></td>
+                <td class="total-item">$0.00</td>
+                <td><button type="button" class="btn-remove" onclick="eliminarFila(this)">X</button></td>
+            `;
+            tbody.appendChild(tr);
+        }
+
+        // Eliminar fila
+        function eliminarFila(btn) {
+            const filas = document.querySelectorAll('#tablaItems tbody tr');
+            if (filas.length > 1) {
+                btn.closest('tr').remove();
+                calcularTotales();
+            }
+        }
+
+        // Calcular totales e IVA
+        function calcularTotales() {
+            const filas = document.querySelectorAll('#tablaItems tbody tr');
+            let subtotal = 0;
+
+            filas.forEach(fila => {
+                const cant = parseFloat(fila.querySelector('.cant-item').value) || 0;
+                const precio = parseFloat(fila.querySelector('.precio-item').value) || 0;
+                const totalItem = cant * precio;
+                subtotal += totalItem;
+                fila.querySelector('.total-item').innerText = '$' + totalItem.toFixed(2);
+            });
+
+            let iva = subtotal * 0.21;
+            let total = subtotal + iva;
+
+            document.getElementById('txtSubtotal').innerText = '$' + subtotal.toFixed(2);
+            document.getElementById('txtIva').innerText = '$' + iva.toFixed(2);
+            document.getElementById('txtTotal').innerText = '$' + total.toFixed(2);
+        }
+
+        // Control centralizado de límite de emisiones por plan
+        function verificarYRegistrarEmision() {
+            if (localStorage.getItem("gespyme_modo_dev") === "true") return true;
+
+            let plan = localStorage.getItem("gespyme_plan") || "basico";
+            if (plan === "pro") return true;
+
+            let mesActual = new Date().getMonth();
+            let mesGuardado = localStorage.getItem("gespyme_mes_actual");
+            
+            if (mesGuardado === null || parseInt(mesGuardado) !== mesActual) {
+                localStorage.setItem("gespyme_mes_actual", mesActual);
+                localStorage.setItem("gespyme_impresiones_mes", "0");
+            }
+
+            let impresionesRealizadas = parseInt(localStorage.getItem("gespyme_impresiones_mes") || "0");
+            let limiteMaximo = (plan === "medio") ? 30 : 15;
+
+            if (impresionesRealizadas >= limiteMaximo) {
+                alert(`⚠️ Has alcanzado el límite mensual de ${limiteMaximo} documentos emitidos para tu plan.\n\nActualiza tu suscripción en "Subscription Pro" para continuar.`);
+                window.location.href = "subscription.html";
+                return false;
+            }
+
+            localStorage.setItem("gespyme_impresiones_mes", impresionesRealizadas + 1);
+            return true;
+        }
+
+        function procesarEmision(event) {
+            event.preventDefault();
+            
+            if (!verificarYRegistrarEmision()) {
+                return;
+            }
+
+            alert('¡Factura emitida con éxito!');
+        }
+
         window.onload = function() {
-            // Sincronizar nombre de usuario en la cabecera
             let usuario = localStorage.getItem("gespyme_usuario");
             if (usuario) document.getElementById("userProfileDisplay").innerHTML = `<span>👤</span> ${usuario}`;
 
-            // Sincronizar automáticamente opciones avanzadas de configuración
             let firmaHabilitada = localStorage.getItem("gespyme_firma_online") === "true";
             let dirEnvioHabilitada = localStorage.getItem("gespyme_dir_envio") === "true";
             let dirObraHabilitada = localStorage.getItem("gespyme_dir_obra") === "true";
 
-            if (firmaHabilitada) {
-                document.getElementById("seccionFirma").style.display = "block";
-            }
-            if (dirEnvioHabilitada) {
-                document.getElementById("seccionDirEnvio").style.display = "block";
-            }
-            if (dirObraHabilitada) {
-                document.getElementById("seccionDirObra").style.display = "block";
-            }
+            if (firmaHabilitada) document.getElementById("seccionFirma").style.display = "block";
+            if (dirEnvioHabilitada) document.getElementById("seccionDirEnvio").style.display = "block";
+            if (dirObraHabilitada) document.getElementById("seccionDirObra").style.display = "block";
         };
     </script>
 </body>
