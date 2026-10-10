@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GesPyme - Nueva Nota de Crédito</title>
+    <title>GesPyme - Nueva Cotización</title>
     <style>
         :root {
             --primary-color: #1a73e8;
@@ -30,9 +30,7 @@
             transform: translateX(-100%); 
             transition: transform 0.3s ease;
         }
-        sidebar.open { 
-            transform: translateX(0); 
-        }
+        sidebar.open { transform: translateX(0); }
         .sidebar-brand { padding: 1.2rem; font-size: 1.1rem; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
         .sidebar-menu { list-style: none; padding: 0.5rem 0; overflow-y: auto; flex: 1; max-height: calc(100vh - 160px); }
         .sidebar-menu li a { display: block; padding: 0.6rem 1.2rem; color: #b0c4de; text-decoration: none; font-size: 0.9rem; transition: 0.2s; }
@@ -45,95 +43,68 @@
             background: rgba(0,0,0,0.15);
         }
         .btn-hide-sidebar {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.1);
-            color: #b0c4de;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 0.5rem;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
+            width: 100%; background: rgba(255, 255, 255, 0.1); color: #b0c4de; border: 1px solid rgba(255, 255, 255, 0.2); padding: 0.5rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 6px;
         }
         .btn-hide-sidebar:hover { background: rgba(255, 255, 255, 0.2); color: white; }
         .sidebar-footer { padding: 0.6rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.8rem; color: #a0a0a0; text-align: center; }
 
         .menu-toggle {
-            background: var(--sidebar-bg); color: white; border: none;
-            padding: 0.5rem 0.8rem; border-radius: 4px; font-size: 1.2rem; cursor: pointer; z-index: 1001;
+            background: var(--sidebar-bg); color: white; border: none; padding: 0.5rem 0.8rem; border-radius: 4px; font-size: 1.2rem; cursor: pointer; z-index: 1001;
         }
 
-        .main-content { 
-            flex: 1; display: flex; flex-direction: column; width: 100%; margin-left: 0; min-height: 100vh; 
-        }
-
+        .main-content { flex: 1; display: flex; flex-direction: column; width: 100%; margin-left: 0; min-height: 100vh; }
         header { background: white; padding: 0.8rem 1.5rem; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; }
         .user-profile { font-size: 0.9rem; color: #555; font-weight: 500; display: flex; align-items: center; gap: 8px; }
         
-        .container { padding: 2rem; max-width: 800px; width: 100%; margin: 0 auto; }
+        .container { padding: 2rem; max-width: 900px; width: 100%; margin: 0 auto; }
         .panel-section { background: white; border-radius: 8px; padding: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .panel-section h2 { margin-bottom: 1.5rem; font-size: 1.3rem; color: #333; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
         
-        /* Estilo para la caja del logotipo */
         .logo-upload-box {
-            width: 120px; height: 120px; border: 2px dashed #ccc; border-radius: 6px;
+            width: 130px; height: 130px; border: 2px dashed #ccc; border-radius: 8px;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             cursor: pointer; background: #fafafa; position: relative; overflow: hidden; text-align: center;
-            margin-bottom: 1.2rem; transition: 0.2s;
+            margin-bottom: 1.5rem; transition: 0.2s;
         }
         .logo-upload-box:hover { border-color: #1a73e8; background: #f0f4f8; }
         .logo-upload-box img { width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0; left: 0; background: white; }
-        .logo-upload-box span { font-size: 0.75rem; color: #666; padding: 0.4rem; }
+        .logo-upload-box span { font-size: 0.8rem; color: #666; padding: 0.4rem; }
 
+        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.2rem; }
         .form-group { margin-bottom: 1.2rem; }
         .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.9rem; color: #555; }
         .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95rem; }
-        .form-group textarea { resize: vertical; height: 90px; }
+        .form-group textarea { resize: vertical; height: 80px; }
         
+        .items-table { width: 100%; border-collapse: collapse; margin-top: 1rem; margin-bottom: 1rem; }
+        .items-table th, .items-table td { padding: 0.6rem; border-bottom: 1px solid #eee; text-align: left; }
+        .items-table th { background: #f8f9fa; font-size: 0.85rem; color: #5f6368; }
+        .items-table input { width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; }
+        
+        .btn-add-item { background: #e8f0fe; color: #1a73e8; border: 1px solid #1a73e8; padding: 0.6rem 1rem; border-radius: 4px; cursor: pointer; font-weight: 500; margin-bottom: 1.5rem; }
+        .btn-add-item:hover { background: #d2e3fc; }
+        .btn-remove { background: #dc3545; color: white; border: none; padding: 0.4rem 0.6rem; border-radius: 4px; cursor: pointer; }
+
+        .totals-box { margin-left: auto; width: 300px; font-size: 0.95rem; }
+        .totals-row { display: flex; justify-content: space-between; padding: 0.4rem 0; border-bottom: 1px solid #eee; }
+        .totals-row.final { font-weight: bold; font-size: 1.15rem; color: #1a73e8; border-bottom: 2px solid #1a73e8; }
+
         .form-actions { display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap; }
         .btn-primary { background-color: #28a745; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-weight: 500; font-size: 0.95rem; }
         .btn-primary:hover { background-color: #218838; }
         .btn-secondary { background-color: #6c757d; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-weight: 500; text-decoration: none; display: inline-block; font-size: 0.95rem; }
 
-        #pro-modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.6); display: none; justify-content: center; align-items: center; z-index: 10000; padding: 15px;
-        }
-        .pro-card {
-            background: white; padding: 2.5rem; border-radius: 12px; width: 90%; max-width: 420px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.3); text-align: center; position: relative; border-top: 5px solid #ff9800;
-        }
-        .pro-card h2 { color: #d97706; margin-bottom: 0.5rem; font-size: 1.4rem; border: none; padding: 0; }
-        .pro-card p { color: #555; font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.4; }
-        .pro-btn {
-            background-color: #28a745; color: white; border: none; padding: 0.8rem 1.5rem;
-            border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; width: 100%;
-        }
-        .close-modal { position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #888; }
-
         @media print {
-            sidebar, header, .form-actions, .no-print, #pro-modal { display: none !important; }
+            sidebar, header, .form-actions, .no-print, .btn-add-item, .btn-remove { display: none !important; }
             body { background: white; height: auto; overflow: visible; }
             .main-content { overflow: visible; display: block !important; }
             .container { padding: 0 !important; max-width: 100% !important; margin: 0 !important; }
             .panel-section { box-shadow: none !important; padding: 0 !important; }
-            input, textarea { border: none !important; background: transparent !important; padding: 0 !important; }
+            input, textarea, select { border: none !important; background: transparent !important; padding: 0 !important; }
         }
     </style>
 </head>
 <body>
-
-    <div id="pro-modal">
-        <div class="pro-card">
-            <button class="close-modal" onclick="cerrarModalPro()">×</button>
-            <h2>⭐ Función Exclusiva</h2>
-            <p id="pro-message">Este módulo está reservado para planes superiores.</p>
-            <a href="subscription.html" class="pro-btn">Ver Planes y Actualizar</a>
-        </div>
-    </div>
 
     <!-- Menú Lateral -->
     <sidebar id="sidebarMenu">
@@ -144,9 +115,8 @@
             <li><a href="index.html">Panel</a></li>
             <li><a href="clientes.html">Clientes</a></li>
             <li><a href="facturas.html">Facturas</a></li>
-            <li><a href="cotizaciones.html">Cotizaciones</a></li>
-            <li><a href="notas-credito.html" class="active">Notas de crédito</a></li>
-            <li><a href="nueva-nota-credito.html" class="sub-item">Nueva nota de crédito</a></li>
+            <li><a href="cotizaciones.html" class="active">Cotizaciones</a></li>
+            <li><a href="nueva-cotizacion.html" class="sub-item">Nueva cotización</a></li>
             <li><a href="articulos.html">Artículos</a></li>
             <li><a href="informes.html">Informes</a></li>
             <li><a href="herramientas.html">Herramientas</a></li>
@@ -158,9 +128,7 @@
                 <span>◀</span> Ocultar Menú
             </button>
         </div>
-        <div class="sidebar-footer">
-            GesPyme © 2026
-        </div>
+        <div class="sidebar-footer">GesPyme © 2026</div>
     </sidebar>
 
     <!-- Área Principal -->
@@ -168,7 +136,7 @@
         <header>
             <div style="display: flex; align-items: center; gap: 12px;">
                 <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
-                <span style="font-weight: bold; font-size: 1rem; color: #1a73e8;">Nueva Nota de Crédito</span>
+                <span style="font-weight: bold; font-size: 1rem; color: #1a73e8;">Nueva Cotización</span>
             </div>
             <div class="user-profile" id="userProfileDisplay">
                 <span>👤 Mi Cuenta</span>
@@ -178,11 +146,11 @@
         <div class="container">
             <div class="panel-section">
                 <h2>
-                    <span>Emitir Nueva Nota de Crédito</span>
-                    <span style="font-size: 0.85rem; color: #666;" class="no-print">Nº NC-0001-00000125</span>
+                    <span>Crear Nueva Cotización / Presupuesto</span>
+                    <span style="font-size: 0.85rem; color: #666;" class="no-print">Nº COT-0001-00000045</span>
                 </h2>
 
-                <!-- Bloque para Añadir Logotipo -->
+                <!-- 1. Logotipo de la Empresa -->
                 <div class="form-group no-print">
                     <label>Logotipo de la Empresa</label>
                     <div class="logo-upload-box" onclick="document.getElementById('input-logo').click()">
@@ -192,27 +160,74 @@
                     <input type="file" id="input-logo" accept="image/*" style="display: none;" onchange="cargarLogotipo(event)">
                 </div>
 
-                <form onsubmit="event.preventDefault(); alert('Nota de crédito guardada con éxito'); window.location.href='notas-credito.html';">
-                    <div class="form-group">
-                        <label>Factura de Referencia / N.º de Comprobante</label>
-                        <input type="text" placeholder="Ej: FAC-0001" required>
+                <form onsubmit="procesarGuardado(event)">
+                    
+                    <!-- 2. Cliente y Fechas -->
+                    <div class="form-row">
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label>Cliente / Razón Social</label>
+                            <input type="text" placeholder="Seleccione o escriba el nombre del cliente..." required>
+                        </div>
+                        <div class="form-group">
+                            <label>Fecha de Emisión</label>
+                            <input type="date" id="fechaEmision" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Válido Hasta (Vencimiento)</label>
+                            <input type="date" id="fechaVencimiento" required>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Cliente / Empresa</label>
-                        <input type="text" placeholder="Nombre del cliente" required>
+
+                    <!-- 3. Tabla Dinámica de Ítems / Productos -->
+                    <label style="font-weight: 500; font-size: 0.9rem; color: #555;">Detalle de Productos / Servicios Cotizados</label>
+                    <table class="items-table" id="tablaItems">
+                        <thead>
+                            <tr>
+                                <th style="width: 45%;">Concepto / Descripción</th>
+                                <th style="width: 15%;">Cantidad</th>
+                                <th style="width: 20%;">Precio Unit. ($)</th>
+                                <th style="width: 15%;">Subtotal</th>
+                                <th style="width: 5%;" class="no-print"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="text" class="desc-item" placeholder="Descripción del producto o servicio..." required></td>
+                                <td><input type="number" class="cant-item" value="1" min="1" oninput="calcularTotales()" required></td>
+                                <td><input type="number" class="precio-item" placeholder="0.00" step="any" oninput="calcularTotales()" required></td>
+                                <td class="total-item">$0.00</td>
+                                <td class="no-print"><button type="button" class="btn-remove" onclick="eliminarFila(this)">X</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button type="button" class="btn-add-item no-print" onclick="agregarFila()">+ Añadir producto / servicio</button>
+
+                    <!-- 4. Resumen de Totales -->
+                    <div class="totals-box">
+                        <div class="totals-row">
+                            <span>Subtotal:</span>
+                            <span id="txtSubtotal">$0.00</span>
+                        </div>
+                        <div class="totals-row">
+                            <span>IVA (21%):</span>
+                            <span id="txtIva">$0.00</span>
+                        </div>
+                        <div class="totals-row final">
+                            <span>Monto Total:</span>
+                            <span id="txtTotal">$0.00</span>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Motivo de la Nota de Crédito</label>
-                        <textarea placeholder="Detalle de la devolución o ajuste..." required></textarea>
+
+                    <!-- 5. Observaciones o Notas -->
+                    <div class="form-group" style="margin-top: 1.5rem;">
+                        <label>Condiciones / Notas al pie</label>
+                        <textarea placeholder="Ej. Presupuesto sujeto a cambios sin previo aviso. Tiempo estimado de ejecución: 3 días."></textarea>
                     </div>
-                    <div class="form-group">
-                        <label>Monto a Creditar ($)</label>
-                        <input type="number" step="any" placeholder="0.00" required>
-                    </div>
+
                     <div class="form-actions">
-                        <button type="submit" class="btn-primary">Emitir Nota de Crédito</button>
-                        <button type="button" class="btn-primary" onclick="window.print()" style="background-color: #1a73e8;">🖨️ Imprimir / PDF</button>
-                        <a href="notas-credito.html" class="btn-secondary">Cancelar</a>
+                        <button type="submit" class="btn-primary">Guardar Cotización</button>
+                        <button type="button" class="btn-primary" onclick="procesarImpresion()" style="background-color: #1a73e8;">🖨️ Imprimir / PDF</button>
+                        <a href="cotizaciones.html" class="btn-secondary">Cancelar</a>
                     </div>
                 </form>
             </div>
@@ -220,11 +235,12 @@
     </div>
 
     <script>
+        // Fecha actual por defecto
+        document.getElementById('fechaEmision').valueAsDate = new Date();
+
         function toggleSidebar() {
             let sidebar = document.getElementById("sidebarMenu");
-            if (sidebar) {
-                sidebar.classList.toggle("open");
-            }
+            if (sidebar) sidebar.classList.toggle("open");
         }
 
         function cargarLogotipo(event) {
@@ -240,6 +256,94 @@
                 }
                 lector.readAsDataURL(archivo);
             }
+        }
+
+        function agregarFila() {
+            const tbody = document.querySelector('#tablaItems tbody');
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><input type="text" class="desc-item" placeholder="Descripción del producto o servicio..." required></td>
+                <td><input type="number" class="cant-item" value="1" min="1" oninput="calcularTotales()" required></td>
+                <td><input type="number" class="precio-item" placeholder="0.00" step="any" oninput="calcularTotales()" required></td>
+                <td class="total-item">$0.00</td>
+                <td class="no-print"><button type="button" class="btn-remove" onclick="eliminarFila(this)">X</button></td>
+            `;
+            tbody.appendChild(tr);
+        }
+
+        function eliminarFila(btn) {
+            const filas = document.querySelectorAll('#tablaItems tbody tr');
+            if (filas.length > 1) {
+                btn.closest('tr').remove();
+                calcularTotales();
+            }
+        }
+
+        function calcularTotales() {
+            const filas = document.querySelectorAll('#tablaItems tbody tr');
+            let subtotal = 0;
+
+            filas.forEach(fila => {
+                const cant = parseFloat(fila.querySelector('.cant-item').value) || 0;
+                const precio = parseFloat(fila.querySelector('.precio-item').value) || 0;
+                const totalItem = cant * precio;
+                subtotal += totalItem;
+                fila.querySelector('.total-item').innerText = '$' + totalItem.toFixed(2);
+            });
+
+            let iva = subtotal * 0.21;
+            let total = subtotal + iva;
+
+            document.getElementById('txtSubtotal').innerText = '$' + subtotal.toFixed(2);
+            document.getElementById('txtIva').innerText = '$' + iva.toFixed(2);
+            document.getElementById('txtTotal').innerText = '$' + total.toFixed(2);
+        }
+
+        // Control centralizado de límite de emisiones de documentos
+        function verificarYRegistrarEmision() {
+            if (localStorage.getItem("gespyme_modo_dev") === "true") return true;
+
+            let plan = localStorage.getItem("gespyme_plan") || "basico";
+            if (plan === "pro") return true;
+
+            let mesActual = new Date().getMonth();
+            let mesGuardado = localStorage.getItem("gespyme_mes_actual");
+            
+            if (mesGuardado === null || parseInt(mesGuardado) !== mesActual) {
+                localStorage.setItem("gespyme_mes_actual", mesActual);
+                localStorage.setItem("gespyme_impresiones_mes", "0");
+            }
+
+            let impresionesRealizadas = parseInt(localStorage.getItem("gespyme_impresiones_mes") || "0");
+            let limiteMaximo = (plan === "medio") ? 30 : 15;
+
+            if (impresionesRealizadas >= limiteMaximo) {
+                alert(`⚠️ Has alcanzado el límite mensual de ${limiteMaximo} documentos emitidos para tu plan.\n\nActualiza tu suscripción en "Subscription Pro" para continuar.`);
+                window.location.href = "subscription.html";
+                return false;
+            }
+
+            localStorage.setItem("gespyme_impresiones_mes", impresionesRealizadas + 1);
+            return true;
+        }
+
+        function procesarGuardado(event) {
+            event.preventDefault();
+            
+            if (!verificarYRegistrarEmision()) {
+                return;
+            }
+
+            alert('Cotización guardada con éxito');
+            window.location.href = 'cotizaciones.html';
+        }
+
+        function procesarImpresion() {
+            if (!verificarYRegistrarEmision()) {
+                return;
+            }
+
+            window.print();
         }
 
         window.onload = function() {
