@@ -13,7 +13,6 @@
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
         
-        /* Scroll vertical fluido optimizado para Android */
         html, body { 
             background-color: var(--bg-color); 
             color: var(--text-color); 
@@ -27,7 +26,6 @@
             height: 100%;
         }
         
-        /* Menú lateral forzado a estar oculto por defecto en subpáginas móviles */
         sidebar { 
             width: 260px; background-color: var(--sidebar-bg); color: white; display: flex; flex-direction: column; 
             position: fixed; height: 100vh; top: 0; left: 0; z-index: 1000; 
@@ -272,7 +270,7 @@
                     </div>
 
                     <div class="form-actions">
-                        <button type="button" class="btn-primary" onclick="generarPDF(event)">Generar y Descargar PDF</button>
+                        <button type="button" class="btn-primary" onclick="ejecutarImpresionDirecta(event)">Generar y Descargar PDF</button>
                         <a href="index.html" class="btn-secondary">Volver al Panel</a>
                     </div>
                 </form>
@@ -377,7 +375,7 @@
             return true;
         }
 
-        function generarPDF(event) {
+        function ejecutarImpresionDirecta(event) {
             if (event) event.preventDefault();
 
             if (!verificarYRegistrarEmision()) {
@@ -390,45 +388,51 @@
             document.getElementById('lblCliente').innerText = document.getElementById('clienteSelect').value || 'Cliente General';
 
             const pdfTbody = document.getElementById('pdf-tbody');
-            pdfTbody.innerHTML = "";
-            const filas = document.querySelectorAll('#tabla-items-factura tbody tr');
-            
-            filas.forEach(fila => {
-                let desc = fila.querySelector('.desc-item').value || 'Artículo/Servicio';
-                let cant = fila.querySelector('.cant-item').value || 1;
-                let precio = parseFloat(fila.querySelector('.precio-item').value || 0).toFixed(2);
-                let total = (parseFloat(cant) * parseFloat(precio)).toFixed(2);
+            if (pdfTbody) {
+                pdfTbody.innerHTML = "";
+                const filas = document.querySelectorAll('#tabla-items-factura tbody tr');
+                
+                filas.forEach(fila => {
+                    let desc = fila.querySelector('.desc-item') ? fila.querySelector('.desc-item').value : 'Servicio';
+                    let cant = fila.querySelector('.cant-item') ? fila.querySelector('.cant-item').value : 1;
+                    let precio = parseFloat(fila.querySelector('.precio-item') ? fila.querySelector('.precio-item').value : 0).toFixed(2);
+                    let total = (parseFloat(cant) * parseFloat(precio)).toFixed(2);
 
-                let tr = document.createElement('tr');
-                tr.style.borderBottom = "1px solid #eee";
-                tr.innerHTML = `
-                    <td style="padding: 8px;">${desc}</td>
-                    <td style="text-align: center; padding: 8px;">${cant}</td>
-                    <td style="text-align: right; padding: 8px;">$${precio}</td>
-                    <td style="text-align: right; padding: 8px;">$${total}</td>
-                `;
-                pdfTbody.appendChild(tr);
-            });
-
-            document.getElementById('pdfSubtotal').innerText = document.getElementById('subtotalText').innerText;
-            document.getElementById('pdfIva').innerText = document.getElementById('ivaText').innerText;
-            document.getElementById('lblTotalFinal').innerText = document.getElementById('totalFinalText').innerText;
-
-            const pdfLogoImg = document.getElementById('pdf-logo-img');
-            if (logoDataUrl) {
-                pdfLogoImg.src = logoDataUrl;
-                pdfLogoImg.style.display = 'block';
-            } else {
-                pdfLogoImg.style.display = 'none';
+                    let tr = document.createElement('tr');
+                    tr.style.borderBottom = "1px solid #eee";
+                    tr.innerHTML = `
+                        <td style="padding: 8px;">${desc}</td>
+                        <td style="text-align: center; padding: 8px;">${cant}</td>
+                        <td style="text-align: right; padding: 8px;">$${precio}</td>
+                        <td style="text-align: right; padding: 8px;">$${total}</td>
+                    `;
+                    pdfTbody.appendChild(tr);
+                });
             }
 
-            window.print();
+            const subText = document.getElementById('subtotalText');
+            const ivaText = document.getElementById('ivaText');
+            const totText = document.getElementById('totalFinalText');
+
+            if (subText) document.getElementById('pdfSubtotal').innerText = subText.innerText;
+            if (ivaText) document.getElementById('pdfIva').innerText = ivaText.innerText;
+            if (totText) document.getElementById('lblTotalFinal').innerText = totText.innerText;
+
+            const pdfLogoImg = document.getElementById('pdf-logo-img');
+            if (pdfLogoImg && typeof logoDataUrl !== 'undefined' && logoDataUrl) {
+                pdfLogoImg.src = logoDataUrl;
+                pdfLogoImg.style.display = 'block';
+            }
+
+            setTimeout(function() {
+                window.print();
+            }, 300);
         }
 
         window.onload = function() {
             let usuario = localStorage.getItem("gespyme_usuario");
             if (usuario) {
-                document.getElementById("userProfileDisplay").innerHTML = `<span>👤</span> ${usuario}`;
+                document.getElementById("userProfileDisplay").innerHTML = `👤 ${usuario}`;
             }
         };
     </script>
