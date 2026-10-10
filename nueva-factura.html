@@ -98,16 +98,7 @@
         .btn-secondary { background-color: #6c757d; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-weight: 500; text-decoration: none; display: inline-block; font-size: 0.95rem; }
         .btn-secondary:hover { background-color: #5a6268; }
 
-        /* Estilos de impresión profesionales y limpios */
-        @media print {
-            sidebar, header, .form-actions, .panel-section h2, .form-row, .invoice-items-table, .btn-action, .btn-danger, .no-print, form > table, form > button, .totals-section { display: none !important; }
-            body { background: white !important; height: auto !important; overflow: visible !important; margin: 0 !important; padding: 0 !important; }
-            .main-content { overflow: visible !important; display: block !important; position: static !important; margin: 0 !important; }
-            .container { padding: 0 !important; max-width: 100% !important; margin: 0 !important; width: 100% !important; }
-            .panel-section { box-shadow: none !important; padding: 0 !important; margin: 0 !important; background: transparent !important; }
-            #pdf-preview { display: block !important; border: none !important; padding: 10px !important; width: 100% !important; position: static !important; }
-        }
-
+        /* Ocultar la previsualización en pantalla normal */
         #pdf-preview { display: none; }
     </style>
 </head>
@@ -156,7 +147,7 @@
                 <form id="facturaForm" onsubmit="event.preventDefault();">
                     
                     <!-- Logotipo -->
-                    <div class="form-group no-print">
+                    <div class="form-group">
                         <label>Logotipo de la Empresa</label>
                         <div class="logo-upload-box" onclick="document.getElementById('input-logo').click()">
                             <span id="logo-text">+ Añadir un logotipo</span>
@@ -196,7 +187,7 @@
                                     <th style="width: 15%;">Cantidad</th>
                                     <th style="width: 20%;">Precio Unitario</th>
                                     <th style="width: 15%;">Total</th>
-                                    <th style="width: 5%;" class="no-print">Acción</th>
+                                    <th style="width: 5%;">Acción</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -205,12 +196,12 @@
                                     <td><input type="number" class="cant-item" value="1" min="1" oninput="calcularTotales()" required></td>
                                     <td><input type="number" class="precio-item" placeholder="0.00" step="any" oninput="calcularTotales()" required></td>
                                     <td class="item-total">$0.00</td>
-                                    <td class="no-print"><button type="button" class="btn-danger" onclick="eliminarFila(this)">X</button></td>
+                                    <td><button type="button" class="btn-danger" onclick="eliminarFila(this)">X</button></td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                    <button type="button" class="btn-action no-print" onclick="agregarFila()">+ Agregar Ítem</button>
+                    <button type="button" class="btn-action" onclick="agregarFila()">+ Agregar Ítem</button>
 
                     <!-- Totales -->
                     <div class="totals-section">
@@ -230,41 +221,6 @@
                         </div>
                     </div>
 
-                    <!-- Plantilla PDF imprimible -->
-                    <div id="pdf-preview" style="background: white; padding: 20px; font-family: sans-serif;">
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
-                            <div>
-                                <h1 style="color: #1a73e8; margin-bottom: 5px;">FACTURA</h1>
-                                <p><strong>Nº Factura:</strong> <span id="lblNum">FAC-0001</span></p>
-                                <p><strong>Fecha de Emisión:</strong> <span id="lblEmision"></span></p>
-                                <p><strong>Fecha de Vencimiento:</strong> <span id="lblVencimiento"></span></p>
-                            </div>
-                            <div>
-                                <img id="pdf-logo-img" style="max-height: 80px; max-width: 150px; display: none;" alt="Logo Empresa">
-                            </div>
-                        </div>
-                        <hr style="margin: 15px 0; border: 0; border-top: 1px solid #ccc;">
-                        <p><strong>Cliente:</strong> <span id="lblCliente"></span></p>
-                        <br>
-                        <table style="width: 100%; border-collapse: collapse;" id="pdf-tabla-items">
-                            <thead>
-                                <tr style="background: #f8f9fa; border-bottom: 2px solid #ddd;">
-                                    <th style="text-align: left; padding: 8px;">Descripción</th>
-                                    <th style="text-align: center; padding: 8px;">Cant.</th>
-                                    <th style="text-align: right; padding: 8px;">Precio Unit.</th>
-                                    <th style="text-align: right; padding: 8px;">Total</th>
-                                </tr>
-                            </thead>
-                            <tbody id="pdf-tbody"></tbody>
-                        </table>
-                        <br>
-                        <div style="text-align: right; font-size: 1rem; line-height: 1.5;">
-                            <p>Subtotal: <span id="pdfSubtotal">$0.00</span></p>
-                            <p>IVA (21%): <span id="pdfIva">$0.00</span></p>
-                            <p style="font-size: 1.2rem; margin-top: 5px;"><strong>Total a Pagar: <span id="lblTotalFinal" style="color: #1a73e8;">$0.00</span></strong></p>
-                        </div>
-                    </div>
-
                     <div class="form-actions">
                         <button type="button" class="btn-primary" onclick="ejecutarImpresionDirecta(event)">Generar y Descargar PDF</button>
                         <a href="index.html" class="btn-secondary">Volver al Panel</a>
@@ -274,6 +230,7 @@
         </div>
     </div>
 
+    <!-- Script de lógica y generación por ventana emergente limpia para Android -->
     <script>
         document.getElementById('fechaEmision').valueAsDate = new Date();
         let logoDataUrl = "";
@@ -307,7 +264,7 @@
                 <td><input type="number" class="cant-item" value="1" min="1" oninput="calcularTotales()" required></td>
                 <td><input type="number" class="precio-item" placeholder="0.00" step="any" oninput="calcularTotales()" required></td>
                 <td class="item-total">$0.00</td>
-                <td class="no-print"><button type="button" class="btn-danger" onclick="eliminarFila(this)">X</button></td>
+                <td><button type="button" class="btn-danger" onclick="eliminarFila(this)">X</button></td>
             `;
             tbody.appendChild(tr);
             calcularTotales();
@@ -377,59 +334,104 @@
                 return;
             }
 
-            // Volcar datos al bloque imprimible
-            document.getElementById('lblNum').innerText = document.getElementById('numFactura').value || 'FAC-0001';
-            document.getElementById('lblEmision').innerText = document.getElementById('fechaEmision').value || '';
-            document.getElementById('lblVencimiento').innerText = document.getElementById('fechaVencimiento').value || '';
-            document.getElementById('lblCliente').innerText = document.getElementById('clienteSelect').value || 'Cliente General';
+            // Recopilar valores del formulario
+            const numFac = document.getElementById('numFactura').value || 'FAC-0001';
+            const fecEmision = document.getElementById('fechaEmision').value || '';
+            const fecVenc = document.getElementById('fechaVencimiento').value || '';
+            const cliente = document.getElementById('clienteSelect').value || 'Cliente General';
+            const subtotalStr = document.getElementById('subtotalText').innerText;
+            const ivaStr = document.getElementById('ivaText').innerText;
+            const totalStr = document.getElementById('totalFinalText').innerText;
 
-            const pdfTbody = document.getElementById('pdf-tbody');
-            if (pdfTbody) {
-                pdfTbody.innerHTML = "";
-                const filas = document.querySelectorAll('#tabla-items-factura tbody tr');
-                
-                filas.forEach(fila => {
-                    let desc = fila.querySelector('.desc-item') ? fila.querySelector('.desc-item').value : 'Servicio';
-                    let cant = fila.querySelector('.cant-item') ? fila.querySelector('.cant-item').value : 1;
-                    let precio = parseFloat(fila.querySelector('.precio-item') ? fila.querySelector('.precio-item').value : 0).toFixed(2);
-                    let total = (parseFloat(cant) * parseFloat(precio)).toFixed(2);
+            // Recopilar filas de la tabla
+            let filasHtml = '';
+            const filas = document.querySelectorAll('#tabla-items-factura tbody tr');
+            filas.forEach(fila => {
+                let desc = fila.querySelector('.desc-item') ? fila.querySelector('.desc-item').value : 'Servicio';
+                let cant = fila.querySelector('.cant-item') ? fila.querySelector('.cant-item').value : 1;
+                let precio = parseFloat(fila.querySelector('.precio-item') ? fila.querySelector('.precio-item').value : 0).toFixed(2);
+                let total = (parseFloat(cant) * parseFloat(precio)).toFixed(2);
 
-                    let tr = document.createElement('tr');
-                    tr.style.borderBottom = "1px solid #eee";
-                    tr.innerHTML = `
-                        <td style="padding: 8px;">${desc}</td>
-                        <td style="text-align: center; padding: 8px;">${cant}</td>
-                        <td style="text-align: right; padding: 8px;">$${precio}</td>
-                        <td style="text-align: right; padding: 8px;">$${total}</td>
-                    `;
-                    pdfTbody.appendChild(tr);
-                });
+                filasHtml += `
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 10px; text-align: left;">${desc}</td>
+                        <td style="padding: 10px; text-align: center;">${cant}</td>
+                        <td style="padding: 10px; text-align: right;">$${precio}</td>
+                        <td style="padding: 10px; text-align: right;">$${total}</td>
+                    </tr>
+                `;
+            });
+
+            // Crear una ventana emergente limpia dedicada exclusivamente al PDF
+            let ventanaImpresion = window.open('', '_blank', 'width=800,height=900');
+            if (!ventanaImpresion) {
+                alert("⚠️ El navegador bloqueó la ventana emergente. Por favor, permite ventanas emergentes para este sitio.");
+                return;
             }
 
-            document.getElementById('pdfSubtotal').innerText = document.getElementById('subtotalText').innerText;
-            document.getElementById('pdfIva').innerText = document.getElementById('ivaText').innerText;
-            document.getElementById('lblTotalFinal').innerText = document.getElementById('totalFinalText').innerText;
+            ventanaImpresion.document.write(`
+                <!DOCTYPE html>
+                <html lang="es">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Factura ${numFac}</title>
+                    <style>
+                        body { font-family: system-ui, -apple-system, sans-serif; padding: 30px; color: #333; background: #fff; }
+                        .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+                        h1 { color: #1a73e8; margin: 0 0 5px 0; font-size: 24px; }
+                        p { margin: 4px 0; font-size: 14px; }
+                        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; }
+                        th { background: #f8f9fa; border-bottom: 2px solid #ddd; padding: 10px; text-align: left; }
+                        .totals { margin-top: 20px; text-align: right; font-size: 15px; line-height: 1.6; }
+                        .totals strong { font-size: 18px; color: #1a73e8; }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <div>
+                            <h1>FACTURA</h1>
+                            <p><strong>Nº Factura:</strong> ${numFac}</p>
+                            <p><strong>Fecha de Emisión:</strong> ${fecEmision}</p>
+                            <p><strong>Fecha de Vencimiento:</strong> ${fecVenc}</p>
+                        </div>
+                        <div>
+                            ${logoDataUrl ? `<img src="${logoDataUrl}" style="max-height: 70px; max-width: 140px; object-fit: contain;" alt="Logo">` : ''}
+                        </div>
+                    </div>
+                    <hr style="border: 0; border-top: 1px solid #ccc; margin: 15px 0;">
+                    <p><strong>Cliente / Razón Social:</strong> ${cliente}</p>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Descripción</th>
+                                <th style="text-align: center;">Cant.</th>
+                                <th style="text-align: right;">Precio Unit.</th>
+                                <th style="text-align: right;">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${filasHtml}
+                        </tbody>
+                    </table>
 
-            const pdfLogoImg = document.getElementById('pdf-logo-img');
-            if (pdfLogoImg && logoDataUrl) {
-                pdfLogoImg.src = logoDataUrl;
-                pdfLogoImg.style.display = 'block';
-            } else {
-                pdfLogoImg.style.display = 'none';
-            }
+                    <div class="totals">
+                        <p>Subtotal: ${subtotalStr}</p>
+                        <p>IVA (21%): ${ivaStr}</p>
+                        <p><strong>Total a Pagar: ${totalStr}</strong></p>
+                    </div>
 
-            // Mostrar el preview explícitamente antes de imprimir para garantizar que Android lo capture
-            const previewBox = document.getElementById('pdf-preview');
-            previewBox.style.display = 'block';
-
-            // Llamada segura con doble temporizador para asegurar renderizado en móviles
-            setTimeout(function() {
-                window.print();
-                // Ocultar de nuevo el preview tras lanzar la impresión
-                setTimeout(function() {
-                    previewBox.style.display = 'none';
-                }, 1000);
-            }, 400);
+                    <script>
+                        window.onload = function() {
+                            setTimeout(function() {
+                                window.print();
+                            }, 500);
+                        };
+                    <\/script>
+                </body>
+                </html>
+            `);
+            ventanaImpresion.document.close();
         }
 
         window.onload = function() {
