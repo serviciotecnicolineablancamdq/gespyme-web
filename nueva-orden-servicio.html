@@ -127,26 +127,9 @@
         .btn-secondary { background-color: #6c757d; color: white; border: none; padding: 0.7rem 1.5rem; border-radius: 4px; cursor: pointer; text-decoration: none; font-weight: 500; }
         .btn-secondary:hover { background-color: #5a6268; }
 
-        /* Modal de Restricción de Planes */
-        #pro-modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.6); display: none; justify-content: center; align-items: center; z-index: 10000; padding: 15px;
-        }
-        .pro-card {
-            background: white; padding: 2.5rem; border-radius: 12px; width: 90%; max-width: 420px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.3); text-align: center; position: relative; border-top: 5px solid #ff9800;
-        }
-        .pro-card h2 { color: #d97706; margin-bottom: 0.5rem; font-size: 1.4rem; border: none; padding: 0; }
-        .pro-card p { color: #555; font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.4; }
-        .pro-btn {
-            background-color: #28a745; color: white; border: none; padding: 0.8rem 1.5rem;
-            border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; width: 100%;
-        }
-        .close-modal { position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #888; }
-
         /* Estilos de Impresión PDF limpios */
         @media print {
-            sidebar, header, .actions-bar, .btn-action, .btn-danger, .no-print, #pro-modal { display: none !important; }
+            sidebar, header, .actions-bar, .btn-action, .btn-danger, .no-print { display: none !important; }
             body { background: white; height: auto; overflow: visible; margin: 0; padding: 0; }
             .main-content { overflow: visible; display: block !important; position: static !important; }
             .container { padding: 0 !important; max-width: 100% !important; margin: 0 !important; width: 100% !important; }
@@ -157,30 +140,20 @@
 </head>
 <body>
 
-    <!-- MODAL DE RESTRICCIÓN DE PLANES -->
-    <div id="pro-modal">
-        <div class="pro-card">
-            <button class="close-modal" onclick="cerrarModalPro()">×</button>
-            <h2>⭐ Función Exclusiva</h2>
-            <p id="pro-message">Este módulo está reservado para planes superiores.</p>
-            <a href="subscription.html" class="pro-btn">Ver Planes y Actualizar</a>
-        </div>
-    </div>
-
     <!-- Menú Lateral Forzado a Iniciar Cerrado -->
     <sidebar id="sidebarMenu">
         <div class="sidebar-brand"><span>⚙️</span> GesPyme</div>
         <ul class="sidebar-menu">
             <li><a href="index.html">Panel</a></li>
             <li><a href="clientes.html">Clientes</a></li>
-            <li><a href="facturas.html" onclick="return verificarRestriccionModulo('facturas', event)">Facturas</a></li>
-            <li><a href="facturas.html" onclick="return verificarRestriccionModulo('facturas', event)" class="sub-item">Nueva factura</a></li>
+            <li><a href="facturas.html">Facturas</a></li>
+            <li><a href="facturas.html" class="sub-item">Nueva factura</a></li>
             <li><a href="cotizaciones.html">Cotizaciones</a></li>
             <li><a href="nueva-cotizacion.html" class="sub-item">Nueva cotización</a></li>
-            <li><a href="notas-credito.html" onclick="return verificarRestriccionModulo('notas', event)">Notas de crédito</a></li>
-            <li><a href="orden-servicio.html" onclick="return verificarRestriccionModulo('ordenes', event)">Orden de Servicio</a></li>
-            <li class="active"><a href="nueva-orden-servicio.html" onclick="return verificarRestriccionModulo('ordenes', event)" class="sub-item">Nueva orden</a></li>
-            <li><a href="pagos.html" onclick="return verificarRestriccionModulo('pagos', event)">Pagos</a></li>
+            <li><a href="notas-credito.html">Notas de crédito</a></li>
+            <li><a href="orden-servicio.html">Orden de Servicio</a></li>
+            <li class="active"><a href="nueva-orden-servicio.html" class="sub-item">Nueva orden</a></li>
+            <li><a href="pagos.html">Pagos</a></li>
             <li><a href="reembolsos.html">Reembolsos</a></li>
             <li><a href="articulos.html">Artículos</a></li>
             <li><a href="informes.html">Informes</a></li>
@@ -345,7 +318,6 @@ Constatación de la Falla: Al realizar las pruebas de continuidad y aislamiento 
     </div>
 
     <script>
-        // Función para abrir/ocultar el menú lateral en móviles
         function toggleSidebar() {
             let sidebar = document.getElementById("sidebarMenu");
             if (sidebar) {
@@ -409,46 +381,40 @@ Constatación de la Falla: Al realizar las pruebas de continuidad y aislamiento 
             document.getElementById('subtotal-rep').textContent = '$' + (totalGeneral / 2).toLocaleString('es-AR', {minimumFractionDigits: 2});
         }
 
-        function obtenerPlanActual() {
-            return localStorage.getItem("gespyme_plan") || "free";
-        }
+        // --- FUNCIÓN CENTRAL DE CONTROL DE LÍMITES Y EMISIONES ---
+        function verificarYRegistrarEmision() {
+            if (localStorage.getItem("gespyme_modo_dev") === "true") return true;
 
-        function verificarRestriccionModulo(modulo, event) {
-            if (localStorage.getItem("gespyme_modo_dev") === "true") {
-                return true;
+            let plan = localStorage.getItem("gespyme_plan") || "basico";
+            if (plan === "pro") return true;
+
+            let mesActual = new Date().getMonth();
+            let mesGuardado = localStorage.getItem("gespyme_mes_actual");
+            
+            if (mesGuardado === null || parseInt(mesGuardado) !== mesActual) {
+                localStorage.setItem("gespyme_mes_actual", mesActual);
+                localStorage.setItem("gespyme_impresiones_mes", "0");
             }
 
-            if (event) event.preventDefault();
+            let impresionesRealizadas = parseInt(localStorage.getItem("gespyme_impresiones_mes") || "0");
+            let limiteMaximo = (plan === "medio") ? 30 : 15;
 
-            let planKey = obtenerPlanActual();
-            if (planKey === 'free') {
-                let nombresModulos = {
-                    'facturas': 'Facturación',
-                    'notas': 'Notas de Crédito',
-                    'ordenes': 'Órdenes de Servicio',
-                    'pagos': 'Gestión de Pagos'
-                };
-                document.getElementById("pro-message").innerHTML = `El módulo de <strong>${nombresModulos[modulo] || modulo}</strong> está reservado para planes superiores.<br><br>Actualiza tu suscripción para desbloquearlo.`;
-                document.getElementById("pro-modal").style.display = "flex";
+            if (impresionesRealizadas >= limiteMaximo) {
+                alert(`⚠️ Has alcanzado el límite mensual de ${limiteMaximo} documentos emitidos para tu plan.\n\nActualiza tu suscripción en "Subscription Pro" para continuar.`);
+                window.location.href = "subscription.html";
                 return false;
             }
+
+            localStorage.setItem("gespyme_impresiones_mes", impresionesRealizadas + 1);
             return true;
         }
 
-        function cerrarModalPro() {
-            document.getElementById("pro-modal").style.display = "none";
-        }
-
         function imprimirOrden() {
-            if (localStorage.getItem("gespyme_modo_dev") === "true") {
-                window.print();
+            // Verificamos antes de generar la orden de servicio
+            if (!verificarYRegistrarEmision()) {
                 return;
             }
 
-            if (obtenerPlanActual() === 'free') {
-                verificarRestriccionModulo('ordenes');
-                return;
-            }
             window.print();
         }
 
@@ -456,11 +422,6 @@ Constatación de la Falla: Al realizar las pruebas de continuidad y aislamiento 
             let usuario = localStorage.getItem("gespyme_usuario");
             if (usuario) {
                 document.getElementById("userProfileDisplay").innerHTML = `<span>👤</span> ${usuario}`;
-            }
-
-            if (localStorage.getItem("gespyme_modo_dev") !== "true" && obtenerPlanActual() === 'free') {
-                document.getElementById("pro-message").innerHTML = `El módulo de <strong>Órdenes de Servicio</strong> está reservado para planes superiores.<br><br>Actualiza tu suscripción para desbloquearlo.`;
-                document.getElementById("pro-modal").style.display = "flex";
             }
         };
     </script>
