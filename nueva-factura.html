@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>GesPyme - Nueva Factura</title>
-    <!-- Librería para generación y descarga directa de PDF en móviles -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root {
             --primary-color: #1a73e8;
@@ -103,17 +101,6 @@
             .container { padding: 0.8rem !important; width: 100% !important; }
             .panel-section { padding: 1rem !important; }
             .form-row { gap: 0.8rem; }
-        }
-
-        /* Plantilla oculta fuera del flujo visual */
-        #pdf-preview-container {
-            position: absolute;
-            left: -9999px;
-            top: -9999px;
-            width: 750px;
-            background: white;
-            padding: 20px;
-            font-family: sans-serif;
         }
     </style>
 </head>
@@ -237,46 +224,10 @@
                     </div>
 
                     <div class="form-actions">
-                        <button type="button" class="btn-primary" id="btnDescargarPDF" onclick="ejecutarImpresionDirecta(event)">Generar y Descargar PDF</button>
+                        <button type="button" class="btn-primary" onclick="ejecutarImpresionDirecta(event)">Generar y Descargar PDF</button>
                         <a href="index.html" class="btn-secondary">Volver al Panel</a>
                     </div>
                 </form>
-
-                <!-- Plantilla invisible para captura de html2pdf -->
-                <div id="pdf-preview-container">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
-                        <div>
-                            <h1 style="color: #1a73e8; margin-bottom: 5px; font-size: 24px;">FACTURA</h1>
-                            <p style="margin: 3px 0;"><strong>Nº Factura:</strong> <span id="lblNum">FAC-0001</span></p>
-                            <p style="margin: 3px 0;"><strong>Fecha de Emisión:</strong> <span id="lblEmision"></span></p>
-                            <p style="margin: 3px 0;"><strong>Fecha de Vencimiento:</strong> <span id="lblVencimiento"></span></p>
-                        </div>
-                        <div>
-                            <img id="pdf-logo-img" style="max-height: 80px; max-width: 150px; display: none;" alt="Logo Empresa">
-                        </div>
-                    </div>
-                    <hr style="margin: 15px 0; border: 0; border-top: 1px solid #ccc;">
-                    <p style="font-size: 15px;"><strong>Cliente / Razón Social:</strong> <span id="lblCliente"></span></p>
-                    <br>
-                    <table style="width: 100%; border-collapse: collapse; margin-top: 10px;" id="pdf-tabla-items">
-                        <thead>
-                            <tr style="background: #f8f9fa; border-bottom: 2px solid #ddd;">
-                                <th style="text-align: left; padding: 10px;">Descripción</th>
-                                <th style="text-align: center; padding: 10px;">Cant.</th>
-                                <th style="text-align: right; padding: 10px;">Precio Unit.</th>
-                                <th style="text-align: right; padding: 10px;">Total</th>
-                            </tr>
-                        </thead>
-                        <tbody id="pdf-tbody"></tbody>
-                    </table>
-                    <br>
-                    <div style="text-align: right; font-size: 1rem; line-height: 1.6; margin-top: 20px;">
-                        <p style="margin: 3px 0;">Subtotal: <span id="pdfSubtotal">$0.00</span></p>
-                        <p style="margin: 3px 0;">IVA (21%): <span id="pdfIva">$0.00</span></p>
-                        <p style="font-size: 1.2rem; margin-top: 8px;"><strong>Total a Pagar: <span id="lblTotalFinal" style="color: #1a73e8;">$0.00</span></strong></p>
-                    </div>
-                </div>
-
             </div>
         </div>
     </div>
@@ -384,72 +335,93 @@
                 return;
             }
 
-            const btn = document.getElementById('btnDescargarPDF');
-            btn.innerText = "⏳ Generando PDF...";
-            btn.disabled = true;
-
-            // Volcar datos al bloque impreso
             const numFac = document.getElementById('numFactura').value || 'FAC-0001';
-            document.getElementById('lblNum').innerText = numFac;
-            document.getElementById('lblEmision').innerText = document.getElementById('fechaEmision').value || '';
-            document.getElementById('lblVencimiento').innerText = document.getElementById('fechaVencimiento').value || '';
-            document.getElementById('lblCliente').innerText = document.getElementById('clienteSelect').value || 'Cliente General';
+            const fecEmision = document.getElementById('fechaEmision').value || '';
+            const fecVenc = document.getElementById('fechaVencimiento').value || '';
+            const cliente = document.getElementById('clienteSelect').value || 'Cliente General';
+            const subtotalStr = document.getElementById('subtotalText').innerText;
+            const ivaStr = document.getElementById('ivaText').innerText;
+            const totalStr = document.getElementById('totalFinalText').innerText;
 
-            const pdfTbody = document.getElementById('pdf-tbody');
-            if (pdfTbody) {
-                pdfTbody.innerHTML = "";
-                const filas = document.querySelectorAll('#tabla-items-factura tbody tr');
-                
-                filas.forEach(fila => {
-                    let desc = fila.querySelector('.desc-item') ? fila.querySelector('.desc-item').value : 'Servicio';
-                    let cant = fila.querySelector('.cant-item') ? fila.querySelector('.cant-item').value : 1;
-                    let precio = parseFloat(fila.querySelector('.precio-item') ? fila.querySelector('.precio-item').value : 0).toFixed(2);
-                    let total = (parseFloat(cant) * parseFloat(precio)).toFixed(2);
+            let filasHtml = '';
+            const filas = document.querySelectorAll('#tabla-items-factura tbody tr');
+            filas.forEach(fila => {
+                let desc = fila.querySelector('.desc-item') ? fila.querySelector('.desc-item').value : 'Servicio';
+                let cant = fila.querySelector('.cant-item') ? fila.querySelector('.cant-item').value : 1;
+                let precio = parseFloat(fila.querySelector('.precio-item') ? fila.querySelector('.precio-item').value : 0).toFixed(2);
+                let total = (parseFloat(cant) * parseFloat(precio)).toFixed(2);
 
-                    let tr = document.createElement('tr');
-                    tr.style.borderBottom = "1px solid #eee";
-                    tr.innerHTML = `
+                filasHtml += `
+                    <tr style="border-bottom: 1px solid #eee;">
                         <td style="padding: 10px; text-align: left;">${desc}</td>
                         <td style="padding: 10px; text-align: center;">${cant}</td>
                         <td style="padding: 10px; text-align: right;">$${precio}</td>
                         <td style="padding: 10px; text-align: right;">$${total}</td>
-                    `;
-                    pdfTbody.appendChild(tr);
-                });
-            }
-
-            document.getElementById('pdfSubtotal').innerText = document.getElementById('subtotalText').innerText;
-            document.getElementById('pdfIva').innerText = document.getElementById('ivaText').innerText;
-            document.getElementById('lblTotalFinal').innerText = document.getElementById('totalFinalText').innerText;
-
-            const pdfLogoImg = document.getElementById('pdf-logo-img');
-            if (pdfLogoImg && logoDataUrl) {
-                pdfLogoImg.src = logoDataUrl;
-                pdfLogoImg.style.display = 'block';
-            } else {
-                pdfLogoImg.style.display = 'none';
-            }
-
-            // Opciones de exportación de html2pdf
-            const elemento = document.getElementById('pdf-preview-container');
-            const opciones = {
-                margin:       10,
-                filename:     `Factura_${numFac}.pdf`,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true },
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
-
-            // Generar y descargar automáticamente el archivo PDF
-            html2pdf().set(opciones).from(elemento).save().then(() => {
-                btn.innerText = "Generar y Descargar PDF";
-                btn.disabled = false;
-            }).catch(err => {
-                console.error(err);
-                alert("Error al generar el PDF. Reintentando...");
-                btn.innerText = "Generar y Descargar PDF";
-                btn.disabled = false;
+                    </tr>
+                `;
             });
+
+            let contenidoHtml = `
+                <!DOCTYPE html>
+                <html lang="es">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Factura ${numFac}</title>
+                    <style>
+                        body { font-family: system-ui, sans-serif; padding: 20px; color: #333; }
+                        h1 { color: #1a73e8; margin-bottom: 5px; }
+                        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                        th { background: #f8f9fa; border-bottom: 2px solid #ddd; padding: 10px; text-align: left; }
+                        td { padding: 10px; border-bottom: 1px solid #eee; }
+                        .totals { margin-top: 20px; text-align: right; font-size: 15px; line-height: 1.5; }
+                        .totals strong { font-size: 18px; color: #1a73e8; }
+                    </style>
+                </head>
+                <body>
+                    <div style="display: flex; justify-content: space-between;">
+                        <div>
+                            <h1>FACTURA</h1>
+                            <p><strong>Nº Factura:</strong> ${numFac}</p>
+                            <p><strong>Fecha de Emisión:</strong> ${fecEmision}</p>
+                            <p><strong>Fecha de Vencimiento:</strong> ${fecVenc}</p>
+                        </div>
+                        <div>
+                            ${logoDataUrl ? `<img src="${logoDataUrl}" style="max-height: 60px; max-width: 120px;" alt="Logo">` : ''}
+                        </div>
+                    </div>
+                    <hr style="margin: 15px 0; border: 0; border-top: 1px solid #ccc;">
+                    <p><strong>Cliente:</strong> ${cliente}</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Descripción</th>
+                                <th style="text-align: center;">Cant.</th>
+                                <th style="text-align: right;">Precio Unit.</th>
+                                <th style="text-align: right;">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${filasHtml}
+                        </tbody>
+                    </table>
+                    <div class="totals">
+                        <p>Subtotal: ${subtotalStr}</p>
+                        <p>IVA (21%): ${ivaStr}</p>
+                        <p><strong>Total a Pagar: ${totalStr}</strong></p>
+                    </div>
+                </body>
+                </html>
+            `;
+
+            let blob = new Blob([contenidoHtml], { type: 'text/html' });
+            let url = URL.createObjectURL(blob);
+            let a = document.createElement('a');
+            a.href = url;
+            a.download = `Factura_${numFac}.html`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
         }
 
         window.onload = function() {
