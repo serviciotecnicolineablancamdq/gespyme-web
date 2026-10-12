@@ -1,8 +1,0 @@
-[{
-      "relation": ["delegate_permission/common.handle_all_urls"],
-      "target": {
-        "namespace": "android_app",
-        "package_name": "io.github.serviciotecnicolineablancamdq.twa",
-        "sha256_cert_fingerprints": ["F4:F9:B4:6C:F3:A5:8E:6E:6E:68:FF:5A:B8:4B:B6:B8:0F:FD:B1:BC:4D:93:D7:61:60:E8:CC:D0:24:F4:AE:6F"]
-      }
-    }]
