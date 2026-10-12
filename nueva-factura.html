@@ -224,7 +224,7 @@
                     </div>
 
                     <div class="form-actions">
-                        <button type="button" class="btn-primary" onclick="ejecutarImpresionDirecta(event)">Generar y Descargar PDF</button>
+                        <button type="button" class="btn-primary" onclick="ejecutarImpresionDirecta(event)">Imprimir / Generar PDF</button>
                         <a href="index.html" class="btn-secondary">Volver al Panel</a>
                     </div>
                 </form>
@@ -361,14 +361,21 @@
                 `;
             });
 
-            let contenidoHtml = `
+            // Abrimos una ventana emergente limpia e invocamos la impresión de forma directa
+            let ventanaImpresion = window.open('', '_blank', 'width=800,height=600');
+            if (!ventanaImpresion) {
+                alert("⚠️ Por favor, permite las ventanas emergentes (pop-ups) en tu navegador para poder imprimir el comprobante.");
+                return;
+            }
+
+            ventanaImpresion.document.write(`
                 <!DOCTYPE html>
                 <html lang="es">
                 <head>
                     <meta charset="UTF-8">
                     <title>Factura ${numFac}</title>
                     <style>
-                        body { font-family: system-ui, sans-serif; padding: 20px; color: #333; }
+                        body { font-family: system-ui, sans-serif; padding: 30px; color: #333; max-width: 800px; margin: 0 auto; }
                         h1 { color: #1a73e8; margin-bottom: 5px; }
                         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
                         th { background: #f8f9fa; border-bottom: 2px solid #ddd; padding: 10px; text-align: left; }
@@ -378,7 +385,7 @@
                     </style>
                 </head>
                 <body>
-                    <div style="display: flex; justify-content: space-between;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                         <div>
                             <h1>FACTURA</h1>
                             <p><strong>Nº Factura:</strong> ${numFac}</p>
@@ -386,11 +393,11 @@
                             <p><strong>Fecha de Vencimiento:</strong> ${fecVenc}</p>
                         </div>
                         <div>
-                            ${logoDataUrl ? `<img src="${logoDataUrl}" style="max-height: 60px; max-width: 120px;" alt="Logo">` : ''}
+                            ${logoDataUrl ? `<img src="${logoDataUrl}" style="max-height: 70px; max-width: 140px; object-fit: contain;" alt="Logo">` : ''}
                         </div>
                     </div>
                     <hr style="margin: 15px 0; border: 0; border-top: 1px solid #ccc;">
-                    <p><strong>Cliente:</strong> ${cliente}</p>
+                    <p><strong>Cliente / Razón Social:</strong> ${cliente}</p>
                     <table>
                         <thead>
                             <tr>
@@ -409,19 +416,15 @@
                         <p>IVA (21%): ${ivaStr}</p>
                         <p><strong>Total a Pagar: ${totalStr}</strong></p>
                     </div>
+                    <script>
+                        setTimeout(function() {
+                            window.print();
+                        }, 500);
+                    <\/script>
                 </body>
                 </html>
-            `;
-
-            let blob = new Blob([contenidoHtml], { type: 'text/html' });
-            let url = URL.createObjectURL(blob);
-            let a = document.createElement('a');
-            a.href = url;
-            a.download = `Factura_${numFac}.html`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+            `);
+            ventanaImpresion.document.close();
         }
 
         window.onload = function() {
