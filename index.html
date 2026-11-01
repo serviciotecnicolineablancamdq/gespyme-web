@@ -446,6 +446,7 @@
             box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
         }
 
+        // Motor GPT local con lectura de contexto real (Corregido y optimizado)
         function enviarMensajeIA() {
             const input = document.getElementById('chat-input');
             const texto = input.value.trim();
@@ -462,30 +463,36 @@
             mensajes.scrollTop = mensajes.scrollHeight;
 
             setTimeout(() => {
-                let respuestaBot = "Entendido. Para gestionar eso en GesPyme, dirígete al módulo correspondiente desde el menú lateral o utiliza los accesos rápidos de la pantalla principal.";
                 let textoMinus = texto.toLowerCase();
+                let respuestaBot = "Entendido. Para gestionar eso en GesPyme, dirígete al módulo correspondiente desde el menú lateral.";
+                
+                let usuario = localStorage.getItem("gespyme_usuario");
+                let planKey = obtenerPlanActual();
+                let planInfo = PLANES_LIMITES[planKey] || PLANES_LIMITES['free'];
+                let usoActual = obtenerUsoActual();
 
                 if (textoMinus.includes('hola') || textoMinus.includes('buenas') || textoMinus.includes('saludos') || textoMinus.includes('que tal')) {
-                    respuestaBot = "¡Hola! Qué gusto saludarte. Soy tu asistente virtual de GesPyme. ¿En qué te puedo ayudar hoy con la gestión de tu negocio, cotizaciones o facturas?";
-                } else if (textoMinus.includes('cuenta') || textoMinus.includes('registro') || textoMinus.includes('usuario') || textoMinus.includes('sesion')) {
-                    let usuario = localStorage.getItem("gespyme_usuario");
-                    let plan = obtenerPlanActual();
+                    respuestaBot = `¡Hola! Qué gusto saludarte. Soy tu asistente virtual de GesPyme. Veo que ${usuario ? 'estás conectado con el ' + planInfo.nombre : 'estás como visitante'}. ¿En qué te puedo ayudar hoy?`;
+                } 
+                else if (textoMinus.includes('cuenta') || textoMinus.includes('registro') || textoMinus.includes('cree') || textoMinus.includes('sesion')) {
                     if (usuario) {
-                        respuestaBot = `¡Perfecto! Veo que tu cuenta (${usuario}) está activa con el ${PLANES_LIMITES[plan].nombre}. ¿En qué te ayudo a gestionar tus documentos hoy?`;
+                        respuestaBot = `¡Sí! Tu cuenta (${usuario}) ya está creada y activa bajo el ${planInfo.nombre}.`;
                     } else {
-                        respuestaBot = "Veo que mencionas tu cuenta. Recuerda usar el botón de 'Crear cuenta' en el banner inferior si aún no te has registrado de forma gratuita.";
+                        respuestaBot = "Para crear tu cuenta gratis, usa el botón 'Crear cuenta' ubicado en el banner inferior de la pantalla.";
                     }
-                } else if (textoMinus.includes('factura') || textoMinus.includes('cotiza') || textoMinus.includes('orden') || textoMinus.includes('crear')) {
-                    respuestaBot = "Para crear facturas, cotizaciones u órdenes de servicio, puedes utilizar los accesos rápidos de la parte superior del panel o el menú lateral (sujeto a los límites de tu plan actual).";
-                } else if (textoMinus.includes('plan') || textoMinus.includes('precio') || textoMinus.includes('pro') || textoMinus.includes('limite') || textoMinus.includes('gratis')) {
-                    let plan = obtenerPlanActual();
-                    let uso = obtenerUsoActual();
-                    let limite = PLANES_LIMITES[plan].limite;
-                    respuestaBot = `Actualmente te encuentras operando en el ${PLANES_LIMITES[plan].nombre} con un consumo de ${uso}/${limite} documentos. Puedes revisar los planes superiores en la sección "Subscription Pro" del menú lateral.`;
-                } else if (textoMinus.includes('ayuda') || textoMinus.includes('soporte') || textoMinus.includes('contacto') || textoMinus.includes('administrador') || textoMinus.includes('admin')) {
-                    respuestaBot = "Para recibir asistencia personalizada o comunicarte con el desarrollador, puedes abrir el 'Centro de Ayuda' desde el menú lateral o escribirnos a refrit234gonza@gmail.com.";
-                } else if (textoMinus.includes('para que sirve') || textoMinus.includes('aplicacion') || textoMinus.includes('gespyme')) {
-                    respuestaBot = "GesPyme es tu plataforma de gestión inteligente diseñada para optimizar facturas, cotizaciones, órdenes de servicio y control de clientes en tu negocio de forma rápida y profesional.";
+                } 
+                else if (textoMinus.includes('factura') || textoMinus.includes('no me deja') || textoMinus.includes('bloquea') || textoMinus.includes('modulo')) {
+                    if (planKey === 'free') {
+                        respuestaBot = `Ten en cuenta que estás en el Plan Gratuito. El sistema restringe el acceso al módulo de Facturas y otras secciones avanzadas hasta que actualices a un plan superior en la sección "Subscription Pro".`;
+                    } else {
+                        respuestaBot = `Tienes activo el ${planInfo.nombre} (${usoActual}/${planInfo.limite} documentos). Deberías poder ingresar al módulo de facturas sin inconvenientes desde el menú lateral.`;
+                    }
+                } 
+                else if (textoMinus.includes('plan') || textoMinus.includes('precio') || textoMinus.includes('pro') || textoMinus.includes('limite') || textoMinus.includes('gratis')) {
+                    respuestaBot = `Actualmente estás operando en el ${planInfo.nombre} con un consumo de ${usoActual}/${planInfo.limite} documentos. Puedes revisar los planes superiores en la sección "Subscription Pro" del menú lateral.`;
+                } 
+                else if (textoMinus.includes('ayuda') || textoMinus.includes('soporte') || textoMinus.includes('contacto') || textoMinus.includes('admin')) {
+                    respuestaBot = "Para asistencia directa con el desarrollador, abre el 'Centro de Ayuda' desde el menú lateral o escríbenos a refrit234gonza@gmail.com.";
                 }
 
                 const msgBot = document.createElement('div');
