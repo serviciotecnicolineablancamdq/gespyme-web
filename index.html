@@ -2,9 +2,10 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#2b3856">
 
     <title>GesPyme - Gestión Inteligente</title>
     <!-- Enlace al manifiesto de la PWA -->
@@ -48,7 +49,7 @@
             .menu-toggle { display: inline-block; }
         }
 
-        /* Banner inferior flotante adaptado para no pisar el menú lateral en escritorio */
+        /* Banner inferior flotante */
         #welcome-banner {
             position: fixed;
             bottom: 0;
@@ -102,14 +103,14 @@
         /* Contenedor principal de la app */
         .app-wrapper { display: flex; width: 100%; flex: 1; position: relative; }
 
-        /* Menú Lateral Responsivo (etiqueta original 'sidebar') */
-        sidebar { 
+        /* Menú Lateral Responsivo (Reemplazado por etiqueta HTML5 estándar 'aside') */
+        aside.sidebar { 
             width: 260px; background-color: var(--sidebar-bg); color: white; display: flex; flex-direction: column; 
             position: fixed; height: 100vh; top: 0; left: 0; z-index: 1000; transition: transform 0.3s ease;
         }
         @media (max-width: 767px) {
-            sidebar { transform: translateX(-100%); }
-            sidebar.open { transform: translateX(0); }
+            aside.sidebar { transform: translateX(-100%); }
+            aside.sidebar.open { transform: translateX(0); }
         }
         .sidebar-brand { padding: 1.2rem; font-size: 1.1rem; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
         .sidebar-menu { list-style: none; padding: 0.5rem 0; overflow-y: auto; flex: 1; max-height: calc(100vh - 160px); }
@@ -117,7 +118,6 @@
         .sidebar-menu li.active a, .sidebar-menu li a:hover { background-color: rgba(255,255,255,0.1); color: white; }
         .sidebar-menu .sub-item { padding-left: 2.2rem; font-size: 0.85rem; }
         
-        /* Botón de ocultar menú ubicado en la zona baja del panel */
         .sidebar-hide-section {
             padding: 0.8rem 1.2rem;
             border-top: 1px solid rgba(255,255,255,0.1);
@@ -227,8 +227,8 @@
     </div>
 
     <div class="app-wrapper">
-        <!-- Menú Lateral (etiqueta original 'sidebar') -->
-        <sidebar>
+        <!-- Menú Lateral Estándar con <aside> -->
+        <aside class="sidebar">
             <div class="sidebar-brand" onclick="intentarActivarModoDev()" title="Haz 3 clics aquí para Modo Desarrollador">
                 <span>⚙</span> <span id="lblBrandTextSide">GesPyme</span>
             </div>
@@ -251,7 +251,6 @@
                 <li><a href="subscription.html" style="color: #ffd700;">⭐ Subscription Pro</a></li>
                 <li><a href="#" onclick="abrirAdminModal(event)" style="color: #4ade80;">👑 Activar Plan (Admin)</a></li>
                 
-                <!-- Sección de Ayuda y Asistente GPT -->
                 <li style="margin-top: 0.8rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 0.5rem;"><a href="#" onclick="abrirAyudaModal()">❓ Ayuda</a></li>
                 <li><a href="#" onclick="abrirAyudaModal()">🛟 Asistencia</a></li>
                 <li><a href="#" onclick="abrirAyudaModal()">💡 Sugerencias</a></li>
@@ -260,7 +259,6 @@
                 <li id="menuCerrarSesion" style="display:none; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 0.5rem; padding-top: 0.5rem;"><a href="#" onclick="cerrarSesion();" style="color: #ff9999;">🚪 Cerrar Sesión</a></li>
             </ul>
 
-            <!-- Botón de ocultar menú ubicado en la zona inferior -->
             <div class="sidebar-hide-section">
                 <button class="btn-hide-sidebar" onclick="toggleSidebar()">
                     <span>◀</span> Ocultar Menú
@@ -270,7 +268,7 @@
             <div class="sidebar-footer">
                 GesPyme © 2026
             </div>
-        </sidebar>
+        </aside>
 
         <!-- Área Principal -->
         <div class="main-content">
@@ -298,7 +296,7 @@
                             <span class="action-icon">📄</span>
                             <span class="action-text">Factura</span>
                         </a>
-                        <a href="ordenes.html" class="action-card" onclick="return verificarRestriccionModuloLink('ordenes', event)">
+                        <a href="orden-servicio.html" class="action-card" onclick="return verificarRestriccionModuloLink('ordenes', event)">
                             <span class="action-icon">🛠️</span>
                             <span class="action-text">Orden Serv.</span>
                         </a>
@@ -382,20 +380,17 @@
             </div>
         </div>
 
-        <!-- Caja de Chat Inteligente (Estilo ChatGPT Local) -->
+        <!-- Caja de Chat Inteligente -->
         <div id="chat-box-container" style="display: none; width: 320px; height: 420px; background: white; border-radius: 12px; box-shadow: 0 6px 24px rgba(0,0,0,0.25); flex-direction: column; overflow: hidden; border: 1px solid #e0e0e0; position: absolute; bottom: 60px; right: 0; z-index: 10005;">
-            <!-- Cabecera del Chat -->
             <div style="background: #1a73e8; color: white; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 0.95rem;">
                 <span>✨ Asistente GPT - GesPyme</span>
                 <button onclick="toggleChatIA()" style="background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer;">×</button>
             </div>
-            <!-- Cuerpo de Mensajes -->
             <div id="chat-messages" style="flex: 1; padding: 12px; overflow-y: auto; background: #f8f9fa; display: flex; flex-direction: column; gap: 10px; font-size: 0.85rem;">
                 <div style="background: #e2e8f0; padding: 8px 12px; border-radius: 8px; align-self: flex-start; max-width: 85%; color: #333;">
                     ¡Hola! Soy tu asistente virtual de GesPyme. ¿En qué te puedo ayudar hoy con tus facturas, cotizaciones o cuentas?
                 </div>
             </div>
-            <!-- Entrada de Texto -->
             <div style="padding: 10px; background: white; border-top: 1px solid #e0e0e0; display: flex; gap: 6px;">
                 <input type="text" id="chat-input" placeholder="Escribe tu consulta..." style="flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 6px; font-size: 0.85rem;" onkeypress="if(event.key === 'Enter') enviarMensajeIA()">
                 <button onclick="enviarMensajeIA()" style="background: #1a73e8; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: bold;">Enviar</button>
@@ -409,7 +404,7 @@
             <button onclick="cerrarAyudaModal()" style="position: absolute; top: 12px; right: 15px; background: none; border: none; font-size: 1.4rem; cursor: pointer; color: #888;">×</button>
             <h2 id="ayuda-titulo" style="color: #1a73e8; margin-bottom: 0.8rem; font-size: 1.4rem;">Centro de Ayuda y Soporte</h2>
             <p id="ayuda-texto" style="color: #555; font-size: 0.95rem; line-height: 1.5; margin-bottom: 1.2rem;">
-                Bienvenido al soporte oficial de GesPyme. Si necesitas asistencia directa con tu cuenta, planes o reportes, puedes comunicarte conmigo (el desarrollador) a través de los siguientes medios:
+                Bienvenido al soporte oficial de GesPyme. Si necesitas asistencia directa con tu cuenta, planes o reportes, puedes comunicarte con soporte técnico.
             </p>
             <div style="background: #f8f9fa; padding: 1rem; border-radius: 6px; font-size: 0.9rem; color: #333; margin-bottom: 1.5rem; border-left: 4px solid #1a73e8;">
                 📧 <strong>Correo de Soporte:</strong> <a href="mailto:refrit234gonza@gmail.com" style="color: #1a73e8; text-decoration: none; font-weight: bold;">refrit234gonza@gmail.com</a><br>
@@ -421,6 +416,15 @@
 
     <!-- Script de Lógica -->
     <script>
+        // Registro del Service Worker para cumplimiento de PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('Service Worker registrado con éxito:', reg.scope))
+                    .catch(err => console.log('Error al registrar Service Worker:', err));
+            });
+        }
+
         const PLANES_LIMITES = {
             'free': { limite: 5, nombre: 'Plan Gratuito' },
             'basico': { limite: 20, nombre: 'Plan Básico' },
@@ -433,7 +437,7 @@
         let tiempoUltimoClic = 0;
 
         function toggleSidebar() {
-            let sidebar = document.querySelector("sidebar");
+            let sidebar = document.querySelector("aside.sidebar");
             sidebar.classList.toggle("open");
         }
 
@@ -442,7 +446,6 @@
             box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
         }
 
-        // Motor GPT local de alta fluidez y respuestas inteligentes
         function enviarMensajeIA() {
             const input = document.getElementById('chat-input');
             const texto = input.value.trim();
@@ -450,7 +453,6 @@
 
             const mensajes = document.getElementById('chat-messages');
 
-            // Mensaje del usuario
             const msgUser = document.createElement('div');
             msgUser.style.cssText = "background: #1a73e8; color: white; padding: 8px 12px; border-radius: 8px; align-self: flex-end; max-width: 85%; word-break: break-word;";
             msgUser.textContent = texto;
@@ -459,7 +461,6 @@
             input.value = "";
             mensajes.scrollTop = mensajes.scrollHeight;
 
-            // Simulación de respuesta fluida
             setTimeout(() => {
                 let respuestaBot = "Entendido. Para gestionar eso en GesPyme, dirígete al módulo correspondiente desde el menú lateral o utiliza los accesos rápidos de la pantalla principal.";
                 let textoMinus = texto.toLowerCase();
